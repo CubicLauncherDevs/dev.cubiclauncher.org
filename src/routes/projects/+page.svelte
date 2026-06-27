@@ -1,9 +1,9 @@
 <script lang="ts">
   import Header from '$lib/components/global/Header.svelte';
-  import Home from '$lib/pages/home.svelte';
+  import Projects from '$lib/pages/projects.svelte';
   import Footer from '$lib/components/global/Footer.svelte';
 </script>
 
 <Header />
-<Home />
+<Projects />
 <Footer />
