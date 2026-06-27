@@ -26,18 +26,16 @@
         <span class="hamburger-line" class:open={menuOpen}></span>
       </button>
       <nav class="nav" class:nav-open={menuOpen}>
-        <div class="nav-inner">
-          <span class="nav-group">
-            <a href="/" class="nav-link" class:active={$page.url.pathname === '/'} onclick={closeMenu}>Inicio</a>
-            <a href="/docs" class="nav-link" class:active={$page.url.pathname.startsWith('/docs')} class:docs-active={$page.url.pathname.startsWith('/docs')} onclick={closeMenu}>Docs</a>
-            <a href="/projects" class="nav-link" class:active={$page.url.pathname === '/projects'} onclick={closeMenu}>Proyectos</a>
-          </span>
-          <span class="nav-sep"></span>
-          <span class="nav-group">
-            <a href="https://github.com/CubicLauncherDevs/CubicLauncher" target="_blank" rel="noopener noreferrer" class="nav-link" onclick={closeMenu}>GitHub</a>
-            <a href="https://discord.gg/7VaqSrPukm" target="_blank" rel="noopener noreferrer" class="nav-link" onclick={closeMenu}>Discord</a>
-          </span>
-        </div>
+        <span class="nav-group">
+          <a href="/" class="nav-link" class:active={$page.url.pathname === '/'} onclick={closeMenu}>Inicio</a>
+          <a href="/docs" class="nav-link" class:active={$page.url.pathname.startsWith('/docs')} class:docs-active={$page.url.pathname.startsWith('/docs')} onclick={closeMenu}>Docs</a>
+          <a href="/projects" class="nav-link" class:active={$page.url.pathname === '/projects'} onclick={closeMenu}>Proyectos</a>
+        </span>
+        <span class="nav-sep"></span>
+        <span class="nav-group">
+          <a href="https://github.com/CubicLauncherDevs/CubicLauncher" target="_blank" rel="noopener noreferrer" class="nav-link" onclick={closeMenu}>GitHub</a>
+          <a href="https://discord.gg/7VaqSrPukm" target="_blank" rel="noopener noreferrer" class="nav-link" onclick={closeMenu}>Discord</a>
+        </span>
       </nav>
     </div>
   </div>
