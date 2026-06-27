@@ -1,5 +1,36 @@
 <script lang="ts">
   import '../../styles/projects.css';
+  import { getRepoInfo } from '$lib/github';
+
+  const repos = [
+    { owner: 'CubicLauncherDevs', name: 'CubicLauncher', display: 'CubicLauncher', lang: 'Rust', license: 'GPL-3.0' },
+    { owner: 'CubicLauncherDevs', name: 'cubiclauncher.com', display: 'cubiclauncher.com', lang: 'Svelte', license: 'GPL-3.0' },
+    { owner: 'CubicLauncherDevs', name: 'Themes', display: 'Themes', lang: 'Zip', license: 'CC0 1.0 Universal' },
+    { owner: 'CubicLauncherDevs', name: 'authlib-injector', display: 'authlib-injector', lang: 'Java', license: 'CC0 1.0 Universal' },
+  ];
+
+  let stars = $state<Record<string, number>>({});
+
+  async function loadStars() {
+    const entries = await Promise.all(
+      repos.map(async (r) => {
+        try {
+          const info = await getRepoInfo(r.owner, r.name);
+          return [r.name, info.stargazers_count] as const;
+        } catch {
+          return [r.name, 0] as const;
+        }
+      })
+    );
+    stars = Object.fromEntries(entries);
+  }
+
+  loadStars();
+
+  function formatStars(n: number): string {
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+    return String(n);
+  }
 </script>
 
 <svelte:head>
@@ -32,7 +63,7 @@
           Nuevo CubicLauncher en Rust para más eficiencia y más personalizado y de código abierto. 
         </p>
         <div class="project-meta">
-          <span class="project-stat">&#9733; ~0</span>
+          <span class="project-stat">&#9733; {stars['CubicLauncher'] !== undefined ? formatStars(stars['CubicLauncher']) : '...'}</span>
           <span class="project-stat">GPL-3.0</span>
         </div>
       </a>
@@ -49,7 +80,7 @@
            Pagina oficial de cubicLauncher 
         </p>
         <div class="project-meta">
-          <span class="project-stat">&#9733; ~0</span>
+          <span class="project-stat">&#9733; {stars['cubiclauncher.com'] !== undefined ? formatStars(stars['cubiclauncher.com']) : '...'}</span>
           <span class="project-stat">GPL-3.0</span>
         </div>
       </a>
@@ -66,7 +97,7 @@
            Repositorio comunitario de temas personalizados para CubicLauncher
         </p>
         <div class="project-meta">
-          <span class="project-stat">&#9733; ~0</span>
+          <span class="project-stat">&#9733; {stars['Themes'] !== undefined ? formatStars(stars['Themes']) : '...'}</span>
           <span class="project-stat">CC0 1.0 Universal</span>
         </div>
       </a>
@@ -83,7 +114,7 @@
            Build your own Minecraft authentication system. (FORK: yushijinhun)
         </p>
         <div class="project-meta">
-          <span class="project-stat">&#9733; ~0</span>
+          <span class="project-stat">&#9733; {stars['authlib-injector'] !== undefined ? formatStars(stars['authlib-injector']) : '...'}</span>
           <span class="project-stat">CC0 1.0 Universal</span>
         </div>
       </a>

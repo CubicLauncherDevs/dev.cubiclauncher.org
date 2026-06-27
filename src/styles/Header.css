@@ -1,7 +1,10 @@
-.header {
+.header-wrapper {
   position: sticky;
   top: 0;
   z-index: 100;
+}
+
+.header {
   background: var(--bg-base);
   border-bottom: 1px solid var(--border-subtle);
 }
@@ -42,6 +45,15 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 0.1875rem;
+}
+
+@media (min-width: 641px) {
+  .nav {
+    position: absolute;
+    top: 50%;
+    right: max(1.5rem, calc((100vw - 960px) / 2 + 1.5rem));
+    transform: translateY(-50%);
+  }
 }
 
 .nav-group {

@@ -41,3 +41,15 @@ export async function getLatestCommit(): Promise<Commit | null> {
   const data = await fetchCached<Commit[]>('latest-commit', 'https://api.github.com/repos/CubicLauncherDevs/CubicLauncher/commits?per_page=1');
   return data[0] || null;
 }
+
+export interface RepoInfo {
+  name: string;
+  full_name: string;
+  stargazers_count: number;
+  description: string;
+  license: { spdx_id: string } | null;
+}
+
+export async function getRepoInfo(owner: string, repo: string): Promise<RepoInfo> {
+  return fetchCached<RepoInfo>(`repo:${owner}/${repo}`, `https://api.github.com/repos/${owner}/${repo}`);
+}
