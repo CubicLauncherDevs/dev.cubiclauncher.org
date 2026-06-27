@@ -1,6 +1,16 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import '../../../styles/Header.css';
+
+  let menuOpen = $state(false);
+
+  function toggleMenu() {
+    menuOpen = !menuOpen;
+  }
+
+  function closeMenu() {
+    menuOpen = false;
+  }
 </script>
 
 <header class="header">
@@ -10,18 +20,29 @@
         <img src="/favicon.png" alt="CubicLauncher" class="logo-icon" />
         <span>CubicLauncher</span>
       </a>
-      <nav class="nav">
-        <span class="nav-group">
-          <a href="/" class="nav-link" class:active={$page.url.pathname === '/'}>Inicio</a>
-          <a href="/docs" class="nav-link" class:active={$page.url.pathname.startsWith('/docs')} class:docs-active={$page.url.pathname.startsWith('/docs')}>Docs</a>
-          <a href="/projects" class="nav-link" class:active={$page.url.pathname === '/projects'}>Proyectos</a>
-        </span>
-        <span class="nav-sep"></span>
-        <span class="nav-group">
-          <a href="https://github.com/CubicLauncherDevs/CubicLauncher" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
-          <a href="https://discord.gg/7VaqSrPukm" target="_blank" rel="noopener noreferrer" class="nav-link">Discord</a>
-        </span>
+      <button class="hamburger" onclick={toggleMenu} aria-label="Menú de navegación" aria-expanded={menuOpen}>
+        <span class="hamburger-line" class:open={menuOpen}></span>
+        <span class="hamburger-line" class:open={menuOpen}></span>
+        <span class="hamburger-line" class:open={menuOpen}></span>
+      </button>
+      <nav class="nav" class:nav-open={menuOpen}>
+        <div class="nav-inner">
+          <span class="nav-group">
+            <a href="/" class="nav-link" class:active={$page.url.pathname === '/'} onclick={closeMenu}>Inicio</a>
+            <a href="/docs" class="nav-link" class:active={$page.url.pathname.startsWith('/docs')} class:docs-active={$page.url.pathname.startsWith('/docs')} onclick={closeMenu}>Docs</a>
+            <a href="/projects" class="nav-link" class:active={$page.url.pathname === '/projects'} onclick={closeMenu}>Proyectos</a>
+          </span>
+          <span class="nav-sep"></span>
+          <span class="nav-group">
+            <a href="https://github.com/CubicLauncherDevs/CubicLauncher" target="_blank" rel="noopener noreferrer" class="nav-link" onclick={closeMenu}>GitHub</a>
+            <a href="https://discord.gg/7VaqSrPukm" target="_blank" rel="noopener noreferrer" class="nav-link" onclick={closeMenu}>Discord</a>
+          </span>
+        </div>
       </nav>
     </div>
   </div>
 </header>
+
+{#if menuOpen}
+  <div class="nav-overlay" onclick={closeMenu} role="presentation"></div>
+{/if}

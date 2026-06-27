@@ -11,6 +11,7 @@
   }
 
   let selectedLang = $state(defaultLang());
+  let sidebarOpen = $state(false);
 
   $effect(() => {
     selectedLang = defaultLang();
@@ -39,6 +40,10 @@
       selectedLang = code;
     }
   }
+
+  function closeSidebar() {
+    sidebarOpen = false;
+  }
 </script>
 
 <svelte:head>
@@ -48,7 +53,11 @@
 <Header />
 
 <div class="docs-layout">
-  <aside class="docs-sidebar">
+  <button class="docs-sidebar-toggle" onclick={() => sidebarOpen = !sidebarOpen} aria-expanded={sidebarOpen}>
+    <span>Índice</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class:rotated={sidebarOpen}><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
+  <aside class="docs-sidebar" class:docs-sidebar-open={sidebarOpen}>
     <div class="docs-sidebar-inner">
       <div class="docs-lang-selector">
         <h4 class="docs-sidebar-title">Documentación</h4>
@@ -78,6 +87,9 @@
       {/if}
     </div>
   </aside>
+  {#if sidebarOpen}
+    <div class="docs-sidebar-overlay" onclick={closeSidebar} role="presentation"></div>
+  {/if}
 
   <main class="docs-content">
     {#if data.page === 'index'}
