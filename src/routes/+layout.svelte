@@ -1,16 +1,20 @@
 <script lang="ts">
   import { navigating } from '$app/stores';
   import '../app.css';
+
+  let { children } = $props();
 </script>
 
-<div class="loading-overlay" class:visible={$navigating}>
-  <div class="loading-overlay-inner">
-    <img src="/rei.png" alt="Cargando" />
-    <p>Cargando...</p>
+{#if $navigating}
+  <div class="loading-overlay visible">
+    <div class="loading-overlay-inner">
+      <img src="/rei.png" alt="Cargando" />
+      <p>Cargando...</p>
+    </div>
   </div>
-</div>
+{/if}
 
-<slot />
+{@render children()}
 
 <style>
   .loading-overlay {

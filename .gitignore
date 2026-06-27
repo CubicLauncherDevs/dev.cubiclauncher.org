@@ -6,3 +6,4 @@ dist/
 .vite/
 .svelte-kit/
 bun.lock
+package-lock.json

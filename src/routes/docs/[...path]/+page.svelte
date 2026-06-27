@@ -1,14 +1,44 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
   import Header from '$lib/components/global/Header.svelte';
   import Footer from '$lib/components/global/Footer.svelte';
   import '../../../styles/docs.css';
 
-  export let data;
+  let { data } = $props();
 
-  $: defaultLang = data.page === 'doc' ? data.lang : 'es-ES';
-  $: selectedLang = defaultLang;
-  $: currentLang = data.langs.find(l => l.code === selectedLang) || data.langs[0];
-  $: langTree = data.tree.find(l => l.code === currentLang?.code);
+  function defaultLang() {
+    return data.page === 'doc' ? data.lang : 'es-ES';
+  }
+
+  let selectedLang = $state(defaultLang());
+
+  $effect(() => {
+    selectedLang = defaultLang();
+  });
+
+  let currentLang = $derived(data.langs.find(l => l.code === selectedLang) || data.langs[0]);
+  let langTree = $derived(data.tree.find(l => l.code === currentLang?.code));
+
+  function switchLang(code: string) {
+    if (data.page === 'doc') {
+      const articleName = data.slug.split('/').pop();
+      for (const lang of data.tree) {
+        if (lang.code === code) {
+          for (const cat of lang.children || []) {
+            for (const item of cat.children || []) {
+              if (item.slug && item.slug.endsWith('/' + articleName)) {
+                goto('/docs/' + item.slug);
+                return;
+              }
+            }
+          }
+        }
+      }
+      goto('/docs');
+    } else {
+      selectedLang = code;
+    }
+  }
 </script>
 
 <svelte:head>
@@ -27,7 +57,7 @@
             <button
               class="docs-lang-pill"
               class:active={lang.code === currentLang?.code}
-              on:click={() => selectedLang = lang.code}
+              onclick={() => switchLang(lang.code)}
             >{lang.label}</button>
           {/each}
         </div>

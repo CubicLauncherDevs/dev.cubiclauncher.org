@@ -9,25 +9,25 @@ title: Installation sur Arch Linux | CubicLauncher
 Sur Arch Linux, il est recommandé de compiler CubicLauncher localement en utilisant le `PKGBUILD` officiel. Il n'est pas nécessaire de cloner le dépôt complet ni d'installer les dépendances manuellement : le `PKGBUILD` télécharge le code source et `makepkg` se charge de résoudre et d'installer les dépendances nécessaires.
 
 <div class="my-6 flex gap-3 rounded-lg border border-yellow-500 bg-yellow-500/5 p-4 text-yellow-500">
-	<div class="flex flex-col gap-1">
-		<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">
-			La compilation locale est obligatoire.
-		</span>
+<div class="flex flex-col gap-1">
+<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">
+La compilation locale est obligatoire.
+</span>
 
-		<div class="m-0 text-sm leading-relaxed text-neutral-400">
-			<p class="mt-1">
-				Arch Linux est une distribution <em>rolling release</em>, donc les versions des bibliothèques et dépendances changent fréquemment.
-			</p>
+<div class="m-0 text-sm leading-relaxed text-neutral-400">
+<p class="mt-1">
+Arch Linux est une distribution <em>rolling release</em>, donc les versions des bibliothèques et dépendances changent fréquemment.
+</p>
 
-			<p class="mt-1">
-				Les binaires générés par GitHub Actions (Ubuntu) peuvent présenter des incompatibilités ou échouer sur des systèmes Arch à jour.
-			</p>
+<p class="mt-1">
+Les binaires générés par GitHub Actions (Ubuntu) peuvent présenter des incompatibilités ou échouer sur des systèmes Arch à jour.
+</p>
 
-			<p class="mt-1">
-				Compiler le programme sur votre propre système garantit la compatibilité avec les bibliothèques installées et permet d'obtenir un paquet adapté à votre environnement.
-			</p>
-		</div>
-	</div>
+<p class="mt-1">
+Compiler le programme sur votre propre système garantit la compatibilité avec les bibliothèques installées et permet d'obtenir un paquet adapté à votre environnement.
+</p>
+</div>
+</div>
 </div>
 
 ```bash
@@ -62,12 +62,12 @@ makepkg -si
 ```
 
 <div class="my-6 flex gap-3 rounded-lg border border-yellow-500 bg-yellow-500/5 p-4 text-yellow-500">
-	<div class="flex flex-col gap-1">
-		<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">NOTE</span>
-		<div class="m-0 text-sm leading-relaxed text-neutral-400">
-			La commande <code>updpkgsums</code> appartient au paquet <code>pacman-contrib</code>. Si vous ne l'avez pas installée, vous pouvez l'obtenir avec <code>sudo pacman -S pacman-contrib</code>.
-		</div>
-	</div>
+<div class="flex flex-col gap-1">
+<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">NOTE</span>
+<div class="m-0 text-sm leading-relaxed text-neutral-400">
+La commande <code>updpkgsums</code> appartient au paquet <code>pacman-contrib</code>. Si vous ne l'avez pas installée, vous pouvez l'obtenir avec <code>sudo pacman -S pacman-contrib</code>.
+</div>
+</div>
 </div>
 
 ## L'auto-mise à jour ne fonctionne pas sur Arch
@@ -113,10 +113,10 @@ makepkg -si
 ```
 
 <div class="my-6 flex gap-3 rounded-lg border border-yellow-500 bg-yellow-500/5 p-4 text-yellow-500">
-	<div class="flex flex-col gap-1">
-		<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">AVERTISSEMENT</span>
-		<div class="m-0 text-sm leading-relaxed text-neutral-400">
-        Cette erreur n'est pas liée à CubicLauncher ni au PKGBUILD ; elle se produit lorsqu'un miroir Arch Linux n'a pas encore synchronisé les paquets les plus récents.
-		</div>
-	</div>
+<div class="flex flex-col gap-1">
+<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">AVERTISSEMENT</span>
+<div class="m-0 text-sm leading-relaxed text-neutral-400">
+Cette erreur n'est pas liée à CubicLauncher ni au PKGBUILD ; elle se produit lorsqu'un miroir Arch Linux n'a pas encore synchronisé les paquets les plus récents.
+</div>
+</div>
 </div>

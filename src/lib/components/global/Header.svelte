@@ -13,8 +13,8 @@
       <nav class="nav">
         <span class="nav-group">
           <a href="/" class="nav-link" class:active={$page.url.pathname === '/'}>Inicio</a>
+          <a href="/docs" class="nav-link" class:active={$page.url.pathname.startsWith('/docs')} class:docs-active={$page.url.pathname.startsWith('/docs')}>Docs</a>
           <a href="/projects" class="nav-link" class:active={$page.url.pathname === '/projects'}>Proyectos</a>
-          <a href="/docs" class="nav-link" class:active={$page.url.pathname.startsWith('/docs')}>Docs</a>
         </span>
         <span class="nav-sep"></span>
         <span class="nav-group">

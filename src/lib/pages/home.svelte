@@ -1,5 +1,30 @@
 <script lang="ts">
   import '../../styles/home.css';
+  import { getContributors, getLatestCommit } from '$lib/github';
+
+  let contributors = $state<Awaited<ReturnType<typeof getContributors>>>([]);
+  let latestCommit = $state<Awaited<ReturnType<typeof getLatestCommit>>>(null);
+
+  $effect(() => {
+    getContributors().then(d => contributors = d).catch(() => {});
+    getLatestCommit().then(d => latestCommit = d).catch(() => {});
+  });
+
+  function timeAgo(date: string): string {
+    const secs = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+    if (secs < 60) return 'hace unos segundos';
+    const mins = Math.floor(secs / 60);
+    if (mins < 60) return `hace ${mins} min`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `hace ${hrs} h`;
+    const days = Math.floor(hrs / 24);
+    if (days < 30) return `hace ${days} d`;
+    return new Date(date).toLocaleDateString('es-ES');
+  }
+
+  function shortMessage(msg: string): string {
+    return msg.split('\n')[0];
+  }
 </script>
 
 <svelte:head>
@@ -20,6 +45,9 @@
     <div class="hero-actions">
       <a href="https://github.com/CubicLauncherDevs/CubicLauncher/releases" target="_blank" rel="noopener noreferrer" class="btn-primary">
         Descargar &darr;
+      </a>
+        <a href="/docs" target="_blank" rel="noopener noreferrer" class="btn-ghost">
+        Documentacion &rarr;
       </a>
       <a href="https://github.com/CubicLauncherDevs/CubicLauncher" target="_blank" rel="noopener noreferrer" class="btn-ghost">
         Ver en GitHub &rarr;
@@ -134,6 +162,47 @@
         <p>Integración con Discord para mostrar el estado de juego.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-label">colaboradores</div>
+    <h2>Colaboradores del proyecto</h2>
+    <p class="section-desc">Desarrolladores que hacen posible CubicLauncher.</p>
+    {#if contributors.length > 0}
+      <div class="members-grid">
+        {#each contributors as c}
+          <a href={c.html_url} target="_blank" rel="noopener noreferrer" class="member-card">
+            <img src={c.avatar_url} alt={c.login} class="member-avatar" />
+            <span class="member-name">{c.login}</span>
+            <span class="member-contrib">{c.contributions} commits</span>
+          </a>
+        {/each}
+      </div>
+    {:else}
+      <p class="text-tertiary">Cargando colaboradores...</p>
+    {/if}
+
+    {#if latestCommit}
+      <div class="latest-commit">
+        <div class="latest-commit-header">
+          <span class="latest-commit-icon">&#128196;</span>
+          <span class="latest-commit-label">Último commit</span>
+        </div>
+        <a href={latestCommit.html_url} target="_blank" rel="noopener noreferrer" class="latest-commit-body">
+          {#if latestCommit.author}
+            <img src={latestCommit.author.avatar_url} alt="" class="latest-commit-avatar" />
+          {/if}
+          <div class="latest-commit-info">
+            <span class="latest-commit-msg">{shortMessage(latestCommit.commit.message)}</span>
+            <span class="latest-commit-meta">
+              {latestCommit.commit.author.name} &middot; {timeAgo(latestCommit.commit.author.date)}
+            </span>
+          </div>
+        </a>
+      </div>
+    {/if}
   </div>
 </section>
 
