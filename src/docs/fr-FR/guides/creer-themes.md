@@ -123,32 +123,31 @@ injects_css = false
 Définit l'apparence du thème :
 
 ```toml
-[theme]
 
-[theme.background]
+[background]
 reference_path = "bg.webp"
 image_blur = 10.0
 image_opacity = 0.5
 
-[theme.colors]
+[colors]
 accent = "#ff0000"
 "accent-rgb" = "255, 0, 0"
 
-[theme.text]
+[text]
 primary = "#ffffff"
 secondary = "#cccccc"
 
-[theme.borders]
+[borders]
 color = "#333333"
 radius = "8px"
 "radius-sm" = "4px"
 
-[theme.shadows]
+[shadows]
 "shadow-sm" = "0 1px 3px rgba(0,0,0,0.5)"
 "shadow-md" = "0 4px 6px rgba(0,0,0,0.3)"
 "glow-accent" = "0 0 12px rgba(255,0,0,0.3)"
 
-[theme.backgrounds]
+[backgrounds]
 main = "#1a1a2e"
 sidebar = "#16213e"
 card = "#0f3460"
@@ -156,13 +155,13 @@ card = "#0f3460"
 overlay = "rgba(0,0,0,0.7)"
 input = "#1a1a2e"
 
-[theme.layout]
+[layout]
 "font-family" = "'Inter', sans-serif"
 "font-size-base" = "14px"
 "font-size-sm" = "12px"
 "font-size-lg" = "18px"
 
-[theme.others]
+[others]
 "icon-filter" = "invert(1)"
 "color-success" = "#22c55e"
 "color-error" = "#ef4444"
@@ -172,11 +171,11 @@ input = "#1a1a2e"
 "scrollbar-track" = "#1a1a2e"
 "scrollbar-thumb" = "#e94560"
 
-[theme.backdrop]
+[backdrop]
 dropdown = 10.0
 modal = 4.0
 
-[[theme.fonts]]
+[[fonts]]
 family = "MaPolice"
 src = "polices/ma-police.woff2"
 format = "woff2"
@@ -190,16 +189,16 @@ Chaque section de `Definition.toml` est aplatie en variables CSS avec un préfix
 
 | Section | Préfixe CSS | Exemple de clé | Génère |
 |---|---|---|---|
-| `[theme.colors]` | `--` | `accent` | `--accent` |
-| `[theme.text]` | `--text-` | `primary` | `--text-primary` |
-| `[theme.borders]` | `--border-` | `color` | `--border-color` |
-| `[theme.shadows]` | `--` | `shadow-sm` | `--shadow-sm` |
-| `[theme.backgrounds]` | `--bg-` | `main` | `--bg-main` |
-| `[theme.layout]` | `--` | `font-family` | `--font-family` |
-| `[theme.backdrop]` | `--backdrop-blur-` | `modal` | `--backdrop-blur-modal` (valeur en `px`) |
-| `[theme.others]` | `--` | `icon-filter` | `--icon-filter` |
+| `[colors]` | `--` | `accent` | `--accent` |
+| `[text]` | `--text-` | `primary` | `--text-primary` |
+| `[borders]` | `--border-` | `color` | `--border-color` |
+| `[shadows]` | `--` | `shadow-sm` | `--shadow-sm` |
+| `[backgrounds]` | `--bg-` | `main` | `--bg-main` |
+| `[layout]` | `--` | `font-family` | `--font-family` |
+| `[backdrop]` | `--backdrop-blur-` | `modal` | `--backdrop-blur-modal` (valeur en `px`) |
+| `[others]` | `--` | `icon-filter` | `--icon-filter` |
 
-De plus, `[theme.background]` génère automatiquement trois variables :
+De plus, `[background]` génère automatiquement trois variables :
 
 | Champ | Variable générée |
 |---|---|
@@ -213,7 +212,7 @@ De plus, `[theme.background]` génère automatiquement trois variables :
 
 ## Polices (v1 et v2)
 
-Les deux versions prennent en charge les polices personnalisées. En v1, elles se trouvent dans le tableau `fonts` de `theme.json` ; en v2, dans `[[theme.fonts]]` de `Definition.toml`.
+Les deux versions prennent en charge les polices personnalisées. En v1, elles se trouvent dans le tableau `fonts` de `theme.json` ; en v2, dans `[[fonts]]` de `Definition.toml`.
 
 ### Champs
 
@@ -245,7 +244,7 @@ Les deux versions prennent en charge les polices personnalisées. En v1, elles s
 ### Exemple v2 (TOML)
 
 ```toml
-[[theme.fonts]]
+[[fonts]]
 family = "MaPolice"
 src = "polices/ma-police.woff2"
 format = "woff2"
@@ -418,24 +417,54 @@ Si vous souhaitez partager votre thème avec la communauté, envoyez une PR au [
 
 ```
 src/
-└── <votre-utilisateur>/
-    └── <nom-du-thème>/
-        ├── showcase.png
-        └── Nom:Auteur.zip
+  <Auteur>/
+    <Thème>/
+      theme.md
+      V1/
+        Auteur_Theme.zip
+        Showcase.png       (optionnel)
+        changelog.md       (optionnel)
+      V2/                  (optionnel)
+        ...
 ```
 
-### Fichiers
+Chaque thème se trouve sous `src/<Auteur>/<Thème>/` avec des sous-dossiers versionnés (`V1`, `V2`, ...).
 
-| Fichier | Description |
-|---|---|
-| `showcase.png` | Capture d'écran du lanceur avec votre thème appliqué, pour la galerie. |
-| `Nom:Auteur.zip` | ZIP avec le dossier du thème à l'intérieur. Le nom suit la convention `Nom:Auteur.zip`. |
+### Fichiers du thème
+
+| Fichier | Obligatoire | Description |
+|---|---|---|
+| `theme.md` | Oui | Markdown avec la description et README du thème |
+| `Auteur_Theme.zip` | Oui | Paquet du thème (format `Auteur_Theme.zip`) |
+| `Showcase.png` | Non | Aperçu de la version (case-insensitive) |
+| `changelog.md` | Non | Journal des modifications de cette version |
+
+### theme.md
+
+```markdown
+# Mon Thème
+
+Description en markdown du thème, son inspiration, etc.
+```
+
+### changelog.md
+
+```markdown
+# V1
+
+- Première version
+- Thème sombre avec accents verts
+```
+
+### Convention de nommage du ZIP
+
+Le ZIP est nommé `Auteur_Theme.zip` (avec underscore, sans espaces ni deux-points).
 
 ### Contenu du ZIP
 
 Pour v2 (recommandée) :
 ```
-Nom:Auteur.zip
+Auteur_Theme.zip
 └── <nom-du-thème>/
     ├── Meta.toml
     ├── Definition.toml
@@ -445,7 +474,7 @@ Nom:Auteur.zip
 
 Pour v1 (legacy) :
 ```
-Nom:Auteur.zip
+Auteur_Theme.zip
 └── <nom-du-thème>/
     ├── theme.json
     └── bg.EXTENSION (optionnel)

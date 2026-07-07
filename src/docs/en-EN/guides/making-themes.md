@@ -123,32 +123,32 @@ injects_css = false
 Defines the theme appearance:
 
 ```toml
-[theme]
 
-[theme.background]
+
+[background]
 reference_path = "bg.webp"
 image_blur = 10.0
 image_opacity = 0.5
 
-[theme.colors]
+[colors]
 accent = "#ff0000"
 "accent-rgb" = "255, 0, 0"
 
-[theme.text]
+[text]
 primary = "#ffffff"
 secondary = "#cccccc"
 
-[theme.borders]
+[borders]
 color = "#333333"
 radius = "8px"
 "radius-sm" = "4px"
 
-[theme.shadows]
+[shadows]
 "shadow-sm" = "0 1px 3px rgba(0,0,0,0.5)"
 "shadow-md" = "0 4px 6px rgba(0,0,0,0.3)"
 "glow-accent" = "0 0 12px rgba(255,0,0,0.3)"
 
-[theme.backgrounds]
+[backgrounds]
 main = "#1a1a2e"
 sidebar = "#16213e"
 card = "#0f3460"
@@ -156,13 +156,13 @@ card = "#0f3460"
 overlay = "rgba(0,0,0,0.7)"
 input = "#1a1a2e"
 
-[theme.layout]
+[layout]
 "font-family" = "'Inter', sans-serif"
 "font-size-base" = "14px"
 "font-size-sm" = "12px"
 "font-size-lg" = "18px"
 
-[theme.others]
+[others]
 "icon-filter" = "invert(1)"
 "color-success" = "#22c55e"
 "color-error" = "#ef4444"
@@ -172,11 +172,11 @@ input = "#1a1a2e"
 "scrollbar-track" = "#1a1a2e"
 "scrollbar-thumb" = "#e94560"
 
-[theme.backdrop]
+[backdrop]
 dropdown = 10.0
 modal = 4.0
 
-[[theme.fonts]]
+[[fonts]]
 family = "MyFont"
 src = "fonts/my-font.woff2"
 format = "woff2"
@@ -190,16 +190,16 @@ Each section of `Definition.toml` is flattened to CSS variables with a specific 
 
 | Section | CSS prefix | Key example | Generates |
 |---|---|---|---|
-| `[theme.colors]` | `--` | `accent` | `--accent` |
-| `[theme.text]` | `--text-` | `primary` | `--text-primary` |
-| `[theme.borders]` | `--border-` | `color` | `--border-color` |
-| `[theme.shadows]` | `--` | `shadow-sm` | `--shadow-sm` |
-| `[theme.backgrounds]` | `--bg-` | `main` | `--bg-main` |
-| `[theme.layout]` | `--` | `font-family` | `--font-family` |
-| `[theme.backdrop]` | `--backdrop-blur-` | `modal` | `--backdrop-blur-modal` (value in `px`) |
-| `[theme.others]` | `--` | `icon-filter` | `--icon-filter` |
+| `[colors]` | `--` | `accent` | `--accent` |
+| `[text]` | `--text-` | `primary` | `--text-primary` |
+| `[borders]` | `--border-` | `color` | `--border-color` |
+| `[shadows]` | `--` | `shadow-sm` | `--shadow-sm` |
+| `[backgrounds]` | `--bg-` | `main` | `--bg-main` |
+| `[layout]` | `--` | `font-family` | `--font-family` |
+| `[backdrop]` | `--backdrop-blur-` | `modal` | `--backdrop-blur-modal` (value in `px`) |
+| `[others]` | `--` | `icon-filter` | `--icon-filter` |
 
-Additionally, `[theme.background]` automatically generates three variables:
+Additionally, `[background]` automatically generates three variables:
 
 | Field | Generated variable |
 |---|---|
@@ -213,7 +213,7 @@ Additionally, `[theme.background]` automatically generates three variables:
 
 ## Fonts (v1 and v2)
 
-Both versions support custom fonts. In v1 they go inside the `fonts` array in `theme.json`; in v2 as `[[theme.fonts]]` in `Definition.toml`.
+Both versions support custom fonts. In v1 they go inside the `fonts` array in `theme.json`; in v2 as `[[fonts]]` in `Definition.toml`.
 
 ### Fields
 
@@ -245,7 +245,7 @@ Both versions support custom fonts. In v1 they go inside the `fonts` array in `t
 ### v2 example (TOML)
 
 ```toml
-[[theme.fonts]]
+[[fonts]]
 family = "MyFont"
 src = "fonts/my-font.woff2"
 format = "woff2"
@@ -418,24 +418,54 @@ If you want to share your theme with the community, send a PR to the [official T
 
 ```
 src/
-└── <your-username>/
-    └── <theme-name>/
-        ├── showcase.png
-        └── Name:Author.zip
+  <Author>/
+    <Theme>/
+      theme.md
+      V1/
+        Author_Theme.zip
+        Showcase.png       (optional)
+        changelog.md       (optional)
+      V2/                  (optional)
+        ...
 ```
 
-### Files
+Each theme lives under `src/<Author>/<Theme>/` with versioned subdirectories (`V1`, `V2`, ...).
 
-| File | Description |
-|---|---|
-| `showcase.png` | Screenshot of the launcher with your theme applied, for the gallery. |
-| `Name:Author.zip` | ZIP with the theme directory inside. Name follows the `Name:Author.zip` convention. |
+### Theme files
+
+| File | Required | Description |
+|---|---|---|
+| `theme.md` | Yes | Markdown with the theme description and README |
+| `Author_Theme.zip` | Yes | Theme package (format `Author_Theme.zip`) |
+| `Showcase.png` | No | Version preview screenshot (case-insensitive) |
+| `changelog.md` | No | Changelog for that version |
+
+### theme.md
+
+```markdown
+# My Theme
+
+Markdown description of the theme, its inspiration, etc.
+```
+
+### changelog.md
+
+```markdown
+# V1
+
+- First release
+- Dark theme with green accents
+```
+
+### ZIP naming convention
+
+The ZIP is named `Author_Theme.zip` (underscore, no spaces or colons).
 
 ### ZIP contents
 
 For v2 (recommended):
 ```
-Name:Author.zip
+Author_Theme.zip
 └── <theme-name>/
     ├── Meta.toml
     ├── Definition.toml
@@ -445,7 +475,7 @@ Name:Author.zip
 
 For v1 (legacy):
 ```
-Name:Author.zip
+Author_Theme.zip
 └── <theme-name>/
     ├── theme.json
     └── bg.EXTENSION (optional)

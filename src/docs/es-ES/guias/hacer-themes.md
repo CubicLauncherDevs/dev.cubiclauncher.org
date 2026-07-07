@@ -123,32 +123,31 @@ injects_css = false
 Define la apariencia del tema:
 
 ```toml
-[theme]
 
-[theme.background]
+[background]
 reference_path = "bg.webp"
 image_blur = 10.0
 image_opacity = 0.5
 
-[theme.colors]
+[colors]
 accent = "#ff0000"
 "accent-rgb" = "255, 0, 0"
 
-[theme.text]
+[text]
 primary = "#ffffff"
 secondary = "#cccccc"
 
-[theme.borders]
+[borders]
 color = "#333333"
 radius = "8px"
 "radius-sm" = "4px"
 
-[theme.shadows]
+[shadows]
 "shadow-sm" = "0 1px 3px rgba(0,0,0,0.5)"
 "shadow-md" = "0 4px 6px rgba(0,0,0,0.3)"
 "glow-accent" = "0 0 12px rgba(255,0,0,0.3)"
 
-[theme.backgrounds]
+[backgrounds]
 main = "#1a1a2e"
 sidebar = "#16213e"
 card = "#0f3460"
@@ -156,13 +155,13 @@ card = "#0f3460"
 overlay = "rgba(0,0,0,0.7)"
 input = "#1a1a2e"
 
-[theme.layout]
+[layout]
 "font-family" = "'Inter', sans-serif"
 "font-size-base" = "14px"
 "font-size-sm" = "12px"
 "font-size-lg" = "18px"
 
-[theme.others]
+[others]
 "icon-filter" = "invert(1)"
 "color-success" = "#22c55e"
 "color-error" = "#ef4444"
@@ -172,11 +171,11 @@ input = "#1a1a2e"
 "scrollbar-track" = "#1a1a2e"
 "scrollbar-thumb" = "#e94560"
 
-[theme.backdrop]
+[backdrop]
 dropdown = 10.0
 modal = 4.0
 
-[[theme.fonts]]
+[[fonts]]
 family = "MiFuente"
 src = "fonts/mi-fuente.woff2"
 format = "woff2"
@@ -190,16 +189,16 @@ Cada sección de `Definition.toml` se aplana a variables CSS con un prefijo espe
 
 | Sección | Prefijo CSS | Ejemplo clave | Genera |
 |---|---|---|---|
-| `[theme.colors]` | `--` | `accent` | `--accent` |
-| `[theme.text]` | `--text-` | `primary` | `--text-primary` |
-| `[theme.borders]` | `--border-` | `color` | `--border-color` |
-| `[theme.shadows]` | `--` | `shadow-sm` | `--shadow-sm` |
-| `[theme.backgrounds]` | `--bg-` | `main` | `--bg-main` |
-| `[theme.layout]` | `--` | `font-family` | `--font-family` |
-| `[theme.backdrop]` | `--backdrop-blur-` | `modal` | `--backdrop-blur-modal` (valor en `px`) |
-| `[theme.others]` | `--` | `icon-filter` | `--icon-filter` |
+| `[colors]` | `--` | `accent` | `--accent` |
+| `[text]` | `--text-` | `primary` | `--text-primary` |
+| `[borders]` | `--border-` | `color` | `--border-color` |
+| `[shadows]` | `--` | `shadow-sm` | `--shadow-sm` |
+| `[backgrounds]` | `--bg-` | `main` | `--bg-main` |
+| `[layout]` | `--` | `font-family` | `--font-family` |
+| `[backdrop]` | `--backdrop-blur-` | `modal` | `--backdrop-blur-modal` (valor en `px`) |
+| `[others]` | `--` | `icon-filter` | `--icon-filter` |
 
-Además, `[theme.background]` genera automáticamente tres variables:
+Además, `[background]` genera automáticamente tres variables:
 
 | Campo | Variable generada |
 |---|---|
@@ -213,7 +212,7 @@ Además, `[theme.background]` genera automáticamente tres variables:
 
 ## Fuentes (v1 y v2)
 
-Ambas versiones soportan fuentes personalizadas. En v1 van dentro del array `fonts` en `theme.json`; en v2 como array `[[theme.fonts]]` en `Definition.toml`.
+Ambas versiones soportan fuentes personalizadas. En v1 van dentro del array `fonts` en `theme.json`; en v2 como array `[[fonts]]` en `Definition.toml`.
 
 ### Campos
 
@@ -245,7 +244,7 @@ Ambas versiones soportan fuentes personalizadas. En v1 van dentro del array `fon
 ### Ejemplo v2 (TOML)
 
 ```toml
-[[theme.fonts]]
+[[fonts]]
 family = "MiFuente"
 src = "fonts/mi-fuente.woff2"
 format = "woff2"
@@ -412,30 +411,60 @@ Es útil para overrides CSS complejos que no pueden expresarse solo con variable
 
 ## Publicar un theme
 
-Si querés compartir tu theme con la comunidad, mandate un PR al [repositorio oficial de Themes](https://github.com/CubicLauncherDevs/Themes).
+Si querés compartir tu theme con la comunidad, mandá un PR al [repositorio oficial de Themes](https://github.com/CubicLauncherDevs/Themes).
 
 ### Estructura del repo
 
 ```
 src/
-└── <tu-usuario>/
-    └── <nombre-del-theme>/
-        ├── showcase.png
-        └── Nombre:Autor.zip
+  <Autor>/
+    <Theme>/
+      theme.md
+      V1/
+        Autor_Theme.zip
+        Showcase.png       (opcional)
+        changelog.md       (opcional)
+      V2/                  (opcional)
+        ...
 ```
 
-### Archivos
+Cada tema vive bajo `src/<Autor>/<Theme>/` con subcarpetas versionadas (`V1`, `V2`, ...).
 
-| Archivo | Descripción |
-|---|---|
-| `showcase.png` | Captura del launcher con tu theme aplicado para mostrarlo en la galería. |
-| `Nombre:Autor.zip` | ZIP con el directorio del theme adentro. El nombre sigue la convención `Nombre:Autor.zip`. |
+### Archivos del tema
+
+| Archivo | Obligatorio | Descripción |
+|---|---|---|
+| `theme.md` | Sí | Markdown con la descripción y README del tema |
+| `Autor_Theme.zip` | Sí | Paquete del tema (formato `Autor_Tema.zip`) |
+| `Showcase.png` | No | Vista previa de la versión (case-insensitive) |
+| `changelog.md` | No | Cambios de esa versión |
+
+### theme.md
+
+```markdown
+# Mi Tema
+
+Descripción en markdown del tema, su inspiración, etc.
+```
+
+### changelog.md
+
+```markdown
+# V1
+
+- Primer lanzamiento
+- Tema oscuro con acentos verdes
+```
+
+### Convención de nombre del ZIP
+
+El ZIP se nombra como `Autor_Tema.zip` (con guion bajo, sin espacios ni dos puntos).
 
 ### Contenido del ZIP
 
 Para v2 (recomendado):
 ```
-Nombre:Autor.zip
+Autor_Tema.zip
 └── <nombre-del-theme>/
     ├── Meta.toml
     ├── Definition.toml
@@ -445,7 +474,7 @@ Nombre:Autor.zip
 
 Para v1 (legacy):
 ```
-Nombre:Autor.zip
+Autor_Tema.zip
 └── <nombre-del-theme>/
     ├── theme.json
     └── bg.EXTENSION (opcional)
