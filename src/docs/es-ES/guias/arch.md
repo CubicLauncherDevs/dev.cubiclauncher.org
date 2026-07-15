@@ -2,16 +2,30 @@
 title: Instalación en Arch Linux | CubicLauncher
 ---
 
-# Arch Linux
-
 ## Instalación
 
-En Arch Linux se recomienda compilar CubicLauncher localmente utilizando el `PKGBUILD` oficial. No es necesario clonar el repositorio completo ni instalar dependencias manualmente: el propio `PKGBUILD` descarga el código fuente y `makepkg` se encarga de resolver e instalar las dependencias necesarias.
+CubicLauncher está disponible en el AUR (Arch User Repository). Puedes instalarlo con tu asistente de AUR preferido:
+
+```bash
+yay -S cubiclauncher
+```
+
+```bash
+paru -S cubiclauncher
+```
+
+Si no tienes `yay` o `paru` instalados, consulta su documentación:
+- [yay](https://github.com/Jguer/yay)
+- [paru](https://github.com/Morganamilo/paru)
+
+También puedes consultar el paquete en: <https://aur.archlinux.org/packages/cubiclauncher>
+
+Si prefieres compilar manualmente, también puedes utilizar el `PKGBUILD` oficial. No es necesario clonar el repositorio completo ni instalar dependencias manualmente: el propio `PKGBUILD` descarga el código fuente y `makepkg` se encarga de resolver e instalar las dependencias necesarias.
 
 <div class="my-6 flex gap-3 rounded-lg border border-yellow-500 bg-yellow-500/5 p-4 text-yellow-500">
 <div class="flex flex-col gap-1">
 <span class="text-sm font-bold uppercase tracking-wider text-yellow-400">
-La compilación local es obligatoria.
+La compilación local es opcional.
 </span>
 
 <div class="m-0 text-sm leading-relaxed text-neutral-400">
