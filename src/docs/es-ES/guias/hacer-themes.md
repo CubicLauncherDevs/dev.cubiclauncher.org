@@ -2,8 +2,6 @@
 title: Como hacer themes | CubicLauncher
 ---
 
-# Cómo hacer themes
-
 CubicLauncher te permite personalizar completamente la interfaz con temas. Cada tema define colores, fuentes, bordes y una imagen de fondo opcional.
 
 Actualmente existen **dos versiones** del sistema de themes. La **v1** (JSON, legacy) y la **v2** (TOML), siendo esta última la recomendada para themes nuevos.
@@ -86,7 +84,7 @@ El launcher detecta la versión automáticamente según qué archivos existan:
 | `version` | `string` | No | Versión del tema. Vacío por defecto. |
 | `type` | `string` | No | `"user"` para temas de usuario. Los `"builtin"` vienen incluidos. |
 | `bg_image` | `string?` | No | Nombre del archivo de imagen de fondo (relativo al directorio del tema). |
-| `bg_image_blur` | `string?` | No | Desenfoque del fondo como string (ej: `"10px"`). Se parsea a número; si no es válido, se ignora. |
+| `bg_image_blur` | `string?` | No | Desenfoque del fondo como string (ej: `"10px"`). Se parsea a número; si no es válido, se usa `0.0`. |
 | `bg_image_opacity` | `number?` | No | Opacidad del fondo (0 a 1, ej: `0.6`). |
 | `fonts` | `array` | No | Lista de fuentes personalizadas (ver sección Fuentes). Vacío por defecto. |
 | `variables` | `object` | Sí | Mapa de variables CSS. Claves y valores string. |
@@ -102,7 +100,6 @@ La v2 separa metadatos y definiciones en dos archivos TOML.
 Define los metadatos del tema:
 
 ```toml
-[meta]
 name = "Mi Tema"
 author = "TuNombre"
 version = "1.0.0"
@@ -116,7 +113,7 @@ injects_css = false
 | `author` | `string` | No | Autor del tema. Vacío por defecto. |
 | `version` | `string` | No | Versión semántica del tema. Vacío por defecto. |
 | `description` | `string` | No | Descripción breve del tema. Vacío por defecto. |
-| `injects_css` | `bool` | No | Si es `true` y existe `Inject.css`, se inyecta en la interfaz. `false` por defecto. |
+| `injects_css` | `bool` | No | Marcador informativo. Si existe `Inject.css`, se inyecta siempre independientemente de este valor. `false` por defecto. |
 
 ### `Definition.toml`
 
@@ -182,6 +179,8 @@ format = "woff2"
 weight = "400"
 style = "normal"
 ```
+
+> **Importante:** Las secciones en `Definition.toml` van **sin** el prefijo `theme.` (ej: `[background]`, `[colors]`, `[[fonts]]`). El prefijo `theme.` solo se usa si ambos archivos (`Meta.toml` + `Definition.toml`) se combinan en un solo TOML como `V2Theme`.
 
 ### Mapeo de secciones a variables CSS
 
@@ -252,14 +251,16 @@ weight = "400"
 style = "normal"
 ```
 
-> Las rutas de fuentes relativas se resuelven contra el directorio del tema. Si la ruta empieza con `/` o `file:`, se usa tal cual (ruta absoluta).
+> Las rutas de fuentes relativas se resuelven contra el directorio del tema. Si la ruta empieza con `/` o es una ruta absoluta, se usa tal cual. En v1 se reconoce `file:`, en v2 se reconoce `:` (ej: `C:\` en Windows).
+>
+> **Licencia:** Siempre debes incluir la licencia de la fuente al distribuir un tema que use fuentes personalizadas. Usa únicamente fuentes que tengas derecho a redistribuir.
 
 ---
 
 ## Imagen de fondo
 
 ### v1: `bg_image`
-### v2: `reference_path` (dentro de `[theme.background]`)
+### v2: `reference_path` (dentro de `[background]`)
 
 El campo referencia un archivo dentro de la carpeta del tema (ej: `bg.jpg`, `bg.webp`). CubicLauncher aplica las siguientes validaciones:
 
@@ -289,7 +290,7 @@ Estas son las variables que el frontend de CubicLauncher consume. Puedes definir
 
 ### Colores de fondo
 
-v1: `--bg-*` en `variables` | v2: `[theme.backgrounds]`
+v1: `--bg-*` en `variables` | v2: `[backgrounds]`
 
 | Variable | Descripción |
 |---|---|
@@ -302,7 +303,7 @@ v1: `--bg-*` en `variables` | v2: `[theme.backgrounds]`
 
 ### Colores de texto
 
-v1: `--text-*` en `variables` | v2: `[theme.text]`
+v1: `--text-*` en `variables` | v2: `[text]`
 
 | Variable | Descripción |
 |---|---|
@@ -312,7 +313,7 @@ v1: `--text-*` en `variables` | v2: `[theme.text]`
 
 ### Acento
 
-v1: `--*` en `variables` | v2: `[theme.colors]`
+v1: `--*` en `variables` | v2: `[colors]`
 
 | Variable | Descripción |
 |---|---|
@@ -323,7 +324,7 @@ v1: `--*` en `variables` | v2: `[theme.colors]`
 
 ### Bordes
 
-v1: `--border-*` en `variables` | v2: `[theme.borders]`
+v1: `--border-*` en `variables` | v2: `[borders]`
 
 | Variable | Descripción |
 |---|---|
@@ -333,7 +334,7 @@ v1: `--border-*` en `variables` | v2: `[theme.borders]`
 
 ### Sombras
 
-v1: `--shadow-*` en `variables` | v2: `[theme.shadows]`
+v1: `--shadow-*` en `variables` | v2: `[shadows]`
 
 | Variable | Descripción |
 |---|---|
@@ -343,7 +344,7 @@ v1: `--shadow-*` en `variables` | v2: `[theme.shadows]`
 
 ### Estados
 
-v1: `--color-*` en `variables` | v2: `[theme.others]`
+v1: `--color-*` en `variables` | v2: `[others]`
 
 | Variable | Descripción |
 |---|---|
@@ -358,7 +359,7 @@ v1: `--color-*` en `variables` | v2: `[theme.others]`
 
 ### Scrollbar
 
-v1: `--scrollbar-*` en `variables` | v2: `[theme.others]`
+v1: `--scrollbar-*` en `variables` | v2: `[others]`
 
 | Variable | Descripción |
 |---|---|
@@ -367,7 +368,7 @@ v1: `--scrollbar-*` en `variables` | v2: `[theme.others]`
 
 ### Tipografía
 
-v1: `--font-*` en `variables` | v2: `[theme.layout]`
+v1: `--font-*` en `variables` | v2: `[layout]`
 
 | Variable | Descripción |
 |---|---|
@@ -378,7 +379,7 @@ v1: `--font-*` en `variables` | v2: `[theme.layout]`
 
 ### Iconos
 
-v1: `--icon-*` en `variables` | v2: `[theme.others]`
+v1: `--icon-*` en `variables` | v2: `[others]`
 
 | Variable | Descripción |
 |---|---|
@@ -387,7 +388,7 @@ v1: `--icon-*` en `variables` | v2: `[theme.others]`
 
 ### Backdrop blur (solo v2)
 
-v2: `[theme.backdrop]`
+v2: `[backdrop]`
 
 | Variable | Descripción |
 |---|---|
@@ -398,7 +399,7 @@ v2: `[theme.backdrop]`
 
 ## Inject.css (solo v2)
 
-Si en `Meta.toml` se define `injects_css = true` y existe un archivo `Inject.css` en el directorio del tema, su contenido se inyecta directamente en la interfaz.
+Si existe un archivo `Inject.css` en el directorio del tema, su contenido se inyecta directamente en la interfaz (independientemente del valor de `injects_css` en `Meta.toml`).
 
 Es útil para overrides CSS complejos que no pueden expresarse solo con variables, como:
 
@@ -406,6 +407,8 @@ Es útil para overrides CSS complejos que no pueden expresarse solo con variable
 - `@media` queries
 - Selectores anidados
 - Pseudo-elementos (`::before`, `::after`)
+
+---
 
 ---
 

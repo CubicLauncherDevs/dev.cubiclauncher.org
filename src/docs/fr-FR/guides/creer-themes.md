@@ -2,8 +2,6 @@
 title: Comment créer des thèmes | CubicLauncher
 ---
 
-# Comment créer des thèmes
-
 CubicLauncher vous permet de personnaliser entièrement l'interface avec des thèmes. Chaque thème définit des couleurs, des polices, des bordures et une image de fond optionnelle.
 
 Il existe actuellement **deux versions** du système de thèmes. La **v1** (JSON, legacy) et la **v2** (TOML), cette dernière étant recommandée pour les nouveaux thèmes.
@@ -86,7 +84,7 @@ Le lanceur détecte automatiquement la version en fonction des fichiers présent
 | `version` | `string` | Non | Version du thème. Vide par défaut. |
 | `type` | `string` | Non | `"user"` pour les thèmes utilisateur. Les thèmes `"builtin"` sont inclus dans le lanceur. |
 | `bg_image` | `string?` | Non | Nom du fichier d'image de fond (relatif au dossier du thème). |
-| `bg_image_blur` | `string?` | Non | Flou de fond sous forme de chaîne (ex: `"10px"`). Converti en nombre ; ignoré si invalide. |
+| `bg_image_blur` | `string?` | Non | Flou de fond sous forme de chaîne (ex: `"10px"`). Converti en nombre ; par défaut `0.0` si invalide. |
 | `bg_image_opacity` | `number?` | Non | Opacité du fond (0 à 1, ex: `0.6`). |
 | `fonts` | `array` | Non | Liste des polices personnalisées (voir section Polices). Vide par défaut. |
 | `variables` | `object` | Oui | Tableau des variables CSS. Clés et valeurs sont des chaînes. |
@@ -102,7 +100,6 @@ La v2 sépare les métadonnées et les définitions dans deux fichiers TOML.
 Définit les métadonnées du thème :
 
 ```toml
-[meta]
 name = "Mon Thème"
 author = "VotreNom"
 version = "1.0.0"
@@ -116,7 +113,7 @@ injects_css = false
 | `author` | `string` | Non | Auteur du thème. Vide par défaut. |
 | `version` | `string` | Non | Version sémantique du thème. Vide par défaut. |
 | `description` | `string` | Non | Brève description du thème. Vide par défaut. |
-| `injects_css` | `bool` | Non | Si `true` et que `Inject.css` existe, il est injecté dans l'interface. `false` par défaut. |
+| `injects_css` | `bool` | Non | Marqueur informatif. Si `Inject.css` existe, il est toujours injecté indépendamment de cette valeur. `false` par défaut. |
 
 ### `Definition.toml`
 
@@ -182,6 +179,8 @@ format = "woff2"
 weight = "400"
 style = "normal"
 ```
+
+> **Important :** Les sections dans `Definition.toml` vont **sans** le préfixe `theme.` (ex: `[background]`, `[colors]`, `[[fonts]]`). Le préfixe `theme.` n'est utilisé que lorsque les deux fichiers (`Meta.toml` + `Definition.toml`) sont combinés en un seul TOML en tant que `V2Theme`.
 
 ### Correspondance sections → variables CSS
 
@@ -252,14 +251,16 @@ weight = "400"
 style = "normal"
 ```
 
-> Les chemins de polices relatifs sont résolus par rapport au dossier du thème. Si le chemin commence par `/` ou `file:`, il est utilisé tel quel (chemin absolu).
+> Les chemins de polices relatifs sont résolus par rapport au dossier du thème. Si le chemin commence par `/` ou est un chemin absolu, il est utilisé tel quel. La v1 reconnaît `file:`, la v2 reconnaît `:` (ex: `C:\` sous Windows).
+>
+> **Licence :** Vous devez toujours inclure la licence de la police lorsque vous distribuez un thème qui utilise des polices personnalisées. Utilisez uniquement des polices que vous avez le droit de redistribuer.
 
 ---
 
 ## Image de fond
 
 ### v1 : `bg_image`
-### v2 : `reference_path` (dans `[theme.background]`)
+### v2 : `reference_path` (dans `[background]`)
 
 Le champ référence un fichier dans le dossier du thème (ex: `bg.jpg`, `bg.webp`). CubicLauncher applique les validations suivantes :
 
@@ -289,7 +290,7 @@ Voici les variables consommées par le frontend de CubicLauncher. Vous pouvez le
 
 ### Couleurs de fond
 
-v1 : `--bg-*` dans `variables` | v2 : `[theme.backgrounds]`
+v1 : `--bg-*` dans `variables` | v2 : `[backgrounds]`
 
 | Variable | Description |
 |---|---|
@@ -302,7 +303,7 @@ v1 : `--bg-*` dans `variables` | v2 : `[theme.backgrounds]`
 
 ### Couleurs de texte
 
-v1 : `--text-*` dans `variables` | v2 : `[theme.text]`
+v1 : `--text-*` dans `variables` | v2 : `[text]`
 
 | Variable | Description |
 |---|---|
@@ -312,7 +313,7 @@ v1 : `--text-*` dans `variables` | v2 : `[theme.text]`
 
 ### Accent
 
-v1 : `--*` dans `variables` | v2 : `[theme.colors]`
+v1 : `--*` dans `variables` | v2 : `[colors]`
 
 | Variable | Description |
 |---|---|
@@ -323,7 +324,7 @@ v1 : `--*` dans `variables` | v2 : `[theme.colors]`
 
 ### Bordures
 
-v1 : `--border-*` dans `variables` | v2 : `[theme.borders]`
+v1 : `--border-*` dans `variables` | v2 : `[borders]`
 
 | Variable | Description |
 |---|---|
@@ -333,7 +334,7 @@ v1 : `--border-*` dans `variables` | v2 : `[theme.borders]`
 
 ### Ombres
 
-v1 : `--shadow-*` dans `variables` | v2 : `[theme.shadows]`
+v1 : `--shadow-*` dans `variables` | v2 : `[shadows]`
 
 | Variable | Description |
 |---|---|
@@ -343,7 +344,7 @@ v1 : `--shadow-*` dans `variables` | v2 : `[theme.shadows]`
 
 ### Couleurs d'état
 
-v1 : `--color-*` dans `variables` | v2 : `[theme.others]`
+v1 : `--color-*` dans `variables` | v2 : `[others]`
 
 | Variable | Description |
 |---|---|
@@ -358,7 +359,7 @@ v1 : `--color-*` dans `variables` | v2 : `[theme.others]`
 
 ### Barre de défilement
 
-v1 : `--scrollbar-*` dans `variables` | v2 : `[theme.others]`
+v1 : `--scrollbar-*` dans `variables` | v2 : `[others]`
 
 | Variable | Description |
 |---|---|
@@ -367,7 +368,7 @@ v1 : `--scrollbar-*` dans `variables` | v2 : `[theme.others]`
 
 ### Typographie
 
-v1 : `--font-*` dans `variables` | v2 : `[theme.layout]`
+v1 : `--font-*` dans `variables` | v2 : `[layout]`
 
 | Variable | Description |
 |---|---|
@@ -378,7 +379,7 @@ v1 : `--font-*` dans `variables` | v2 : `[theme.layout]`
 
 ### Icônes
 
-v1 : `--icon-*` dans `variables` | v2 : `[theme.others]`
+v1 : `--icon-*` dans `variables` | v2 : `[others]`
 
 | Variable | Description |
 |---|---|
@@ -387,7 +388,7 @@ v1 : `--icon-*` dans `variables` | v2 : `[theme.others]`
 
 ### Flou d'arrière-plan (v2 seulement)
 
-v2 : `[theme.backdrop]`
+v2 : `[backdrop]`
 
 | Variable | Description |
 |---|---|
@@ -398,7 +399,7 @@ v2 : `[theme.backdrop]`
 
 ## Inject.css (v2 seulement)
 
-Si `injects_css = true` est défini dans `Meta.toml` et qu'un fichier `Inject.css` existe dans le dossier du thème, son contenu est injecté directement dans l'interface.
+Si un fichier `Inject.css` existe dans le dossier du thème, son contenu est injecté directement dans l'interface (indépendamment de la valeur de `injects_css` dans `Meta.toml`).
 
 Il est utile pour les overrides CSS complexes qui ne peuvent pas être exprimés uniquement avec des variables, comme :
 
@@ -406,6 +407,8 @@ Il est utile pour les overrides CSS complexes qui ne peuvent pas être exprimés
 - Requêtes `@media`
 - Sélecteurs imbriqués
 - Pseudo-éléments (`::before`, `::after`)
+
+---
 
 ---
 
