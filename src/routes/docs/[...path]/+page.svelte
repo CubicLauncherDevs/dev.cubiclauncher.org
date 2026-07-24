@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { browser } from '$app/environment';
   import { goto } from '$app/navigation';
   import Header from '$lib/components/global/Header.svelte';
   import Footer from '$lib/components/global/Footer.svelte';
@@ -7,11 +8,21 @@
   let { data } = $props();
 
   function defaultLang() {
-    return data.page === 'doc' ? data.lang : 'es-ES';
+    if (data.page !== 'doc') {
+      if (browser) {
+        const stored = localStorage.getItem('docs-lang');
+        if (stored && data.langs.some(l => l.code === stored)) return stored;
+      }
+      return 'es-ES';
+    }
+    return data.lang;
   }
 
   let selectedLang = $state(defaultLang());
   let sidebarOpen = $state(false);
+  let langOpen = $state(false);
+  let langBtn: HTMLButtonElement;
+  let langMenuStyle = $state('');
 
   $effect(() => {
     selectedLang = defaultLang();
@@ -20,7 +31,18 @@
   let currentLang = $derived(data.langs.find(l => l.code === selectedLang) || data.langs[0]);
   let langTree = $derived(data.tree.find(l => l.code === currentLang?.code));
 
+  function openLangMenu() {
+    langOpen = true;
+    if (langBtn) {
+      const r = langBtn.getBoundingClientRect();
+      langMenuStyle = `top:${r.bottom + 4}px;left:${r.left}px;width:${r.width}px`;
+    }
+  }
+
   function switchLang(code: string) {
+    localStorage.setItem('docs-lang', code);
+    selectedLang = code;
+    langOpen = false;
     if (data.page === 'doc') {
       const articleName = data.slug.split('/').pop();
       for (const lang of data.tree) {
@@ -36,8 +58,6 @@
         }
       }
       goto('/docs');
-    } else {
-      selectedLang = code;
     }
   }
 
@@ -61,14 +81,11 @@
     <div class="docs-sidebar-inner">
       <div class="docs-lang-selector">
         <h4 class="docs-sidebar-title">Documentación</h4>
-        <div class="docs-lang-pills">
-          {#each data.langs as lang}
-            <button
-              class="docs-lang-pill"
-              class:active={lang.code === currentLang?.code}
-              onclick={() => switchLang(lang.code)}
-            >{lang.label}</button>
-          {/each}
+        <div class="docs-lang-dropdown">
+          <button bind:this={langBtn} class="docs-lang-btn" onclick={openLangMenu}>
+            <span>{currentLang?.label}</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class:lang-open={langOpen}><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
         </div>
       </div>
       {#if langTree}
@@ -128,6 +145,19 @@
       </article>
     {/if}
   </main>
+
+  {#if langOpen}
+    <div class="docs-lang-backdrop" onclick={() => langOpen = false} role="presentation"></div>
+    <ul class="docs-lang-menu" style={langMenuStyle}>
+      {#each data.langs as lang}
+        <li>
+          <button class="docs-lang-option" class:active={lang.code === currentLang?.code} onclick={() => switchLang(lang.code)}>
+            {lang.label}
+          </button>
+        </li>
+      {/each}
+    </ul>
+  {/if}
 </div>
 
 <Footer />

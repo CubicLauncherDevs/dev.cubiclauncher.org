@@ -2,8 +2,6 @@
 title: Cómo usar CubicLauncher
 ---
 
-# Como usar CubicLauncher?
-
 Muchas personas nos han dicho sobre como se usa nuestro launcher, lo que igual se entiende ya que tenemos una interfaz bastante unica. 
 Aca te mostraremos algunas cosas basicas mas a detalle que no estan en el tutorial.
 
