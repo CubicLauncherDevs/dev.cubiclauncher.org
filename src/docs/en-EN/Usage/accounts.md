@@ -14,30 +14,47 @@ Setting up a user in CubicLauncher is super easy, just follow these steps:
 Click on the user section in the sidebar.
 
 <div class="my-4 flex justify-center">
-	<img src="/https://i.ibb.co/VYdg9N2L/step1.png" alt="Launcher UI" class="rounded-lg border border-neutral-800 max-w-full" />
+	<img src="https://i.imgur.com/Ex1yCdz.png" alt="Launcher UI" class="rounded-lg border border-neutral-800 max-w-full" />
 </div>
 
 ### Step 2
-Clicking it will show a modal where you can choose whether to create an offline account or sign in with Microsoft.
+Clicking it will show a modal where you can choose whether to create an offline account, sign in with Microsoft, or use an external authentication server (Authlib) like https://ely.by/.
 
 <div class="my-4 flex justify-center">
-	<img src="/docs/howto/step2.png" alt="easter egg xddd" class="rounded-lg border border-neutral-800 max-w-full" />
+	<img src="https://i.imgur.com/z2q1yUh.png" alt="easter egg xddd" class="rounded-lg border border-neutral-800 max-w-full" />
 </div>
 
 ### Step 3
 Depending on what you chose, follow the steps on the screen.
 
+#### Offline
 If you chose offline, a text input will appear where you can enter your username.
 <div class="my-4 flex justify-center">
-	<img src="/docs/howto/step3.png" alt=">_<" class="rounded-lg border border-neutral-800 max-w-full" />
+	<img src="https://i.imgur.com/JawOIiW.png" alt=">_<" class="rounded-lg border border-neutral-800 max-w-full" />
 </div>
 
-If you chose Microsoft sign-in, the following modal will appear.
+#### Microsoft
+If you chose Microsoft sign-in and you already have a premium account in the launcher, a selector will appear where you can choose your existing account or add another one.
+
 <div class="my-4 flex justify-center">
-	<img src="/docs/howto/step4.png" alt="A launcher for launch them all." class="rounded-lg border border-neutral-800 max-w-full" />
+	<img src="https://i.imgur.com/Lqph5ft.png" alt="Microsoft account selector" class="rounded-lg border border-neutral-800 max-w-full" />
 </div>
 
-> What do I need to do?
+If you haven't set up an account before, an official Microsoft login screen will appear.
 
-Copy the code shown in that menu and go to the verification site ```https://www.microsoft.com/link```.
-Enter the code given by the launcher and sign in normally. When finished, the launcher will be logged in with your account.
+<div class="my-4 flex justify-center">
+	<img src="https://i.imgur.com/ZmlohG7.png" alt="Microsoft login" class="rounded-lg border border-neutral-800 max-w-full" />
+</div>
+
+#### Authlib (external servers)
+If you chose an external server (Authlib), you will first need to pick your authentication server. The most popular and recommended one is https://ely.by/.
+
+<div class="my-4 flex justify-center">
+	<img src="https://i.imgur.com/5ZS4pdK.png" alt="Select auth server" class="rounded-lg border border-neutral-800 max-w-full" />
+</div>
+
+After entering your server link, you will be asked to log in with your server account. If you are using https://ely.by/, it will ask for the email and password you use to register your account.
+
+<div class="my-4 flex justify-center">
+	<img src="https://i.imgur.com/p6NHuSx.png" alt="Auth login" class="rounded-lg border border-neutral-800 max-w-full" />
+</div>
