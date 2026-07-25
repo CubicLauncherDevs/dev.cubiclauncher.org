@@ -1,127 +1,131 @@
 ---
-title: How to make themes | CubicLauncher
+title: How to create themes | CubicLauncher
 ---
 
-CubicLauncher lets you fully customize the UI with themes. Each theme defines colors, fonts, borders, and an optional background image.
+CubicLauncher lets you fully customize the interface through **themes**. A theme defines the colors, fonts, borders, shadows and, optionally, a background image for the launcher.
 
-There are currently **two versions** of the theme system. **v1** (JSON, legacy) and **v2** (TOML), the latter being the recommended one for new themes.
+There are **two versions** of the theme system:
 
----
+| Version | Format | Status |
+|---|---|---|
+| **v2** | TOML (`Meta.toml` + `Definition.toml`) | ✅ **Recommended** for new themes |
+| **v1** | JSON (`theme.json`) | ⚠️ Legacy, kept for compatibility only |
 
-## Theme structure
+**Contents of this guide:**
 
-User themes go inside `.cubic/themes/`. Each theme is a folder containing the following files depending on the version:
-
-### v1 (JSON legacy)
-```
-.cubic/
-└── themes/
-    └── <id>/
-        ├── theme.json
-        └── bg.jpg (optional)
-```
-
-### v2 (TOML, recommended)
-```
-.cubic/
-└── themes/
-    └── <id>/
-        ├── Meta.toml
-        ├── Definition.toml
-        ├── Inject.css        (optional)
-        └── bg.jpg            (optional)
-```
-
-> The launcher **does not** load anything outside `.cubic` for security.
-
-### Version detection
-
-The launcher automatically detects the version based on which files exist:
-
-1. If `Meta.toml` exists → treated as **v2** (loads `Meta.toml` + `Definition.toml`)
-2. If `theme.json` exists → treated as **v1**
-3. If neither exists, the theme is ignored
+1. [Quick start](#quick-start) — create your first theme in 5 minutes
+2. [Where themes live and how they're detected](#where-themes-live)
+3. [v2 format (recommended)](#v2-format-toml--recommended)
+4. [v1 format (legacy)](#v1-format-json--legacy)
+5. [Shared reference](#shared-reference-v1-and-v2) — fonts, background image and CSS variables
+6. [Publishing your theme](#publishing-a-theme)
 
 ---
 
-## v1 — JSON format (legacy)
+## Quick start
 
-### Full schema
+Create a working v2 theme in three steps:
 
-```json
-{
-  "name": "My Theme",
-  "author": "YourName",
-  "version": "1.0.0",
-  "type": "user",
-  "bg_image": "bg.jpg",
-  "bg_image_blur": "10px",
-  "bg_image_opacity": 0.6,
-  "fonts": [
-    {
-      "family": "MyFont",
-      "src": "fonts/my-font.woff2",
-      "format": "woff2",
-      "weight": "400",
-      "style": "normal"
-    }
-  ],
-  "variables": {
-    "--bg-main": "#1a1a2e",
-    "--bg-sidebar": "#16213e",
-    "--text-primary": "#ffffff",
-    "--accent": "#e94560"
-  }
-}
+**1.** Create the theme folder inside `.cubic/themes/`:
+
+```
+.cubic/themes/my-theme/
 ```
 
-### Fields
-
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `name` | `string` | Yes | Visible theme name in the selector. |
-| `author` | `string` | No | Theme author. Empty by default. |
-| `version` | `string` | No | Theme version. Empty by default. |
-| `type` | `string` | No | `"user"` for user themes. `"builtin"` themes come with the launcher. |
-| `bg_image` | `string?` | No | Background image filename (relative to the theme directory). |
-| `bg_image_blur` | `string?` | No | Background blur as a string (e.g. `"10px"`). Parsed to a number; defaults to `0.0` if invalid. |
-| `bg_image_opacity` | `number?` | No | Background opacity (0 to 1, e.g. `0.6`). |
-| `fonts` | `array` | No | List of custom fonts (see Fonts section). Empty by default. |
-| `variables` | `object` | Yes | Map of CSS variables. Both keys and values are strings. |
-
----
-
-## v2 — TOML format (recommended)
-
-v2 separates metadata and definitions into two TOML files.
-
-### `Meta.toml`
-
-Defines theme metadata:
+**2.** Inside it, create `Meta.toml` with the metadata:
 
 ```toml
 name = "My Theme"
 author = "YourName"
 version = "1.0.0"
-description = "A dark minimalist theme"
+description = "A minimalist dark theme"
+```
+
+**3.** Create `Definition.toml` with the minimal appearance:
+
+```toml
+[backgrounds]
+main = "#1a1a2e"
+sidebar = "#16213e"
+card = "#0f3460"
+
+[text]
+primary = "#ffffff"
+secondary = "#cccccc"
+
+[colors]
+accent = "#e94560"
+```
+
+Restart (or reload) the launcher and select **My Theme** in the theme selector. Done! The rest of this guide covers every available option.
+
+---
+
+## Where themes live
+
+User themes go inside `.cubic/themes/`. Each theme is **a folder** whose contents depend on the version:
+
+**v2 (recommended):**
+
+```
+.cubic/
+└── themes/
+    └── <id>/
+        ├── Meta.toml          # metadata (name, author, version…)
+        ├── Definition.toml    # appearance (colors, fonts, background…)
+        ├── Inject.css         # (optional) advanced CSS
+        └── bg.jpg             # (optional) background image
+```
+
+**v1 (legacy):**
+
+```
+.cubic/
+└── themes/
+    └── <id>/
+        ├── theme.json         # everything in a single file
+        └── bg.jpg             # (optional) background image
+```
+
+> ⚠️ For security reasons, the launcher **does not load anything** outside `.cubic`.
+
+### How the version is detected
+
+The launcher automatically decides which version to use based on which files it finds, in this order:
+
+1. Does `Meta.toml` exist? → Treated as **v2** (loads `Meta.toml` + `Definition.toml`).
+2. If not, does `theme.json` exist? → Treated as **v1**.
+3. If neither exists → the theme is **ignored**.
+
+---
+
+## v2 format (TOML) — Recommended
+
+v2 splits the theme into two files: `Meta.toml` (who and what the theme is) and `Definition.toml` (how it looks).
+
+### `Meta.toml` — Metadata
+
+```toml
+name = "My Theme"
+author = "YourName"
+version = "1.0.0"
+description = "A minimalist dark theme"
 injects_css = false
 ```
 
-| Field | Type | Required | Description |
+| Field | Type | Required? | Description |
 |---|---|---|---|
-| `name` | `string` | Yes | Visible theme name. |
+| `name` | `string` | **Yes** | Theme name shown in the selector. |
 | `author` | `string` | No | Theme author. Empty by default. |
 | `version` | `string` | No | Semantic version of the theme. Empty by default. |
-| `description` | `string` | No | Brief theme description. Empty by default. |
-| `injects_css` | `bool` | No | Informational marker. If `Inject.css` exists, it is always injected regardless of this value. `false` by default. |
+| `description` | `string` | No | Short description. Empty by default. |
+| `injects_css` | `bool` | No | Informational only. If `Inject.css` exists, it is **always injected**, regardless of this value. `false` by default. |
 
-### `Definition.toml`
+### `Definition.toml` — Appearance
 
-Defines the theme appearance:
+Each **section** of the file groups one kind of visual property. Full example:
 
 ```toml
-
-
 [background]
 reference_path = "bg.webp"
 image_blur = 10.0
@@ -181,13 +185,13 @@ weight = "400"
 style = "normal"
 ```
 
-> **Important:** Sections in `Definition.toml` go **without** the `theme.` prefix (e.g. `[background]`, `[colors]`, `[[fonts]]`). The `theme.` prefix is only used when both files (`Meta.toml` + `Definition.toml`) are combined into a single TOML as `V2Theme`.
+> **Important:** sections are written **without** the `theme.` prefix (i.e. `[background]`, `[colors]`, `[[fonts]]`). The `theme.` prefix only applies if you merge both files into a single TOML as a `V2Theme`.
 
-### Section to CSS variable mapping
+### How sections map to CSS variables
 
-Each section of `Definition.toml` is flattened to CSS variables with a specific prefix:
+Each key in `Definition.toml` is "flattened" into a CSS variable with a prefix depending on its section:
 
-| Section | CSS prefix | Key example | Generates |
+| Section | CSS prefix | Example key | Generated variable |
 |---|---|---|---|
 | `[colors]` | `--` | `accent` | `--accent` |
 | `[text]` | `--text-` | `primary` | `--text-primary` |
@@ -195,10 +199,13 @@ Each section of `Definition.toml` is flattened to CSS variables with a specific 
 | `[shadows]` | `--` | `shadow-sm` | `--shadow-sm` |
 | `[backgrounds]` | `--bg-` | `main` | `--bg-main` |
 | `[layout]` | `--` | `font-family` | `--font-family` |
-| `[backdrop]` | `--backdrop-blur-` | `modal` | `--backdrop-blur-modal` (value in `px`) |
 | `[others]` | `--` | `icon-filter` | `--icon-filter` |
+| `[backdrop]` | `--backdrop-blur-` | `modal` | `--backdrop-blur-modal` |
 
-Additionally, `[background]` automatically generates three variables:
+**Special cases:**
+
+- `[backdrop]` automatically appends `px` to the value: `dropdown = 10.0` → `--backdrop-blur-dropdown: 10px`.
+- `[background]` (singular — the background image) automatically generates these three variables:
 
 | Field | Generated variable |
 |---|---|
@@ -206,25 +213,97 @@ Additionally, `[background]` automatically generates three variables:
 | `image_blur = 10.0` | `--bg-image-blur: 10px` |
 | `image_opacity = 0.5` | `--bg-image-opacity: 0.5` |
 
-> **Note:** `backdrop` automatically appends `px` to the value (e.g. `dropdown = 10.0` → `--backdrop-blur-dropdown: 10px`).
+### `Inject.css` — Advanced CSS (optional)
+
+If the theme directory contains an `Inject.css` file, its contents are injected directly into the interface (**always**, regardless of the `injects_css` value in `Meta.toml`).
+
+It's useful for everything that can't be expressed with CSS variables alone:
+
+- `@keyframes` and custom animations
+- `@media` queries
+- Nested selectors
+- Pseudo-elements (`::before`, `::after`)
 
 ---
 
-## Fonts (v1 and v2)
+## v1 format (JSON) — Legacy
 
-Both versions support custom fonts. In v1 they go inside the `fonts` array in `theme.json`; in v2 as `[[fonts]]` in `Definition.toml`.
+> Use v1 only to maintain existing themes. For new themes, use [v2](#v2-format-toml--recommended).
 
-### Fields
+The whole theme is defined in a single `theme.json` file:
 
-| Field | Type | Required | Description |
+```json
+{
+  "name": "My Theme",
+  "author": "YourName",
+  "version": "1.0.0",
+  "type": "user",
+  "bg_image": "bg.jpg",
+  "bg_image_blur": "10px",
+  "bg_image_opacity": 0.6,
+  "fonts": [
+    {
+      "family": "MyFont",
+      "src": "fonts/my-font.woff2",
+      "format": "woff2",
+      "weight": "400",
+      "style": "normal"
+    }
+  ],
+  "variables": {
+    "--bg-main": "#1a1a2e",
+    "--bg-sidebar": "#16213e",
+    "--text-primary": "#ffffff",
+    "--accent": "#e94560"
+  }
+}
+```
+
+| Field | Type | Required? | Description |
 |---|---|---|---|
-| `family` | `string` | Yes | Font family name (used in `font-family`). |
-| `src` | `string` | Yes | Path to the font file (relative to the theme directory, or absolute). |
-| `format` | `string?` | No | Font format (`woff2`, `ttf`, `otf`, etc.). |
-| `weight` | `string?` | No | Font weight (`400`, `700`, `bold`, etc.). |
-| `style` | `string?` | No | Font style (`normal`, `italic`, `oblique`). |
+| `name` | `string` | **Yes** | Theme name shown in the selector. |
+| `variables` | `object` | **Yes** | Map of CSS variables. String keys and values. Written as-is, `--` included (see [CSS variables](#available-css-variables)). |
+| `author` | `string` | No | Theme author. Empty by default. |
+| `version` | `string` | No | Theme version. Empty by default. |
+| `type` | `string` | No | `"user"` for user themes. `"builtin"` themes ship with the launcher. |
+| `bg_image` | `string?` | No | Background image file name, relative to the theme directory. |
+| `bg_image_blur` | `string?` | No | Background blur as a string (e.g. `"10px"`). Parsed to a number; if invalid, `0.0` is used. |
+| `bg_image_opacity` | `number?` | No | Background opacity, from 0 to 1 (e.g. `0.6`). |
+| `fonts` | `array` | No | List of custom fonts (see [Fonts](#fonts)). Empty by default. |
 
-### v1 example (JSON)
+> In v1, `bg_image_blur` and `bg_image_opacity` remain separate fields in `ThemeResponse` — they are **not** turned into CSS variables (unlike v2).
+
+---
+
+## Shared reference (v1 and v2)
+
+### Fonts
+
+Both versions support custom fonts with the same fields. Only where they are declared changes:
+
+- **v2:** `[[fonts]]` blocks in `Definition.toml`
+- **v1:** `fonts` array in `theme.json`
+
+| Field | Type | Required? | Description |
+|---|---|---|---|
+| `family` | `string` | **Yes** | Font family name (the one you later use in `font-family`). |
+| `src` | `string` | **Yes** | Path to the font file, relative to the theme directory (or absolute). |
+| `format` | `string?` | No | File format: `woff2`, `ttf`, `otf`, etc. |
+| `weight` | `string?` | No | Weight: `400`, `700`, `bold`, etc. |
+| `style` | `string?` | No | Style: `normal`, `italic`, `oblique`. |
+
+**v2 example (TOML):**
+
+```toml
+[[fonts]]
+family = "MyFont"
+src = "fonts/my-font.woff2"
+format = "woff2"
+weight = "400"
+style = "normal"
+```
+
+**v1 example (JSON):**
 
 ```json
 {
@@ -241,39 +320,34 @@ Both versions support custom fonts. In v1 they go inside the `fonts` array in `t
 }
 ```
 
-### v2 example (TOML)
+**Path resolution:**
 
-```toml
-[[fonts]]
-family = "MyFont"
-src = "fonts/my-font.woff2"
-format = "woff2"
-weight = "400"
-style = "normal"
-```
+- **Relative** paths are resolved against the theme directory.
+- Paths starting with `/` (or absolute paths) are used as-is.
+- To detect absolute paths: v1 recognizes the `file:` prefix; v2 recognizes `:` (for example `C:\` on Windows).
 
-> Relative font paths are resolved against the theme directory. If the path starts with `/` or is an absolute path, it is used as-is. v1 recognizes `file:`, v2 recognizes `:` (e.g. `C:\` on Windows).
->
-> **License:** You must always include the font license when distributing a theme that uses custom fonts. Only use fonts that you have the right to redistribute.
+> ⚖️ **License:** when distributing a theme with custom fonts, always include the font's license and only use fonts you have the right to redistribute.
 
----
+### Background image
 
-## Background image
+The field referencing the image depends on the version:
 
-### v1: `bg_image`
-### v2: `reference_path` (inside `[background]`)
+- **v2:** `reference_path` inside `[background]`
+- **v1:** `bg_image` in `theme.json`
 
-The field references a file inside the theme directory (e.g. `bg.jpg`, `bg.webp`). CubicLauncher applies the following validations:
+In both cases it points to a file inside the theme folder (e.g. `bg.jpg`, `bg.webp`).
 
-1. **Checks the actual type** via magic number using the `infer` library. Does not trust the file extension.
-2. **Does not load images larger than 25 MB** for safety and efficiency. If exceeded, the background is ignored and a warning is shown.
-3. **Only accepts valid image formats** (PNG, JPG, GIF, WEBP, etc.).
+**Validations applied by the launcher:**
 
-If the launcher cannot load the image (corrupt file, invalid format, too heavy), it ignores it and shows no background.
+1. **Checks the real file type** via *magic number* (using the `infer` library); it does not trust the file extension.
+2. **Rejects images larger than 25 MB** for security and efficiency. If exceeded, the background is ignored and a warning is shown.
+3. **Only accepts valid image formats:** PNG, JPG, GIF, WEBP, etc.
 
-### Background CSS variables (automatic)
+If the image cannot be loaded (corrupted file, invalid format, too heavy), the launcher simply ignores it and shows no background.
 
-| Variable | Origin | Description |
+**Background-related CSS variables:**
+
+| Variable | Source | Description |
 |---|---|---|
 | `--bg-image` | Internal (frontend) | URL of the loaded image. |
 | `--bg-image-loaded` | Internal (frontend) | `0` while loading, `1` when ready. |
@@ -281,17 +355,11 @@ If the launcher cannot load the image (corrupt file, invalid format, too heavy),
 | `--bg-image-blur` | v2: `image_blur` | Blur in pixels (v2 only). |
 | `--bg-image-opacity` | v2: `image_opacity` | Background opacity (v2 only). |
 
-> In v1, `bg_image_blur` and `bg_image_opacity` are kept as separate fields in `ThemeResponse`, not as CSS variables.
+### Available CSS variables
 
----
+This is the full list of variables consumed by the frontend. In **v1** they are written as-is (with `--`) inside `variables`; in **v2** they are written **without** the prefix, in the indicated section.
 
-## Available CSS variables
-
-These are the variables that the CubicLauncher frontend consumes. You can define them in `variables` (v1) or in the corresponding sections of `Definition.toml` (v2).
-
-### Background colors
-
-v1: `--bg-*` in `variables` | v2: `[backgrounds]`
+#### Background colors — v2: `[backgrounds]`
 
 | Variable | Description |
 |---|---|
@@ -302,9 +370,7 @@ v1: `--bg-*` in `variables` | v2: `[backgrounds]`
 | `--bg-overlay` | Overlay/modal background |
 | `--bg-input` | Input background |
 
-### Text colors
-
-v1: `--text-*` in `variables` | v2: `[text]`
+#### Text colors — v2: `[text]`
 
 | Variable | Description |
 |---|---|
@@ -312,20 +378,16 @@ v1: `--text-*` in `variables` | v2: `[text]`
 | `--text-secondary` | Secondary text |
 | `--text-muted` | Disabled or subtle text |
 
-### Accent
-
-v1: `--*` in `variables` | v2: `[colors]`
+#### Accent — v2: `[colors]`
 
 | Variable | Description |
 |---|---|
 | `--accent` | Main accent color |
-| `--accent-rgb` | Accent in RGB format (for use with `rgba()`) |
+| `--accent-rgb` | Accent in RGB format (to use with `rgba()`) |
 | `--accent-hover` | Accent on hover |
-| `--accent-text` | Text color on accent background |
+| `--accent-text` | Text color over accent background |
 
-### Borders
-
-v1: `--border-*` in `variables` | v2: `[borders]`
+#### Borders — v2: `[borders]`
 
 | Variable | Description |
 |---|---|
@@ -333,9 +395,7 @@ v1: `--border-*` in `variables` | v2: `[borders]`
 | `--border-radius` | General border radius |
 | `--border-radius-sm` | Small border radius |
 
-### Shadows
-
-v1: `--shadow-*` in `variables` | v2: `[shadows]`
+#### Shadows — v2: `[shadows]`
 
 | Variable | Description |
 |---|---|
@@ -343,9 +403,7 @@ v1: `--shadow-*` in `variables` | v2: `[shadows]`
 | `--shadow-md` | Medium shadow |
 | `--glow-accent` | Accent color glow |
 
-### State colors
-
-v1: `--color-*` in `variables` | v2: `[others]`
+#### States — v2: `[others]`
 
 | Variable | Description |
 |---|---|
@@ -355,95 +413,89 @@ v1: `--color-*` in `variables` | v2: `[others]`
 | `--color-error-rgb` | Error in RGB format |
 | `--color-warning` | Warning color |
 | `--color-warning-rgb` | Warning in RGB format |
-| `--color-status-starting` | "Starting" status |
-| `--color-status-started` | "Started" status |
+| `--color-status-starting` | "Starting" state |
+| `--color-status-started` | "Started" state |
 
-### Scrollbar
-
-v1: `--scrollbar-*` in `variables` | v2: `[others]`
+#### Scrollbar — v2: `[others]`
 
 | Variable | Description |
 |---|---|
 | `--scrollbar-track` | Scrollbar track background |
-| `--scrollbar-thumb` | Scrollbar handle color |
+| `--scrollbar-thumb` | Scrollbar thumb color |
 
-### Typography
-
-v1: `--font-*` in `variables` | v2: `[layout]`
+#### Typography — v2: `[layout]`
 
 | Variable | Description |
 |---|---|
 | `--font-family` | Font family |
-| `--font-size-base` | Base font size |
-| `--font-size-sm` | Small font size |
-| `--font-size-lg` | Large font size |
+| `--font-size-base` | Base text size |
+| `--font-size-sm` | Small size |
+| `--font-size-lg` | Large size |
 
-### Icons
-
-v1: `--icon-*` in `variables` | v2: `[others]`
+#### Icons — v2: `[others]`
 
 | Variable | Description |
 |---|---|
 | `--icon-filter` | CSS filter for icons (e.g. `invert(1)`) |
 | `--icon-filter-error` | Filter for error icons |
 
-### Backdrop blur (v2 only)
-
-v2: `[backdrop]`
+#### Backdrop blur — v2 only: `[backdrop]`
 
 | Variable | Description |
 |---|---|
-| `--backdrop-blur-dropdown` | Dropdown backdrop blur |
-| `--backdrop-blur-modal` | Modal backdrop blur |
-
----
-
-## Inject.css (v2 only)
-
-If an `Inject.css` file exists in the theme directory, its content is injected directly into the UI (regardless of the `injects_css` value in `Meta.toml`).
-
-It is useful for complex CSS overrides that cannot be expressed with variables alone, such as:
-
-- `@keyframes` and custom animations
-- `@media` queries
-- Nested selectors
-- Pseudo-elements (`::before`, `::after`)
-
----
+| `--backdrop-blur-dropdown` | Dropdown blur |
+| `--backdrop-blur-modal` | Modal blur |
 
 ---
 
 ## Publishing a theme
 
-If you want to share your theme with the community, send a PR to the [official Themes repository](https://github.com/CubicLauncherDevs/Themes).
+Want to share your theme with the community? Send a Pull Request to the [official Themes repository](https://github.com/CubicLauncherDevs/Themes). Published themes appear on the official website: [cubiclauncher.org/themes](https://www.cubiclauncher.org/themes).
 
 ### Repository structure
+
+Each theme lives under `src/<Author>/<Theme>/`, with `theme.md` at the theme root and one subfolder per version (`V1`, `V2`, …):
 
 ```
 src/
   <Author>/
     <Theme>/
-      theme.md
+      theme.md               # theme description (required)
       V1/
-        Author_Theme.zip
-        Showcase.png       (optional)
-        changelog.md       (optional)
-      V2/                  (optional)
+        Author_Theme.zip     # theme package (required)
+        Showcase.png         # preview (optional)
+        changelog.md         # version changes (optional)
+      V2/                    # new versions (optional)
         ...
 ```
 
-Each theme lives under `src/<Author>/<Theme>/` with versioned subdirectories (`V1`, `V2`, ...).
+### Steps to add your theme
+
+1. Create `src/YourAuthor/YourTheme/theme.md` with the theme description.
+2. Create the version folder `src/YourAuthor/YourTheme/V1/`.
+3. Add `YourAuthor_YourTheme.zip` inside it (the ZIP name must follow the `Author_Theme.zip` pattern).
+4. *(Optional)* Add `Showcase.png` as a preview (the name is matched *case-insensitively*, lowercase is fine).
+5. *(Optional)* Add `changelog.md` with the version's change log.
+6. To publish new versions of the theme, create `V2/`, `V3/`, etc.
+7. Open a Pull Request to the repository.
 
 ### Theme files
 
-| File | Required | Description |
-|---|---|---|
-| `theme.md` | Yes | Markdown with the theme description and README |
-| `Author_Theme.zip` | Yes | Theme package (format `Author_Theme.zip`) |
-| `Showcase.png` | No | Version preview screenshot (case-insensitive) |
-| `changelog.md` | No | Changelog for that version |
+**At the theme root:**
 
-### theme.md
+| File | Required? | Description |
+|---|---|---|
+| `theme.md` | **Yes** | Theme description/README in Markdown. |
+
+**Inside each version folder (`V1/`, `V2/`, …):**
+
+| File | Required? | Description |
+|---|---|---|
+| `Author_Theme.zip` | **Yes** | Theme package. |
+| `Showcase.png` | No | Preview for that version (*case-insensitive* name). |
+| `changelog.md` | No | Changes for that version. |
+
+**`theme.md` example:**
 
 ```markdown
 # My Theme
@@ -451,7 +503,7 @@ Each theme lives under `src/<Author>/<Theme>/` with versioned subdirectories (`V
 Markdown description of the theme, its inspiration, etc.
 ```
 
-### changelog.md
+**`changelog.md` example:**
 
 ```markdown
 # V1
@@ -460,30 +512,44 @@ Markdown description of the theme, its inspiration, etc.
 - Dark theme with green accents
 ```
 
-### ZIP naming convention
+### The ZIP file
 
-The ZIP is named `Author_Theme.zip` (underscore, no spaces or colons).
+**Name:** `Author_Theme.zip` — with an underscore, no spaces or colons.
 
-### ZIP contents
+**Contents for v2 (recommended):**
 
-For v2 (recommended):
 ```
 Author_Theme.zip
 └── <theme-name>/
     ├── Meta.toml
     ├── Definition.toml
-    ├── Inject.css (optional)
-    └── bg.EXTENSION (optional)
+    ├── Inject.css        (optional)
+    └── bg.EXTENSION      (optional)
 ```
 
-For v1 (legacy):
+**Contents for v1 (legacy):**
+
 ```
 Author_Theme.zip
 └── <theme-name>/
     ├── theme.json
-    └── bg.EXTENSION (optional)
+    └── bg.EXTENSION      (optional)
 ```
 
-### Accepted image formats
+**Accepted image formats:** PNG, GIF, WEBP and JPG.
 
-**PNG**, **GIF**, **WEBP**, **JPG**.
+### What happens after the merge?
+
+The repository includes a **GitHub Action** (`.github/workflows/generate-themes.yml`) that runs on every push:
+
+1. Scans the `src/` folder.
+2. Reads each theme's `theme.md` and `changelog.md`.
+3. Gets the git dates of each version.
+4. Builds download URLs pointing to `raw.githubusercontent.com`.
+5. Generates the `themes.json` file at the repository root.
+
+That `themes.json` is served statically and is what the CubicLauncher website uses to display and download themes. You don't need to do anything extra: once your PR is accepted, the theme automatically appears on [cubiclauncher.org/themes](https://www.cubiclauncher.org/themes).
+
+### Repository license
+
+The Themes repository is licensed under [CC0 1.0 Universal](https://github.com/CubicLauncherDevs/Themes/blob/master/LICENSE) (public domain). By submitting your theme, you agree to publish it under that license. Remember that the **fonts** bundled with your theme keep their own license: include it and only use fonts you have the right to redistribute.
