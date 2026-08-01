@@ -38,6 +38,7 @@ Ofrecemos soporte para múltiples formatos en Linux:
 - **AppImage:** Descarga, otorga permisos de ejecución y abre.
 - **Debian/Ubuntu:** Instala el paquete `.deb` usando `sudo apt install ./cubiclauncher.deb`.
 - **ARCH APKGBUILD:** Compilar localmente es obligatorio. Los binarios generados por las CI de GitHub (Ubuntu) pueden no ser compatibles con Arch Linux debido a su modelo rolling release. <a href="/docs/es-ES/guides/arch" class="text-blue-400 hover:underline">Guia</a>.
+- **Nix/NixOS:** Instala desde el flake del repositorio con `nix profile install github:CubicLauncherDevs/CubicLauncher`. <a href="/docs/es-ES/guias/nix" class="text-blue-400 hover:underline">Guía</a>.
 
 ## macOS
 
