@@ -1,4 +1,6 @@
 import matter from 'gray-matter';
+import { renderMarkdown } from './markdown';
+import type { Heading } from './markdown';
 
 interface DocEntry {
   lang: string;
@@ -16,10 +18,21 @@ export interface DocNode {
 
 export interface DocMeta {
   title: string;
+  description: string;
   lang: string;
   category: string;
   slug: string;
   content: string;
+  headings: Heading[];
+}
+
+export interface SearchDoc {
+  slug: string;
+  lang: string;
+  category: string;
+  title: string;
+  description: string;
+  excerpt: string;
 }
 
 const modules = import.meta.glob('/src/docs/**/*.md', { eager: true, query: '?raw', import: 'default' }) as Record<string, string>;
@@ -101,8 +114,60 @@ export function getDocTree(): DocNode[] {
   return tree;
 }
 
+function getDocMeta(entry: DocEntry): { title: string; description: string; headings: Heading[]; content: string } {
+  try {
+    const { data, content } = matter(entry.content);
+    const { html, headings } = renderMarkdown(content);
+    const title = data.title?.split('|')[0]?.trim() || entry.slug.split('/').pop()?.replace(/-/g, ' ') || '';
+    const description = data.description || '';
+    return { title, description, headings, content: html };
+  } catch {
+    const { html, headings } = renderMarkdown(entry.content);
+    const title = entry.slug.split('/').pop()?.replace(/-/g, ' ') || '';
+    return { title, description: '', headings, content: html };
+  }
+}
+
 export function getDoc(slug: string): DocMeta | null {
   const docEntry = docsCache.find(d => d.slug === slug);
   if (!docEntry) return null;
-  return { lang: docEntry.lang, category: docEntry.category, slug: docEntry.slug, title: '', content: docEntry.content };
+  const meta = getDocMeta(docEntry);
+  return {
+    lang: docEntry.lang,
+    category: docEntry.category,
+    slug: docEntry.slug,
+    title: meta.title,
+    description: meta.description,
+    headings: meta.headings,
+    content: meta.content,
+  };
+}
+
+export function getSearchIndex(): SearchDoc[] {
+  return docsCache.map(entry => {
+    try {
+      const { data, content } = matter(entry.content);
+      const title = data.title?.split('|')[0]?.trim() || entry.slug.split('/').pop()?.replace(/-/g, ' ') || '';
+      const { html } = renderMarkdown(content);
+      const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      const excerpt = text.slice(0, 160) + (text.length > 160 ? '…' : '');
+      return {
+        slug: entry.slug,
+        lang: entry.lang,
+        category: entry.category,
+        title,
+        description: data.description || '',
+        excerpt,
+      };
+    } catch {
+      return {
+        slug: entry.slug,
+        lang: entry.lang,
+        category: entry.category,
+        title: entry.slug.split('/').pop()?.replace(/-/g, ' ') || '',
+        description: '',
+        excerpt: '',
+      };
+    }
+  });
 }

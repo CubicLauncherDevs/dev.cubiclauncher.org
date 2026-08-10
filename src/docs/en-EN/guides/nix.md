@@ -1,5 +1,6 @@
 ---
 title: Installation on Nix | CubicLauncher
+description: CubicLauncher can be installed from the repository's flake. To use it you need Nix with flakes and nix-command enabled.
 ---
 
 ## Prerequisites
@@ -25,19 +26,9 @@ nix --version
 nix flake show github:CubicLauncherDevs/CubicLauncher
 ```
 
-<div class="my-6 flex gap-3 rounded-lg border border-yellow-500 bg-yellow-500/5 p-4 text-yellow-500">
-<div class="flex flex-col gap-1">
-<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">
-Architecture support
-</span>
-
-<div class="m-0 text-sm leading-relaxed text-neutral-400">
-<p class="mt-1">
-The flake is currently tested on <code>x86_64-linux</code>. Other Linux architectures (for example <code>aarch64-linux</code>) may require adjusting the <code>nodeModules</code> hash in <code>dist/nix/package.nix</code>.
-</p>
-</div>
-</div>
-</div>
+:::warning Architecture support
+The flake is currently tested on x86_64-linux. Other Linux architectures (for example aarch64-linux) may require adjusting the nodeModules hash in dist/nix/package.nix.
+:::
 
 ## Install
 
@@ -100,19 +91,9 @@ Or reinstall to replace the current version:
 nix profile install github:CubicLauncherDevs/CubicLauncher
 ```
 
-<div class="my-6 flex gap-3 rounded-lg border border-yellow-500 bg-yellow-500/5 p-4 text-yellow-500">
-<div class="flex flex-col gap-1">
-<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">
-Self-update is disabled
-</span>
-
-<div class="m-0 text-sm leading-relaxed text-neutral-400">
-<p class="mt-1">
+:::warning Self-update is disabled
 Updater artifacts are disabled during Nix packaging, since the launcher should be updated through Nix.
-</p>
-</div>
-</div>
-</div>
+:::
 
 ## Troubleshooting
 
@@ -134,11 +115,6 @@ nix run github:CubicLauncherDevs/CubicLauncher
 nix develop
 ```
 
-<div class="my-6 flex gap-3 rounded-lg border border-yellow-500 bg-yellow-500/5 p-4 text-yellow-500">
-<div class="flex flex-col gap-1">
-<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">WARNING</span>
-<div class="m-0 text-sm leading-relaxed text-neutral-400">
+:::warning WARNING
 This problem is not related to CubicLauncher; it is a configuration error in your Nix installation.
-</div>
-</div>
-</div>
+:::

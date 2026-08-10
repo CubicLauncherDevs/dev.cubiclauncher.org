@@ -4,12 +4,33 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%sveltekit.assets%/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="CubicLauncher - Launcher de Minecraft multiplataforma construido con Rust y SvelteKit" />
-    <meta name="theme-color" content="#2a2a2d" />
+    <meta name="description" content="CubicLauncher Docs — Documentación oficial del launcher de Minecraft multiplataforma construido con Rust y SvelteKit." />
+    <meta name="theme-color" content="#2a2a2d" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <script>
+      (function () {
+        try {
+          const stored = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const theme = stored === 'light' || stored === 'dark' ? stored : (prefersDark ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
     <style>
+      :root {
+        --init-bg: #1c1c1f;
+        --init-text: #a1a1aa;
+      }
+      html[data-theme="light"] {
+        --init-bg: #fafafa;
+        --init-text: #52525b;
+      }
       .loading-init {
         position: fixed;
         inset: 0;
@@ -19,7 +40,7 @@
         align-items: center;
         justify-content: center;
         gap: 1.5rem;
-        background: #2a2a2d;
+        background: var(--init-bg);
         transition: opacity 0.3s ease;
       }
       .loading-init.hidden {
@@ -35,7 +56,7 @@
       .loading-init p {
         font-family: 'Inter', sans-serif;
         font-size: 0.875rem;
-        color: #a1a1aa;
+        color: var(--init-text);
         animation: pulse 1.5s ease-in-out infinite;
       }
       @keyframes pulse {

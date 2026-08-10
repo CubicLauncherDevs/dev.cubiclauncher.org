@@ -1,9 +1,0 @@
-<script lang="ts">
-  import Header from '$lib/components/global/Header.svelte';
-  import Home from '$lib/pages/home.svelte';
-  import Footer from '$lib/components/global/Footer.svelte';
-</script>
-
-<Header />
-<Home />
-<Footer />

@@ -1,5 +1,6 @@
 ---
 title: Comment utiliser ?
+description: Beaucoup de gens nous ont demandé comment utiliser notre launcher, ce qui est compréhensible car nous avons une interface assez unique. Voici quelques…
 ---
 
 Beaucoup de gens nous ont demandé comment utiliser notre launcher, ce qui est compréhensible car nous avons une interface assez unique. Voici quelques notions de base plus en détail qui ne sont pas dans le tutoriel.

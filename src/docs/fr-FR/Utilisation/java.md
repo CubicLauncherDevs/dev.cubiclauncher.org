@@ -1,5 +1,6 @@
 ---
 title: Qu'est-ce que Java ?
+description: Qu'est-ce que Java et pourquoi est-il nécessaire pour lancer le jeu ?
 ---
 
 # Java ?
@@ -18,8 +19,8 @@ Dans Cubic, vous avez deux options pour utiliser Java. Vous pouvez utiliser un J
 
 ### Où ?
 Dans la section Java de la configuration, vous pouvez ouvrir le menu des environnements Java et télécharger ceux que vous souhaitez.
-<div class="my-4 flex justify-center">
-	<img src="https://i.ibb.co/60thDTQw/java.png" alt=">_<" class="rounded-lg border border-neutral-800 max-w-full" />
+<div class="docs-img-wrap">
+  <img src="https://i.ibb.co/60thDTQw/java.png" alt=">_<" />
 </div>
 
 ### Quelles versions télécharger ?

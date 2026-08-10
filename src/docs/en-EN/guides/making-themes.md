@@ -1,5 +1,6 @@
 ---
 title: How to create themes | CubicLauncher
+description: CubicLauncher lets you fully customize the interface through themes. A theme defines the colors, fonts, borders, shadows and, optionally, a background image…
 ---
 
 CubicLauncher lets you fully customize the interface through **themes**. A theme defines the colors, fonts, borders, shadows and, optionally, a background image for the launcher.
@@ -10,15 +11,6 @@ There are **two versions** of the theme system:
 |---|---|---|
 | **v2** | TOML (`Meta.toml` + `Definition.toml`) | ✅ **Recommended** for new themes |
 | **v1** | JSON (`theme.json`) | ⚠️ Legacy, kept for compatibility only |
-
-**Contents of this guide:**
-
-1. [Quick start](#quick-start) — create your first theme in 5 minutes
-2. [Where themes live and how they're detected](#where-themes-live)
-3. [v2 format (recommended)](#v2-format-toml--recommended)
-4. [v1 format (legacy)](#v1-format-json--legacy)
-5. [Shared reference](#shared-reference-v1-and-v2) — fonts, background image and CSS variables
-6. [Publishing your theme](#publishing-a-theme)
 
 ---
 

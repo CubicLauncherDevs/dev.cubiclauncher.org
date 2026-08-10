@@ -1,5 +1,6 @@
 ---
 title: Installation | CubicLauncher
+description: Installing CubicLauncher is a straightforward process. Follow the instructions for your operating system to get started.
 ---
 
 # Installation
@@ -15,14 +16,9 @@ Before installing, make sure you have **Java** installed on your system. We reco
 - **Java 17:** For Minecraft versions 1.17 and above.
 - **Java 8:** For Minecraft versions 1.16.5 and below.
 
-<div class="my-6 flex gap-3 rounded-lg border border-blue-500/20 bg-blue-500/5 p-4 text-blue-400">
-	<div class="flex flex-col gap-1">
-		<span class="text-sm font-bold uppercase tracking-wider text-blue-400">Tip</span>
-		<div class="m-0 text-sm leading-relaxed text-neutral-400">
-			CubicLauncher does not need Java installed on the system to run, but you need Java installed to play Minecraft.
-		</div>
-	</div>
-</div>
+:::tip Tip
+CubicLauncher does not need Java installed on the system to run, but you need Java installed to play Minecraft.
+:::
 
 ## Windows
 

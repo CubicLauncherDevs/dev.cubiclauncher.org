@@ -1,5 +1,6 @@
 ---
 title: Cómo usar CubicLauncher
+description: Muchas personas nos han dicho sobre como se usa nuestro launcher, lo que igual se entiende ya que tenemos una interfaz bastante unica. Aca te mostraremos…
 ---
 
 Muchas personas nos han dicho sobre como se usa nuestro launcher, lo que igual se entiende ya que tenemos una interfaz bastante unica. 

@@ -1,19 +1,16 @@
 ---
 title: Política de Privacidad | CubicLauncher
+description: CubicLauncher es un proyecto completamente de código abierto para la comunidad. Esto significa que cualquier persona puede revisar el código fuente,…
 ---
 
 # Política de Privacidad
 
 CubicLauncher es un proyecto completamente de **código abierto** para la comunidad. Esto significa que cualquier persona puede revisar el código fuente, utilizarlo y contribuir a su desarrollo. Nuestra prioridad es la transparencia y la seguridad de nuestros usuarios.
 
-<div class="my-6 flex gap-3 rounded-lg border border-red-500/20 bg-red-500/5 p-4 text-red-500">
-	<div class="flex flex-col gap-1">
-		<span class="text-sm font-bold uppercase tracking-wider text-red-400">Importante</span>
-		<div class="m-0 text-sm leading-relaxed text-neutral-400">
-			CubicLauncher no está asociado, afiliado, patrocinado ni respaldado por Mojang AB.<br>Minecraft es una marca registrada de Mojang Synergies AB.
-		</div>
-	</div>
-</div>
+:::danger Importante
+CubicLauncher no está asociado, afiliado, patrocinado ni respaldado por Mojang AB.
+Minecraft es una marca registrada de Mojang Synergies AB.
+:::
 
 ## Transparencia y Seguridad
 

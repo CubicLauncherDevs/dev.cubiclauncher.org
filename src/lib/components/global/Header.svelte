@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import ThemeToggle from '$lib/components/docs/ThemeToggle.svelte';
   import '../../../styles/Header.css';
 
   let menuOpen = $state(false);
@@ -19,15 +20,18 @@
   <header class="header">
     <div class="container">
       <div class="header-content">
-        <a href="/" class="logo">
+        <a href="/docs" class="logo">
           <img src="/favicon.png" alt="CubicLauncher" class="logo-icon" />
-          <span>CubicLauncher</span>
+          <span>CubicLauncher<span class="logo-accent">Docs</span></span>
         </a>
-        <button class="hamburger" onclick={toggleMenu} aria-label="Menú de navegación" aria-expanded={menuOpen}>
-          <span class="hamburger-line" class:open={menuOpen}></span>
-          <span class="hamburger-line" class:open={menuOpen}></span>
-          <span class="hamburger-line" class:open={menuOpen}></span>
-        </button>
+        <div class="header-actions">
+          <ThemeToggle />
+          <button class="hamburger" onclick={toggleMenu} aria-label="Menú de navegación" aria-expanded={menuOpen}>
+            <span class="hamburger-line" class:open={menuOpen}></span>
+            <span class="hamburger-line" class:open={menuOpen}></span>
+            <span class="hamburger-line" class:open={menuOpen}></span>
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -38,9 +42,7 @@
 
   <nav class="nav" class:nav-open={menuOpen}>
     <span class="nav-group">
-      <a href="/" class="nav-link" class:active={$page.url.pathname === '/'} onclick={closeMenu}>Inicio</a>
       <a href="/docs" class="nav-link" class:active={$page.url.pathname.startsWith('/docs')} class:docs-active={$page.url.pathname.startsWith('/docs')} onclick={closeMenu}>Docs</a>
-      <a href="/projects" class="nav-link" class:active={$page.url.pathname === '/projects'} onclick={closeMenu}>Proyectos</a>
     </span>
     <span class="nav-sep"></span>
     <span class="nav-group">

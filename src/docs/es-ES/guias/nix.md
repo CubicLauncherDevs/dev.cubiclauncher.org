@@ -1,5 +1,6 @@
 ---
 title: Instalación en Nix | CubicLauncher
+description: CubicLauncher se puede instalar desde el flake del repositorio. Para usarlo necesitas Nix con flakes y nix-command habilitados.
 ---
 
 ## Prerrequisitos
@@ -25,19 +26,9 @@ nix --version
 nix flake show github:CubicLauncherDevs/CubicLauncher
 ```
 
-<div class="my-6 flex gap-3 rounded-lg border border-yellow-500 bg-yellow-500/5 p-4 text-yellow-500">
-<div class="flex flex-col gap-1">
-<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">
-Soporte de arquitecturas
-</span>
-
-<div class="m-0 text-sm leading-relaxed text-neutral-400">
-<p class="mt-1">
-Actualmente el flake está probado en <code>x86_64-linux</code>. Otras arquitecturas Linux (por ejemplo <code>aarch64-linux</code>) pueden necesitar ajustar el hash de <code>nodeModules</code> en <code>dist/nix/package.nix</code>.
-</p>
-</div>
-</div>
-</div>
+:::warning Soporte de arquitecturas
+Actualmente el flake está probado en x86_64-linux. Otras arquitecturas Linux (por ejemplo aarch64-linux) pueden necesitar ajustar el hash de nodeModules en dist/nix/package.nix.
+:::
 
 ## Instalar
 
@@ -100,19 +91,9 @@ O reinstala para reemplazar la versión actual:
 nix profile install github:CubicLauncherDevs/CubicLauncher
 ```
 
-<div class="my-6 flex gap-3 rounded-lg border border-yellow-500 bg-yellow-500/5 p-4 text-yellow-500">
-<div class="flex flex-col gap-1">
-<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">
-La auto-actualización está desactivada
-</span>
-
-<div class="m-0 text-sm leading-relaxed text-neutral-400">
-<p class="mt-1">
+:::warning La auto-actualización está desactivada
 Durante el empaquetado para Nix se desactivan los artefactos del auto-actualizador, ya que el launcher debe actualizarse a través de Nix.
-</p>
-</div>
-</div>
-</div>
+:::
 
 ## Problemas comunes
 
@@ -134,11 +115,6 @@ nix run github:CubicLauncherDevs/CubicLauncher
 nix develop
 ```
 
-<div class="my-6 flex gap-3 rounded-lg border border-yellow-500 bg-yellow-500/5 p-4 text-yellow-500">
-<div class="flex flex-col gap-1">
-<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">AVISO</span>
-<div class="m-0 text-sm leading-relaxed text-neutral-400">
+:::warning AVISO
 Este problema no está relacionado con CubicLauncher; es un error de configuración de la instalación de Nix en tu sistema.
-</div>
-</div>
-</div>
+:::

@@ -1,5 +1,6 @@
 ---
 title: How do I use it?
+description: Many people have asked us how to use our launcher, which is understandable since we have a quite unique interface. Here we will show you some basic things…
 ---
 
 Many people have asked us how to use our launcher, which is understandable since we have a quite unique interface. Here we will show you some basic things in more detail that are not in the tutorial.

@@ -1,22 +1,19 @@
 ---
 title: Conditions d'Utilisation | CubicLauncher
+description: En utilisant CubicLauncher, vous acceptez les conditions suivantes. Ce projet est conçu pour la communauté Minecraft avec un accent sur la transparence et…
 ---
 
 # Conditions d'Utilisation
 
 En utilisant **CubicLauncher**, vous acceptez les conditions suivantes. Ce projet est conçu pour la communauté Minecraft avec un accent sur la transparence et l'open source.
 
-<div class="my-6 flex gap-3 rounded-lg border border-red-500/20 bg-red-500/5 p-4 text-red-500">
-	<div class="flex flex-col gap-1">
-		<span class="text-sm font-bold uppercase tracking-wider text-red-400">Important</span>
-		<div class="m-0 text-sm leading-relaxed text-neutral-400">
-			CubicLauncher n'est pas associé, affilié, sponsorisé ni approuvé par Mojang AB.<br>Minecraft est une marque déposée de Mojang Synergies AB.
-		</div>
-	</div>
-</div>
+:::danger Important
+CubicLauncher n'est pas associé, affilié, sponsorisé ni approuvé par Mojang AB.
+Minecraft est une marque déposée de Mojang Synergies AB.
+:::
 
 ## 1. Licence et Open Source
-CubicLauncher est distribué sous la licence **GNU General Public License v3.0 (GPL-3.0)**. Cela signifie que le logiciel est fourni "tel quel dans le dépôt GitHub", l'équipe de CubicLauncher maintient le projet et les contributeurs externes sous cette licence. Vous pouvez consulter les détails complets de la <a href="/docs/license" class="text-blue-400 hover:underline">Licence</a>.
+CubicLauncher est distribué sous la licence **GNU General Public License v3.0 (GPL-3.0)**. Cela signifie que le logiciel est fourni "tel quel dans le dépôt GitHub", l'équipe de CubicLauncher maintient le projet et les contributeurs externes sous cette licence. Vous pouvez consulter les détails complets de la <a href="/docs/fr-FR/license" class="text-blue-400 hover:underline">Licence</a>.
 
 ## 2. Utilisation Responsable
 En tant qu'utilisateur, vous êtes responsable de :
@@ -28,14 +25,9 @@ En tant qu'utilisateur, vous êtes responsable de :
 
 - L'utilisation de versions non officielles du code qui n'ont pas été compilées via nos processus officiels **GitHub Workflows**.
 
-<div class="my-6 flex gap-3 rounded-lg border border-blue-500/20 bg-blue-500/5 p-4 text-blue-400">
-	<div class="flex flex-col gap-1">
-		<span class="text-sm font-bold uppercase tracking-wider text-blue-400">Astuce</span>
-		<div class="m-0 text-sm leading-relaxed text-neutral-400">
-			Pour être informé des versions officielles de CubicLauncher, vous pouvez rejoindre notre communauté <a href="https://discord.com/invite/7VaqSrPukm" class="text-blue-400 hover:underline">Discord</a>.
-		</div>
-	</div>
-</div>
+:::info Astuce
+Pour être informé des versions officielles de CubicLauncher, vous pouvez rejoindre notre communauté [Discord](https://discord.com/invite/7VaqSrPukm).
+:::
 
 ## 4. Services Tiers
 CubicLauncher facilite l'interaction avec des services tiers (Microsoft OAuth2, API Mojang). L'utilisation de ces services est soumise aux politiques de confidentialité et conditions de ces entreprises.

@@ -1,5 +1,6 @@
 ---
 title: Soporte Oficial | CubicLauncher
+description: ¿Necesitas ayuda con CubicLauncher? Disponemos de varios canales oficiales donde puedes obtener asistencia, reportar problemas y recibir ayuda tanto de la…
 ---
 
 # Soporte
@@ -15,14 +16,9 @@ Antes de abrir una solicitud de soporte, asegúrate de:
 - Buscar si tu problema ya ha sido reportado anteriormente.
 - Reunir registros (logs), capturas de pantalla o mensajes de error relevantes.
 
-<div class="my-6 flex gap-3 rounded-lg border border-blue-500/20 bg-blue-500/5 p-4 text-blue-400">
-	<div class="flex flex-col gap-1">
-		<span class="text-sm font-bold uppercase tracking-wider text-blue-400">Tip</span>
-		<div class="m-0 text-sm leading-relaxed text-neutral-400">
-        Cuanta más información proporciones, más fácil será identificar y resolver el problema.
-		</div>
-	</div>
-</div>
+:::tip Tip
+Cuanta más información proporciones, más fácil será identificar y resolver el problema.
+:::
 
 ## GitHub Issues
 
@@ -50,14 +46,9 @@ Al crear un issue, intenta incluir:
 - Pasos para reproducir el error.
 - Capturas de pantalla o registros relevantes.
 
-<div class="my-6 flex gap-3 rounded-lg border border-red-500/20 bg-red-500/5 p-4 text-red-500">
-	<div class="flex flex-col gap-1">
-		<span class="text-sm font-bold uppercase tracking-wider text-red-400">Importante</span>
-		<div class="m-0 text-sm leading-relaxed text-neutral-400">
-        Antes de crear un nuevo issue, verifica si ya existe uno relacionado con tu problema.
-		</div>
-	</div>
-</div>
+:::danger Importante
+Antes de crear un nuevo issue, verifica si ya existe uno relacionado con tu problema.
+:::
 
 ## Soporte en Discord
 

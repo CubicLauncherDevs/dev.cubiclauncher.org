@@ -1,5 +1,6 @@
 ---
 title: What is Java?
+description: What is Java and why is it necessary to launch the game?
 ---
 
 # Java?
@@ -18,8 +19,8 @@ In Cubic you have two options for using Java. You can use a JRE managed by the l
 
 ### Where?
 In the Java section of the configuration you can open the Java environments menu and download whichever you like.
-<div class="my-4 flex justify-center">
-	<img src="https://i.ibb.co/60thDTQw/java.png" alt=">_<" class="rounded-lg border border-neutral-800 max-w-full" />
+<div class="docs-img-wrap">
+  <img src="https://i.ibb.co/60thDTQw/java.png" alt=">_<" />
 </div>
 
 ### Which versions should I download?

@@ -1,5 +1,6 @@
 ---
 title: Instalación en Arch Linux | CubicLauncher
+description: CubicLauncher está disponible en el AUR (Arch User Repository). Puedes instalarlo con tu asistente de AUR preferido:
 ---
 
 ## Instalación
@@ -22,27 +23,11 @@ También puedes consultar el paquete en: <https://aur.archlinux.org/packages/cub
 
 Si prefieres compilar manualmente, también puedes utilizar el `PKGBUILD` oficial. No es necesario clonar el repositorio completo ni instalar dependencias manualmente: el propio `PKGBUILD` descarga el código fuente y `makepkg` se encarga de resolver e instalar las dependencias necesarias.
 
-<div class="my-6 flex gap-3 rounded-lg border border-yellow-500 bg-yellow-500/5 p-4 text-yellow-500">
-<div class="flex flex-col gap-1">
-<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">
-La compilación local es opcional.
-</span>
-
-<div class="m-0 text-sm leading-relaxed text-neutral-400">
-<p class="mt-1">
-Arch Linux es una distribución <em>rolling release</em>, por lo que las versiones de bibliotecas y dependencias cambian con frecuencia.
-</p>
-
-<p class="mt-1">
+:::warning La compilación local es opcional.
+Arch Linux es una distribución rolling release, por lo que las versiones de bibliotecas y dependencias cambian con frecuencia.
 Los binarios generados por GitHub Actions (Ubuntu) pueden presentar incompatibilidades o fallar al ejecutarse en sistemas Arch actualizados.
-</p>
-
-<p class="mt-1">
 Compilar el programa en tu propio sistema garantiza la compatibilidad con las bibliotecas instaladas y permite obtener un paquete adaptado a tu entorno.
-</p>
-</div>
-</div>
-</div>
+:::
 
 ```bash
 mkdir cubiclauncher-build
@@ -75,14 +60,9 @@ Finalmente, recompila e instala el paquete actualizado:
 makepkg -si
 ```
 
-<div class="my-6 flex gap-3 rounded-lg border border-yellow-500 bg-yellow-500/5 p-4 text-yellow-500">
-<div class="flex flex-col gap-1">
-<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">NOTA</span>
-<div class="m-0 text-sm leading-relaxed text-neutral-400">
-El comando <code>updpkgsums</code> pertenece al paquete <code>pacman-contrib</code>. Si no lo tienes instalado, puedes obtenerlo con <code>sudo pacman -S pacman-contrib</code>.
-</div>
-</div>
-</div>
+:::warning NOTA
+El comando updpkgsums pertenece al paquete pacman-contrib. Si no lo tienes instalado, puedes obtenerlo con sudo pacman -S pacman-contrib.
+:::
 
 ## La auto-actualización no funciona en Arch
 
@@ -126,11 +106,6 @@ Una vez actualizado el sistema, vuelve a ejecutar:
 makepkg -si
 ```
 
-<div class="my-6 flex gap-3 rounded-lg border border-yellow-500 bg-yellow-500/5 p-4 text-yellow-500">
-<div class="flex flex-col gap-1">
-<span class="text-sm font-bold uppercase tracking-wider text-yellow-400">AVISO</span>
-<div class="m-0 text-sm leading-relaxed text-neutral-400">
+:::warning AVISO
 Este error no está relacionado con CubicLauncher ni con el PKGBUILD; ocurre cuando un mirror de Arch Linux todavía no ha sincronizado los paquetes más recientes.
-</div>
-</div>
-</div>
+:::
