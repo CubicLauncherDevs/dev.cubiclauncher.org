@@ -1,5 +1,5 @@
 ---
-title: How to install a theme | CubicLauncher
+title: How to install a theme
 description: Installing a theme in CubicLauncher is very simple. Just follow these 3 steps.
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Soporte Oficial | CubicLauncher
+title: Soporte Oficial
 description: ¿Necesitas ayuda con CubicLauncher? Disponemos de varios canales oficiales donde puedes obtener asistencia, reportar problemas y recibir ayuda tanto de la…
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Privacy Policy | CubicLauncher
+title: Privacy Policy
 description: CubicLauncher is a completely open source project for the community. This means anyone can review the source code, use it and contribute to its development.…
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Política de Privacidad | CubicLauncher
+title: Política de Privacidad
 description: CubicLauncher es un proyecto completamente de código abierto para la comunidad. Esto significa que cualquier persona puede revisar el código fuente,…
 ---
 

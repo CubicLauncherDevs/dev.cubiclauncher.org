@@ -1,5 +1,5 @@
 ---
-title: Términos de Uso | CubicLauncher
+title: Términos de Uso
 description: Al utilizar CubicLauncher, aceptás los siguientes términos y condiciones. Este proyecto está diseñado para la comunidad de Minecraft con un enfoque en la…
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Instancias | CubicLauncher
+title: Instancias
 description: Una instancia es un directorio autocontenido con su propia copia de Minecraft, mods, resource packs, capturas y configuración. Cada instancia representa una…
 ---
 

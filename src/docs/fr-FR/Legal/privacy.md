@@ -1,5 +1,5 @@
 ---
-title: Politique de Confidentialité | CubicLauncher
+title: Politique de Confidentialité
 description: CubicLauncher est un projet complètement open source pour la communauté. Cela signifie que n'importe qui peut consulter le code source, l'utiliser et…
 ---
 

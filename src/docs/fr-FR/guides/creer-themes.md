@@ -1,5 +1,5 @@
 ---
-title: Comment créer des thèmes | CubicLauncher
+title: Comment créer des thèmes
 description: CubicLauncher vous permet de personnaliser entièrement l'interface grâce aux thèmes. Un thème définit les couleurs, les polices, les bordures, les ombres…
 ---
 

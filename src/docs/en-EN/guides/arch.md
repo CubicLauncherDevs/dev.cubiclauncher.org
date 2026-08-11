@@ -1,6 +1,6 @@
 ---
-title: Installation on Arch Linux | CubicLauncher
-description: CubicLauncher is available in the AUR (Arch User Repository). You can install it with your preferred AUR helper:
+title: Installation on Arch Linux
+description: CubicLauncher is available in the AUR (Arch User Repository). You can install it with your preferred AUR helper.
 ---
 
 ## Installation

@@ -1,5 +1,5 @@
 ---
-title: Official Support | CubicLauncher
+title: Official Support
 description: Need help with CubicLauncher? We have several official channels where you can get assistance, report issues and receive help from both the community and the…
 ---
 

@@ -68,13 +68,15 @@ function catDisplay(name: string): string {
     'Avance': 'Avancé',
     'Advanced': 'Advanced',
     'Legal': 'Legal',
+    'Clientes': 'Clientes',
+    'Clients': 'Clients',
   };
   return map[name] || name;
 }
 
 export function getDocTree(): DocNode[] {
   const langOrder = ['es-ES', 'en-EN', 'fr-FR'];
-  const catOrder = ['Comenzando', 'Getting-Started', 'Pour-commencer', 'Uso', 'Usage', 'Utilisation', 'Avanzado', 'Advanced', 'Avance', 'guias', 'guides', 'Legal'];
+  const catOrder = ['Comenzando', 'Getting-Started', 'Pour-commencer', 'Uso', 'Usage', 'Utilisation', 'Avanzado', 'Advanced', 'Avance', 'guias', 'guides', 'Clientes', 'Clients', 'Legal'];
 
   const langs = [...new Set(docsCache.map(d => d.lang))];
   langs.sort((a, b) => {

@@ -1,5 +1,5 @@
 ---
-title: Installation | CubicLauncher
+title: Installation
 description: Installer CubicLauncher est un processus simple. Suivez les instructions correspondant à votre système d'exploitation pour commencer.
 ---
 

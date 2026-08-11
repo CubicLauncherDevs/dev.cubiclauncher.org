@@ -1,5 +1,5 @@
 ---
-title: Instances | CubicLauncher
+title: Instances
 description: Une instance est un répertoire autonome avec sa propre copie de Minecraft, mods, resource packs, captures d'écran et configuration. Chaque instance…
 ---
 

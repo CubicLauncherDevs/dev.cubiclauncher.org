@@ -1,5 +1,5 @@
 ---
-title: Introducción | CubicLauncher
+title: Introducción
 description: Bienvenido a la documentación oficial de CubicLauncher. Aquí encontrarás guías detalladas sobre cómo instalar, configurar y sacar el máximo provecho de…
 ---
 

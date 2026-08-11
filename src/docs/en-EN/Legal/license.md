@@ -1,5 +1,5 @@
 ---
-title: License | CubicLauncher
+title: License
 description: Cubic Launcher Licenses
 ---
 

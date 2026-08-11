@@ -1,5 +1,5 @@
 ---
-title: Terms of Service | CubicLauncher
+title: Terms of Service
 description: By using CubicLauncher, you agree to the following terms and conditions. This project is designed for the Minecraft community with a focus on transparency…
 ---
 
