@@ -149,12 +149,25 @@
     };
   }
 
+  function openParentDetails(el: Element) {
+    let node: HTMLElement | null = el.parentElement;
+    while (node) {
+      if (node.tagName === 'DETAILS') {
+        (node as HTMLDetailsElement).open = true;
+      }
+      node = node.parentElement;
+    }
+  }
+
   $effect(() => {
     if (browser && data.page === 'doc') {
       const hash = $page.url.hash;
       if (hash) {
         const el = document.querySelector(hash);
-        el?.scrollIntoView({ behavior: 'smooth' });
+        if (el) {
+          openParentDetails(el);
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     }
   });

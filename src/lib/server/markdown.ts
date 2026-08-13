@@ -1,4 +1,4 @@
-import { marked, type RendererObject, type Tokens } from 'marked';
+import { Marked, type RendererObject, type Tokens } from 'marked';
 import hljs from 'highlight.js';
 
 export interface Heading {
@@ -7,11 +7,115 @@ export interface Heading {
   id: string;
 }
 
-const CALLOUT_TYPES = ['info', 'tip', 'warning', 'danger'] as const;
-type CalloutType = (typeof CALLOUT_TYPES)[number];
+const BLOCK_TYPES = ['info', 'tip', 'warning', 'danger', 'details'] as const;
+type BlockType = (typeof BLOCK_TYPES)[number];
 
-function isCalloutType(s: string): s is CalloutType {
-  return CALLOUT_TYPES.includes(s as CalloutType);
+function isBlockType(s: string): s is BlockType {
+  return BLOCK_TYPES.includes(s as BlockType);
+}
+
+function blockTitle(type: BlockType, raw: string | undefined): string {
+  if (raw && raw.trim()) return raw.trim();
+  if (type === 'details') return 'Detalles';
+  return type.charAt(0).toUpperCase() + type.slice(1);
+}
+
+function wrapBlock(type: BlockType, title: string, html: string): string {
+  if (type === 'details') {
+    return (
+      `<details class="docs-details">` +
+      `<summary class="docs-summary">${escapeHtml(title)}</summary>` +
+      `<div class="docs-details-content">${html}</div>` +
+      `</details>`
+    );
+  }
+  return (
+    `<div class="callout callout-${type}">` +
+    `<div class="callout-title">${escapeHtml(title)}</div>` +
+    `<div class="callout-content">${html}</div>` +
+    `</div>`
+  );
+}
+
+function processVideos(src: string): string {
+  const videoRegex = /^:::(youtube|video)\s+([^\n]+)$/gim;
+
+  return src.replace(videoRegex, (_, type: string, value: string) => {
+    const trimmed = value.trim();
+    if (type === 'youtube') {
+      const id = extractYouTubeId(trimmed);
+      if (!id) return `<div class="docs-video"><div class="docs-video-fallback"><p>ID de YouTube no válido: <code>${escapeHtml(trimmed)}</code></p></div></div>`;
+      return `<div class="docs-video"><iframe src="https://www.youtube-nocookie.com/embed/${id}" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>`;
+    }
+    if (isVideoFile(trimmed)) {
+      return `<div class="docs-video"><video controls preload="metadata"><source src="${escapeHtml(trimmed)}" /><p>Tu navegador no soporta la reproducción de video.</p></video></div>`;
+    }
+    if (/^https?:\/\//.test(trimmed)) {
+      return `<div class="docs-video"><video controls preload="metadata"><source src="${escapeHtml(trimmed)}" /><p>Tu navegador no soporta la reproducción de video.</p></video></div>`;
+    }
+    return `<div class="docs-video"><div class="docs-video-fallback"><p>Formato de video no reconocido: <code>${escapeHtml(trimmed)}</code></p></div></div>`;
+  });
+}
+
+function processCustomBlocks(src: string, markedInstance: Marked): string {
+  const openRe = /^:::(\w+)(?:\s+(.*))?$/;
+  const closeRe = /^:::[ \t]*$/;
+  const fenceRe = /^ *```/;
+  const lines = src.split('\n');
+  const out: string[] = [];
+  let i = 0;
+  let inFence = false;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    if (!inFence && fenceRe.test(line)) {
+      inFence = true;
+      out.push(line);
+      i++;
+      continue;
+    }
+    if (inFence && fenceRe.test(line)) {
+      inFence = false;
+      out.push(line);
+      i++;
+      continue;
+    }
+
+    if (!inFence) {
+      const openMatch = line.match(openRe);
+      if (openMatch && isBlockType(openMatch[1])) {
+        const type = openMatch[1] as BlockType;
+        const title = blockTitle(type, openMatch[2]);
+        let depth = 1;
+        const innerLines: string[] = [];
+        let j = i + 1;
+        while (j < lines.length && depth > 0) {
+          const l = lines[j];
+          const lOpen = l.match(openRe);
+          if (lOpen && isBlockType(lOpen[1])) {
+            depth++;
+          } else if (closeRe.test(l)) {
+            depth--;
+            if (depth === 0) break;
+          }
+          innerLines.push(l);
+          j++;
+        }
+        const inner = innerLines.join('\n');
+        const processedInner = processCustomBlocks(inner, markedInstance);
+        const html = markedInstance.parse(processedInner, { async: false }) as string;
+        out.push(wrapBlock(type, title, html));
+        i = j + 1;
+        continue;
+      }
+    }
+
+    out.push(line);
+    i++;
+  }
+
+  return out.join('\n');
 }
 
 function slugify(text: string): string {
@@ -57,36 +161,6 @@ export function renderMarkdown(rawContent: string): { html: string; headings: He
     }
     usedIds.add(id);
     return id;
-  }
-
-  function processCallouts(src: string): string {
-    const calloutRegex = new RegExp(`^:::(${CALLOUT_TYPES.join('|')})(\\s+[^\\n]*)?\\n`, 'gm');
-    const videoRegex = /^:::(youtube|video)\s+([^\n]+)$/gim;
-
-    let result = src.replace(calloutRegex, (_, type: string, titleRaw: string | undefined) => {
-      const title = titleRaw?.trim() || type.charAt(0).toUpperCase() + type.slice(1);
-      return `<div class="callout callout-${type}"><div class="callout-title">${title}</div><div class="callout-content">\n`;
-    });
-
-    result = result.replace(videoRegex, (_, type: string, value: string) => {
-      const trimmed = value.trim();
-      if (type === 'youtube') {
-        const id = extractYouTubeId(trimmed);
-        if (!id) return `<div class="docs-video"><div class="docs-video-fallback"><p>ID de YouTube no válido: <code>${escapeHtml(trimmed)}</code></p></div></div>`;
-        return `<div class="docs-video"><iframe src="https://www.youtube-nocookie.com/embed/${id}" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>`;
-      }
-      if (isVideoFile(trimmed)) {
-        return `<div class="docs-video"><video controls preload="metadata"><source src="${escapeHtml(trimmed)}" /><p>Tu navegador no soporta la reproducción de video.</p></video></div>`;
-      }
-      if (/^https?:\/\//.test(trimmed)) {
-        return `<div class="docs-video"><video controls preload="metadata"><source src="${escapeHtml(trimmed)}" /><p>Tu navegador no soporta la reproducción de video.</p></video></div>`;
-      }
-      return `<div class="docs-video"><div class="docs-video-fallback"><p>Formato de video no reconocido: <code>${escapeHtml(trimmed)}</code></p></div></div>`;
-    });
-
-    result = result.replace(/^:::[ \t]*$/gm, '</div></div>');
-
-    return result;
   }
 
   function wrapImages(src: string): string {
@@ -174,9 +248,11 @@ export function renderMarkdown(rawContent: string): { html: string; headings: He
     }
   };
 
+  const marked = new Marked();
   marked.use({ renderer });
 
-  const processed = processCallouts(rawContent);
+  const withVideos = processVideos(rawContent);
+  const processed = processCustomBlocks(withVideos, marked);
   const html = marked.parse(processed, { async: false }) as string;
   const wrapped = wrapImages(html);
 

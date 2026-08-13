@@ -88,6 +88,10 @@ Consejo útil para el usuario.
 Información importante.
 :::
 
+:::details Sección colapsable
+Agrupá contenido extenso en categorías que el lector pueda abrir o cerrar. Soporta markdown completo dentro del bloque.
+:::
+
 4. Inserta videos fácilmente:
 
 ```md
