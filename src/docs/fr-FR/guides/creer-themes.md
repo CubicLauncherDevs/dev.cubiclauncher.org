@@ -863,6 +863,63 @@ Exemple :
 Le dépôt de Themes est sous licence [CC0 1.0 Universal](https://github.com/CubicLauncherDevs/Themes/blob/master/LICENSE) (domaine public). En envoyant votre thème, vous acceptez de le publier sous cette licence. Rappelez-vous que les **polices** incluses dans votre thème conservent leur propre licence : incluez-la et n'utilisez que des polices que vous avez le droit de redistribuer.
 :::
 
+:::details Concevoir des thèmes avec l'IA (agents.md)
+L'IA peut beaucoup accélérer la conception d'un thème, mais elle a aussi tendance à reproduire des combinaisons génériques : fonds sombres + accent bleu, police Inter et peu plus. Pour en profiter sans tomber dans la répétition, utilisez ce prompt ou adaptez-le à votre assistant.
+
+> Ce bloc fonctionne comme une référence de type `agents.md` pour l'IA et les créateurs. Vous pouvez le copier, le coller dans votre chat préféré et l'ajuster au concept que vous souhaitez.
+
+### Prompt recommandé pour agents IA
+
+```markdown
+# Rôle
+Tu es un designer spécialisé dans les interfaces de bureau pour les launchers Minecraft. Tu vas créer un thème pour CubicLauncher au format V2 (`Meta.toml` + `Definition.toml`).
+
+# Objectif
+Générer un thème visuellement unique, avec une identité claire et cohérente, qui ne ressemble pas à un « thème sombre avec des accents bleus génériques ».
+
+# Règles de design
+- Choisis une source d'inspiration concrète : une esthétique de jeu vidéo, une époque du design, une sous-culture visuelle, une région géographique, un mouvement artistique, etc.
+- La palette doit avoir une couleur dominante inattendue ou au moins un accent qui n'est pas le bleu typique `#3b82f6`, le vert `#22c55e` ou le violet `#8b5cf6`.
+- Utilise des typographies qui apportent de la personnalité ; pas toujours Inter. Tu peux combiner une police display pour les titres et une sans-serif lisible pour le corps.
+- Le fond doit avoir une texture, un motif subtil ou un dégradé atmosphérique ; évite les couleurs sombres plates sans détail.
+- Inclus des icônes ou au moins une palette d'icônes cohérente avec le concept.
+- Si cela a du sens, ajoute un `Inject.css` pour des détails que les variables ne parviennent pas à obtenir (ombres de néon, bordures avec clip, filtres, etc.).
+- Nomme les variables de manière sémantique et cohérente.
+
+# Règles techniques
+- Utiliser le format V2.
+- Chemins relatifs pour les ressources.
+- Ne pas inclure `vflag.txt`.
+- Image de fond ≤ 25 Mo, icônes rasterisées ≤ 2 Mo.
+- Valider le TOML avant de livrer.
+
+# Sortie attendue
+1. `[meta]` avec nom, auteur, version, description courte et `injects_css` si applicable.
+2. `[theme]` complet dans `Definition.toml`.
+3. Liste des fichiers recommandés (bg, polices, icônes).
+4. Brève explication du concept (pourquoi il est unique).
+```
+
+### Comment éviter les résultats génériques
+
+- **Ne demandez pas « un thème sombre »** : demandez plutôt quelque chose comme « UI de terminal VT220 », « aesthetic vaporwave de mall », « design suisse brutaliste », « interface Pip-Boy », « esthétique lo-fi japonaise », etc.
+- **Limitez les couleurs « sûres »** : si l'IA vous donne du bleu/vert/violet par défaut, demandez-lui de changer l'accent pour de l'ocre, du corail, du turquoise atténué, du lavande grisâtre, etc.
+- **Demandez des imperfections délibérées** : bruit subtil dans le fond, bordures légèrement usées, ombres longues, contrastes inhabituels.
+- **Intégrez la typographie comme identité** : une police avec empattements pour les titres dans un launcher moderne peut être plus mémorable qu'utiliser Inter partout.
+- **Utilisez `Inject.css` pour des signatures visuelles** : bordures en dégradé, coins alternatifs, effets de verre/néon, typographie monoespacée dans certains panneaux.
+- **Vérifiez le dossier `icons/`** : les icônes personnalisées sont un excellent différenciateur ; si vous ne les dessinez pas à la main, demandez à l'IA un ensemble cohérent et exportez-les en SVG.
+
+### Checklist avant de publier
+
+- [ ] Le thème a un concept clair, pas seulement « sombre avec un accent ».
+- [ ] La palette se distingue de thèmes populaires comme Midnight Blue.
+- [ ] Les polices se chargent et la lisibilité est bonne.
+- [ ] `bg.png` comporte des détails, une texture ou un dégradé, et n'est pas une couleur unie.
+- [ ] Les icônes (s'il y en a) sont cohérentes avec le concept.
+- [ ] Le TOML est valide.
+- [ ] Il n'inclut pas `vflag.txt`.
+:::
+
 :::details Référence rapide
 ### Table comparative V1 vs V2
 

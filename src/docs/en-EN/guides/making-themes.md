@@ -863,6 +863,63 @@ Example:
 The Themes repository is under [CC0 1.0 Universal](https://github.com/CubicLauncherDevs/Themes/blob/master/LICENSE) (public domain). By submitting your theme, you agree to publish it under that license. Remember that the **fonts** included in your theme keep their own license: include it and use only fonts you have the right to redistribute.
 :::
 
+:::details Designing themes with AI (agents.md)
+AI can greatly speed up theme design, but it also tends to reproduce generic combinations: dark backgrounds + blue accent, Inter fonts, and little else. To take advantage of AI without falling into repetition, use this prompt or adapt it to your assistant.
+
+> This block works as an `agents.md`-style reference for AI and creators. Feel free to copy it, paste it into your favorite chat, and adjust it to the concept you want.
+
+### Recommended prompt for AI agents
+
+```markdown
+# Role
+You are a designer specialized in desktop interfaces for Minecraft launchers. You will create a theme for CubicLauncher in V2 format (`Meta.toml` + `Definition.toml`).
+
+# Goal
+Generate a visually unique theme with a clear, coherent identity that does not look like a "generic dark theme with blue accents".
+
+# Design rules
+- Choose a concrete source of inspiration: a video game aesthetic, a design era, a visual subculture, a geographic region, an art movement, etc.
+- The palette must have an unexpected dominant color or at least an accent that is not the typical blue `#3b82f6`, green `#22c55e`, or purple `#8b5cf6`.
+- Use typefaces that add personality; not always Inter. You can combine a display font for titles with a legible sans for body text.
+- The background must have texture, a subtle pattern, or an atmospheric gradient; avoid flat dark colors without detail.
+- Include icons or at least an icon palette coherent with the concept.
+- If it makes sense, add `Inject.css` for details that variables alone cannot achieve (neon shadows, clipped borders, filters, etc.).
+- Name variables semantically and consistently.
+
+# Technical rules
+- Use the V2 format.
+- Use relative paths for resources.
+- Do not include `vflag.txt`.
+- Background image ≤ 25 MB, raster icons ≤ 2 MB.
+- Validate the TOML before delivering.
+
+# Expected output
+1. `[meta]` with name, author, version, short description, and `injects_css` if applicable.
+2. Complete `[theme]` in `Definition.toml`.
+3. List of recommended files (bg, fonts, icons).
+4. Brief explanation of the concept (why it is unique).
+```
+
+### How to avoid generic results
+
+- **Don't ask for "a dark theme"**: ask for something like "VT220 terminal UI", "mall vaporwave aesthetic", "Swiss brutalist design", "Pip-Boy interface", "Japanese lo-fi aesthetic", etc.
+- **Limit "safe" colors**: if the AI defaults to blue/green/purple, ask it to change the accent to ochre, coral, muted turquoise, grayish lavender, etc.
+- **Ask for deliberate imperfections**: subtle background noise, slightly worn edges, long shadows, unusual contrasts.
+- **Make typography part of the identity**: a serif font for titles in a modern launcher can be more memorable than using Inter everywhere.
+- **Use `Inject.css` for visual signatures**: gradient borders, alternate corners, glass/neo effects, monospaced type in certain panels.
+- **Review `icons/`**: custom icons are a huge differentiator; if you don't draw them manually, ask the AI for a coherent set and export them as SVG.
+
+### Checklist before publishing
+
+- [ ] The theme has a clear concept, not just "dark with an accent".
+- [ ] The palette is distinguishable from popular themes such as Midnight Blue.
+- [ ] Fonts load and readability is good.
+- [ ] `bg.png` has detail, texture, or a gradient, not just a flat color.
+- [ ] Icons (if any) are consistent with the concept.
+- [ ] The TOML validates correctly.
+- [ ] It does not include `vflag.txt`.
+:::
+
 :::details Quick reference
 ### V1 vs V2 comparison table
 
