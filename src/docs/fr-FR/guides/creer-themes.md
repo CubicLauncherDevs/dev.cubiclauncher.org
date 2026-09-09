@@ -870,34 +870,36 @@ L'IA peut beaucoup accélérer la conception d'un thème, mais elle a aussi tend
 
 ### Prompt recommandé pour agents IA
 
-```markdown
-# Rôle
+Copiez et collez ceci dans votre assistant, en ajustant le concept :
+
+```text
+[RÔLE]
 Tu es un designer spécialisé dans les interfaces de bureau pour les launchers Minecraft. Tu vas créer un thème pour CubicLauncher au format V2 (`Meta.toml` + `Definition.toml`).
 
-# Objectif
-Générer un thème visuellement unique, avec une identité claire et cohérente, qui ne ressemble pas à un « thème sombre avec des accents bleus génériques ».
+[OBJECTIF]
+Générer un thème visuellement unique, avec une identité claire et cohérente, qui NE ressemble pas à un « thème sombre avec des accents bleus génériques ».
 
-# Règles de design
-- Choisis une source d'inspiration concrète : une esthétique de jeu vidéo, une époque du design, une sous-culture visuelle, une région géographique, un mouvement artistique, etc.
-- La palette doit avoir une couleur dominante inattendue ou au moins un accent qui n'est pas le bleu typique `#3b82f6`, le vert `#22c55e` ou le violet `#8b5cf6`.
-- Utilise des typographies qui apportent de la personnalité ; pas toujours Inter. Tu peux combiner une police display pour les titres et une sans-serif lisible pour le corps.
-- Le fond doit avoir une texture, un motif subtil ou un dégradé atmosphérique ; évite les couleurs sombres plates sans détail.
-- Inclus des icônes ou au moins une palette d'icônes cohérente avec le concept.
-- Si cela a du sens, ajoute un `Inject.css` pour des détails que les variables ne parviennent pas à obtenir (ombres de néon, bordures avec clip, filtres, etc.).
+[RÈGLES DE DESIGN]
+- Choisis une source d'inspiration concrète et peu commune : une esthétique de jeu vidéo, une époque du design, une sous-culture visuelle, un mouvement artistique, etc.
+- Évite l'accent par défaut bleu/vert/violet. Propose de l'ocre, du corail, du turquoise atténué, du lavande grisâtre, etc.
+- Utilise des typographies qui apportent de la personnalité. Tu peux combiner une police display pour les titres et une sans-serif lisible pour le corps.
+- Le fond doit avoir une texture, un motif subtil ou un dégradé atmosphérique ; pas une couleur sombre plate.
+- Ajoute des icônes cohérentes avec le concept.
+- Utilise `Inject.css` quand les variables seules ne suffisent pas (ombres de néon, bordures avec clip, filtres, etc.).
 - Nomme les variables de manière sémantique et cohérente.
 
-# Règles techniques
-- Utiliser le format V2.
+[RÈGLES TECHNIQUES]
+- Format V2.
 - Chemins relatifs pour les ressources.
 - Ne pas inclure `vflag.txt`.
-- Image de fond ≤ 25 Mo, icônes rasterisées ≤ 2 Mo.
+- Image de fond ≤ 25 Mo ; icônes rasterisées ≤ 2 Mo.
 - Valider le TOML avant de livrer.
 
-# Sortie attendue
-1. `[meta]` avec nom, auteur, version, description courte et `injects_css` si applicable.
+[SORTIE ATTENDUE]
+1. `[meta]` avec nom, auteur, version, description et `injects_css` si applicable.
 2. `[theme]` complet dans `Definition.toml`.
 3. Liste des fichiers recommandés (bg, polices, icônes).
-4. Brève explication du concept (pourquoi il est unique).
+4. Brève explication du concept et pourquoi il est unique.
 ```
 
 ### Comment éviter les résultats génériques

@@ -868,34 +868,36 @@ Las IA pueden acelerar mucho el diseño de un theme, pero también tienden a rep
 
 ### Prompt recomendado para agentes de IA
 
-```markdown
-# Rol
+Copiá y pegá esto en tu asistente, ajustando el concepto:
+
+```text
+[ROL]
 Sos un diseñador especializado en interfaces de escritorio para launchers de Minecraft. Vas a crear un theme para CubicLauncher en formato V2 (`Meta.toml` + `Definition.toml`).
 
-# Objetivo
-Generar un theme visualmente único, con una identidad clara y coherente, que no se parezca a un "tema oscuro con acentos azules genérico".
+[OBJETIVO]
+Generar un theme visualmente único, con identidad clara y coherente, que NO sea un "tema oscuro con acentos azules genérico".
 
-# Reglas de diseño
-- Elegí una fuente de inspiración concreta: una estética de videojuego, una época del diseño, una subcultura visual, una región geográfica, un movimiento artístico, etc.
-- La paleta debe tener un color dominante inesperado o al menos un acento que no sea el típico azul `#3b82f6`, verde `#22c55e` o morado `#8b5cf6`.
-- Usá tipografías que aporten personalidad; no siempre Inter. Podés combinar una display para títulos y una sans legible para el cuerpo.
-- El fondo debe tener textura, patrón sutil o degradado atmosférico; evitá colores planos oscuros sin detalle.
-- Incluí iconos o al menos una paleta de iconos coherente con el concepto.
-- Si tiene sentido, agregá `Inject.css` para detalles que las variables no logren (sombras de neón, bordes con clip, filtros, etc.).
+[REGLAS DE DISEÑO]
+- Elegí una fuente de inspiración concreta y poco común: una estética de videojuego, una época del diseño, una subcultura visual, un movimiento artístico, etc.
+- Evitá el acento por defecto azul/verde/morado. Proponé ocre, coral, turquesa apagada, lavanda grisácea, etc.
+- Usá tipografías que aporten personalidad. Podés combinar una display para títulos y una sans legible para cuerpo.
+- El fondo debe tener textura, patrón sutil o degradado atmosférico; no un color plano oscuro.
+- Agregá iconos coherentes con el concepto.
+- Usá `Inject.css` cuando variables solas no alcancen (sombras de neón, bordes con clip, filtros, etc.).
 - Nombrá las variables de forma semántica y coherente.
 
-# Reglas técnicas
-- Usar formato V2.
+[REGLAS TÉCNICAS]
+- Formato V2.
 - Rutas relativas para recursos.
 - No incluir `vflag.txt`.
-- Imagen de fondo ≤ 25 MB, iconos rasterizados ≤ 2 MB.
+- Fondo ≤ 25 MB; iconos rasterizados ≤ 2 MB.
 - Validar TOML antes de entregar.
 
-# Salida esperada
-1. `[meta]` con nombre, autor, versión, descripción corta e `injects_css` si corresponde.
+[SALIDA ESPERADA]
+1. `[meta]` con nombre, autor, versión, descripción e `injects_css` si aplica.
 2. `[theme]` completo en `Definition.toml`.
 3. Lista de archivos recomendados (bg, fuentes, iconos).
-4. Breve explicación del concepto (por qué es único).
+4. Breve explicación del concepto y por qué es único.
 ```
 
 ### Cómo evitar resultados genéricos
