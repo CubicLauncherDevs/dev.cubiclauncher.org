@@ -732,28 +732,40 @@ Vous voulez partager votre thème avec la communauté ? Envoyez une Pull Request
 
 Chaque thème réside sous `src/<Auteur>/<Theme>/`, avec `theme.md` à la racine du thème et un sous-dossier par version (`V1`, `V2`, …) :
 
+> `V1/`, `V2/`, … désignent les **versions du thème au sein du dépôt**, et non l'ancien format V1 de CubicLauncher. À l'intérieur de chaque dossier de version, placez les fichiers du thème dans le format de votre choix (V2 recommandé).
+
 ```
 src/
   <Auteur>/
     <Theme>/
       theme.md               # description du thème (obligatoire)
+      vflag.txt              # vérification du thème, staff uniquement (optionnel)
       V1/
-        Auteur_Theme.zip      # paquet du thème (obligatoire)
+        Meta.toml            # métadonnées
+        Definition.toml      # définitions visuelles
+        bg.png               # image de fond
+        fonts/               # polices personnalisées
+          Font.ttf
         Showcase.png         # aperçu (optionnel)
         changelog.md         # modifications de la version (optionnel)
       V2/                    # nouvelles versions (optionnel)
         ...
 ```
 
+:::info Fichiers binaires
+Les fichiers binaires (images, polices) **ne sont pas stockés dans Git**. Le workflow CI les téléverse automatiquement sur Cloudflare R2, puis les supprime du dépôt. C'est pourquoi seuls les fichiers texte persistent dans le dépôt : TOML, CSS, TXT, MD, etc.
+:::
+
 ### Étapes pour ajouter votre thème
 
 1. Créez `src/VotreAuteur/VotreTheme/theme.md` avec la description du thème.
 2. Créez le dossier de version `src/VotreAuteur/VotreTheme/V1/`.
-3. Ajoutez-y `VotreAuteur_VotreTheme.zip` (le nom du ZIP doit suivre le motif `Auteur_Theme.zip`).
-4. *(Optionnel)* Ajoutez `Showcase.png` comme aperçu (le nom est recherché de manière insensible à la casse, il peut être en minuscules).
-5. *(Optionnel)* Ajoutez `changelog.md` avec le journal des modifications de la version.
-6. Pour publier de nouvelles versions du thème, créez `V2/`, `V3/`, etc.
-7. Ouvrez une Pull Request vers le dépôt.
+3. Ajoutez-y `Meta.toml` et `Definition.toml` (format TOML de CubicLauncher).
+4. Ajoutez-y `bg.png` (ou `.jpg`, `.gif`, `.webp`) comme image de fond.
+5. *(Optionnel)* Ajoutez `Showcase.png` comme aperçu, des polices dans `fonts/`, ainsi que `Inject.css`, `icons/`, etc.
+6. *(Optionnel)* Ajoutez `changelog.md` avec le journal des modifications de la version.
+7. Pour publier de nouvelles versions du thème, créez `V2/`, `V3/`, etc.
+8. Ouvrez une Pull Request vers le dépôt.
 
 ### Fichiers du thème
 
@@ -762,21 +774,27 @@ src/
 | Fichier | Obligatoire ? | Description |
 |---|---|---|
 | `theme.md` | **Oui** | Description/README du thème en Markdown. |
+| `vflag.txt` | Non | Flag de vérification du thème complet. **Seul le staff doit l'ajouter ; si l'auteur l'inclut, le thème ne sera pas vérifié.** |
 
 **À l'intérieur de chaque dossier de version (`V1/`, `V2/`, …) :**
 
 | Fichier | Obligatoire ? | Description |
 |---|---|---|
-| `Auteur_Theme.zip` | **Oui** | Paquet du thème. |
+| `Meta.toml` | **Oui** | Métadonnées du thème. |
+| `Definition.toml` | **Oui** | Définitions visuelles du thème. |
+| `bg.EXT` | **Oui** | Image de fond. Formats : PNG, GIF, WEBP, JPG. |
+| `fonts/` | Non | Polices personnalisées. |
+| `Inject.css` | Non | CSS additionnel (requiert `injects_css = true` dans `Meta.toml`). |
+| `icons/` | Non | Icônes personnalisées (format V2 uniquement). |
 | `Showcase.png` | Non | Aperçu de cette version (nom insensible à la casse). |
 | `changelog.md` | Non | Modifications de cette version. |
 
 **Exemple de `theme.md` :**
 
 ```markdown
-# Mi Tema
+# Mon thème
 
-Descripción en markdown del tema, su inspiración, etc.
+Description en markdown du thème, son inspiration, etc.
 ```
 
 **Exemple de `changelog.md` :**
@@ -784,47 +802,61 @@ Descripción en markdown del tema, su inspiración, etc.
 ```markdown
 # V1
 
-- Primer lanzamiento
-- Tema oscuro con acentos verdes
+- Première version
+- Thème sombre avec des accents verts
 ```
 
-### Le fichier ZIP
+### Vérification des thèmes
 
-**Nom :** `Auteur_Theme.zip` — avec un underscore, sans espaces ni deux-points.
+Le catalogue `themes.json` marque un thème avec `verified: true` uniquement s'il existe un fichier nommé exactement `vflag.txt` dans `src/<Auteur>/<Theme>/`, à côté de `theme.md`. Il peut être vide : son contenu n'est pas lu.
 
-**Contenu pour V2 (recommandé) :**
+> **Important :** le fichier `vflag.txt` **ne doit être ajouté que par le staff**. Si vous, en tant qu'auteur du thème, l'incluez dans votre PR, votre thème **ne sera pas vérifié**.
 
-```
-Auteur_Theme.zip
-└── <nombre-del-theme>/
-    ├── Meta.toml
-    ├── Definition.toml
-    ├── Inject.css        (optionnel)
-    └── bg.EXTENSION      (optionnel)
-```
+La vérification s'applique au thème complet. Un dossier nommé `vflag.txt` ou un fichier à l'intérieur de `V1/`, `V2/`, etc. ne le rend pas vérifié. Sans le fichier, ou si vous le supprimez, le catalogue est généré avec `verified: false`.
 
-**Contenu pour V1 (legacy) :**
+Ajouter ou supprimer uniquement ce flag met à jour le catalogue sans régénérer les aperçus ni téléverser ou supprimer d'assets sur R2.
 
-```
-Auteur_Theme.zip
-└── <nombre-del-theme>/
-    ├── theme.json
-    └── bg.EXTENSION      (optionnel)
-```
+### Comment ajouter uniquement un `Showcase.png` à un thème existant ?
 
-**Formats d'image acceptés :** PNG, GIF, WEBP et JPG.
+1. Ajoutez `Showcase.png` dans `src/<Auteur>/<Theme>/V1/Showcase.png`.
+2. Faites un commit et un push vers `master` (ou ouvrez une PR).
+
+Le workflow téléverse le fichier sur R2, met à jour `showcaseUrl` et préserve les URLs R2 existantes des autres assets (image de fond, polices, etc.).
+
+> L'aperçu se régénère automatiquement. Si `bg.png` n'est pas sur le disque (il a déjà été téléversé sur R2 lors d'une exécution antérieure), l'aperçu utilisera un gradient comme solution de secours.
 
 ### Que se passe-t-il après le merge ?
 
-Le dépôt inclut une **GitHub Action** (`.github/workflows/generate-themes.yml`) qui s'exécute à chaque push :
+Le dépôt inclut un workflow `Generate + Assets to R2` (`.github/workflows/`) qui s'exécute sur **push vers `master`** et en **PR** lorsque des fichiers de `src/` sont modifiés :
 
-1. Il scanne le dossier `src/`.
-2. Il lit le `theme.md` et le `changelog.md` de chaque thème.
-3. Il obtient les dates git de chaque version.
-4. Il construit les URLs de téléchargement vers `raw.githubusercontent.com`.
-5. Il génère le fichier `themes.json` à la racine du dépôt.
+1. Il détecte quels dossiers de version ont changé (p. ex. `src/VotreAuteur/VotreTheme/V1`).
+2. Il optimise les PNGs nouveaux avec `oxipng`.
+3. Il génère les aperçus uniquement pour les dossiers modifiés (`generate.js --dirs`).
+4. Il fusionne les *collections* externes dans `packages.json`.
+5. Il téléverse sur R2 les assets binaires nouveaux, met à jour `themes.json` avec les URLs R2, puis supprime les fichiers binaires locaux (`scripts/upload-assets.mjs`).
+6. Il commite et pousse les changements (`[skip ci]` pour éviter les boucles).
 
-Ce `themes.json` est servi statiquement et est consommé par le site de CubicLauncher pour afficher et télécharger les thèmes. Vous n'avez pas besoin de faire quoi que ce soit de plus : une fois votre PR acceptée, le thème apparaît automatiquement sur [cubiclauncher.org/themes](https://www.cubiclauncher.org/themes).
+Le `themes.json` résultant est servi statiquement et est consommé par le site de CubicLauncher pour afficher et télécharger les thèmes. Vous n'avez pas besoin de faire quoi que ce soit de plus : une fois votre PR acceptée, le thème apparaît automatiquement sur [cubiclauncher.org/themes](https://www.cubiclauncher.org/themes).
+
+### Archive des thèmes — Themes Archive
+
+Il existe également un workflow manuel **`Themes Archive Release`** dans l'onglet *Actions*. En l'exécutant, il génère une release GitHub nommée `archive-YYYY-MM-DD-HHMM` contenant un ZIP avec tous les thèmes et toutes leurs versions :
+
+- Il reconstruit `src/` complet en téléchargeant les fichiers de texte depuis GitHub raw et les assets binaires depuis R2.
+- Il joint `themes.json`, `packages.json`, `README.md` et `LICENSE`.
+- Il vérifie que le ZIP ne dépasse pas la limite de 2 Go de GitHub avant de le publier.
+
+### Assets sur R2
+
+- Les fichiers binaires sont téléversés vers `https://themes.cubiclauncher.org/` avec des noms hachés (`file.<hash8>.ext`) et `Cache-Control: immutable`.
+- Les fichiers de texte sont servis depuis GitHub raw.
+- Le bucket R2 a CORS activé pour permettre les téléchargements depuis le frontend.
+
+```
+Exemple :
+  src/4xnl/Jadol/V1/bg.jpg
+  → https://themes.cubiclauncher.org/src/4xnl/Jadol/V1/bg.132191b1.jpg
+```
 
 ### Licence du dépôt
 
