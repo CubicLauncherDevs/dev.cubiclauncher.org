@@ -9,6 +9,8 @@ CubicLauncher allows you to customize the user interface through **themes**. A t
 
 This guide describes how to create a theme from scratch, how to package it, how to test it locally, and how to publish it to the official repository.
 
+> **Compatibility reference:** updated to [commit `5a7e752` on `develop` (September 16, 2026)](https://github.com/CubicLauncherDevs/CubicLauncher/commit/5a7e752bbb34b0c4573830cbf43616931a8263ca). The new dimensions and `Inject.css` precedence require a build that includes this change. See the [default variables in `reset.css`](https://github.com/CubicLauncherDevs/CubicLauncher/blob/5a7e752bbb34b0c4573830cbf43616931a8263ca/src/styles/shared/reset.css) for reference names and values.
+
 :::details Introduction
 ### What is a theme?
 
@@ -297,11 +299,100 @@ home = "icons/sidebar/home.svg"
 `Inject.css` (optional):
 
 ```css
-/* Additional CSS to customize specific components */
-.custom-button {
-  text-transform: uppercase;
+/* Customize Market cards without !important */
+.market-item {
+  padding: 20px;
 }
 ```
+:::
+
+:::details Interface dimensions and styles
+Change `5a7e752` expands customization through CSS variables without changing the file formats. V1 themes can use these variables in `variables`; V2 themes declare them in the categories of `Definition.toml`. Omitting a variable preserves the launcher's default value.
+
+### Lists and the Market grid
+
+| Variable | Default value | Usage |
+|---|---|---|
+| `--sidebar-width` / `--sidebar-compact-width` | `260px` / `70px` | Width of the normal / compact sidebar. |
+| `--sidebar-row-height` / `--sidebar-compact-row-height` | `52px` / `50px` | Instance row height in each mode. |
+| `--sidebar-row-gap` | `8px` | Spacing between sidebar rows. |
+| `--version-row-height` | `78px` | Row height in the version download selector. |
+| `--resource-row-height` / `--resource-row-gap` | `130px` / `6px` | Total row height and spacing in mod and resource pack catalogs. |
+| `--resource-card-padding` / `--resource-icon-size` | `14px 16px` / `56px` | Card padding and icon size. |
+| `--market-row-height` / `--market-grid-gap` | `224px` / `12px` | Total row height and spacing in the Market. |
+| `--market-card-min-width` | `280px` | Reference width for calculating Market columns (between 1 and 4). |
+| `--market-grid-padding` | `8px` | Space on the right of Market rows. |
+| `--market-card-padding` / `--market-icon-size` | `14px` / `48px` | Market card padding and icon size. |
+
+Virtualized lists only render visible items. Use these variables to change their dimensions: changing only a card's CSS `height` or margins can desynchronize scroll calculations. In the Market, the visible row height is `--market-row-height` minus `--market-grid-gap`; resource cards subtract `--resource-row-gap` from the total height.
+
+Dimensions are resolved through CSS and observed with `ResizeObserver`: they support `px`, `rem`, `calc()`, and `var()`, and update when the font size changes or `Inject.css` loads. Use positive lengths for heights and widths; the Market grid gap and padding can be `0px`. Adjust the total height when increasing padding, icons, or text size.
+
+### Colors, states, and effects
+
+| Variables | Usage and notable defaults |
+|---|---|
+| `--accent-text` | Text on accent buttons; `#0a0a0a`. Adjust it alongside `--accent` to maintain contrast. |
+| `--surface-rgb`, `--surface-subtle`, `--surface-raised` | Base RGB (`255, 255, 255`) and surfaces with opacity `0.02` / `0.04`. Light themes can use a dark base. |
+| `--border-hover`, `--border-focus` | Interaction borders derived from `--surface-rgb` with opacity `0.1` / `0.3`. |
+| `--color-success`, `--color-error`, `--color-warning`, `--color-info` | Semantic colors: `#22c55e`, `#ef4444`, `#eab308`, `#60a5fa`. |
+| `--color-on-success`, `--color-on-error`, `--color-on-warning`, `--color-on-info` | Text on status backgrounds; `#fff`. |
+| `--color-status-starting`, `--color-status-started` | Starting / running status; use `--color-info` / `--color-success`. |
+| `--toast-bg`, `--toast-border` | Notification background and border; derived from `--bg-card` and `--surface-rgb`. |
+| `--download-library`, `--download-asset`, `--download-native`, `--download-client` | Library, asset, native, and client colors: `#4ade80`, `#60a5fa`, `#f59e0b`, `#a78bfa`. |
+| `--download-verifying`, `--download-generic`, `--download-processing`, `--download-jre` | Verification, generic download, processing, and Java: `#f472b6`, `#94a3b8`, `#fb923c`, `#22d3ee`. |
+| `--log-trace`, `--log-debug`, `--log-info`, `--log-message`, `--log-warn`, `--log-error`, `--log-fatal`, `--log-launcher`, `--log-stderr`, `--log-unknown` | Colors by log level/source; default to values derived from text and status colors. |
+| `--media-overlay`, `--media-overlay-text`, `--viewer-overlay` | Image overlay (`rgba(0, 0, 0, 0.6)`), text (`#fff`), and viewer (`rgba(0, 0, 0, 0.9)`). |
+| `--shadow-inset`, `--shadow-floating`, `--shadow-image`, `--shadow-indicator` | Inset, floating, image, and indicator shadows. The last three use `--shadow-lg`, `--shadow-md`, and `--shadow-sm`. |
+| `--shadow-drawer-left`, `--shadow-drawer-right`, `--shadow-drawer-top`, `--shadow-drawer-bottom` | Drawer shadows by direction. |
+| `--bg-image-brightness`, `--bg-image-size`, `--bg-image-position` | Background brightness (`0.4`), size (`cover`), and position (`center`). Brightness is independent of the opacity and blur configured in `[theme.background]`. |
+
+The variables `--error` and `--warning` remain as legacy names. For new themes, prefer the semantic `--color-*` colors. If you change `--accent`, `--color-success`, `--color-error`, or `--color-warning`, keep their `*-rgb` variables consistent when used for transparency; write RGB values as `"239, 68, 68"`, without `rgb()`.
+
+### V2 example: dimensions and contrast
+
+This `Definition.toml` can be used with the earlier minimal `Meta.toml`. When adapting it to an existing theme, merge the keys into the corresponding sections: do not repeat a TOML table.
+
+```toml
+[theme.background]
+
+[theme.colors]
+accent = "#d89b53"
+accent-rgb = "216, 155, 83"
+accent-hover = "#e5ad6d"
+accent-text = "#17120d"
+bg-main = "#17120d"
+bg-sidebar = "#211a13"
+bg-card = "#292017"
+surface-rgb = "255, 240, 220"
+log-warn = "#f1c875"
+download-jre = "#8dcbb8"
+
+[theme.text]
+primary = "#f5eadb"
+secondary = "#c6b6a1"
+
+[theme.layout]
+font-size-base = "14px"
+sidebar-row-height = "4rem"
+sidebar-compact-row-height = "4rem"
+version-row-height = "6rem"
+resource-row-height = "10rem"
+resource-card-padding = "16px"
+market-row-height = "calc(18rem + 12px)"
+market-grid-gap = "12px"
+market-card-min-width = "300px"
+market-card-padding = "20px"
+modal-width = "480px"
+modal-padding = "24px"
+icon-scale = "1.1"
+
+[theme.others]
+font-family-mono = "ui-monospace, Consolas, monospace"
+bg-image-brightness = "0.55"
+```
+
+Variable values are strings, including unitless factors such as `icon-scale`. Use `[theme.layout]` to generate `--modal-width` or `--font-size-base`, and `[theme.others]` for `--font-family-mono`. Placing `font-family-mono` in `[theme.text]` would generate `--text-font-family-mono`, which does not control the monospace font.
 :::
 
 :::details Additional resources
@@ -346,7 +437,7 @@ This means that if `--bg-sidebar-gradient` is defined, the gradient will be appl
 The sidebar can switch between two modes from the interface:
 
 - **Normal mode**: uses the width defined by `--sidebar-width` (default value: `260px`).
-- **Compact mode**: keeps the same colors and gradients, but displays only icons.
+- **Compact mode**: keeps the same colors and gradients, but displays only icons. Its width is controlled by `--sidebar-compact-width` (default `70px`).
 
 #### V1 example
 
@@ -393,6 +484,11 @@ CubicLauncher modals use a combination of global variables to define the overlay
 | `--shadow-lg` | Modal drop shadow. |
 | `--text-primary` | Color of the modal title and primary text. |
 | `--text-muted` | Color of secondary buttons and auxiliary text. |
+| `--modal-width` | Desired width, capped at `90vw`. If omitted, uses the component's width (`400px` if none is specified). |
+| `--modal-max-height` | Maximum height; defaults to `90vh`. |
+| `--modal-padding` / `--modal-gap` | Content padding and spacing; default to `var(--space-xl)` (`24px`) / `20px`. |
+| `--modal-title-size` / `--modal-footer-gap` | Title size and action spacing; `1rem` / `10px`. |
+| `--drawer-width` / `--drawer-max-height` | Side drawer width (`340px`, capped at `90vw`) and top/bottom drawer maximum height (`85vh`). |
 
 #### Overlay behavior
 
@@ -403,7 +499,7 @@ background: var(--bg-overlay, rgba(0, 0, 0, 0.75));
 backdrop-filter: blur(var(--backdrop-blur-modal, 4px));
 ```
 
-If `--bg-overlay` is not defined, a semi-transparent black is used as default (`rgba(0, 0, 0, 0.75)`). If `--backdrop-blur-modal` is not defined, the default blur is `4px`.
+The base CSS already defines `--bg-overlay` as `rgba(0, 0, 0, 0.7)` and `--backdrop-blur-modal` as `4px`. The `0.75` value in this rule is only a fallback if the variable is unavailable, not the launcher's base value.
 
 #### Note on modal background
 
@@ -465,6 +561,8 @@ CubicLauncher styles scrollbars through CSS variables that are later applied wit
 | `--scrollbar-track` | Background of the scrollbar track. |
 | `--scrollbar-thumb` | Color of the scrollbar thumb. |
 | `--scrollbar-thumb-hover` | Thumb color on hover. |
+| `--scrollbar-size` | Scrollbar width and height; defaults to `6px`. |
+| `--scrollbar-radius` | Thumb radius; defaults to `10px`. |
 
 #### Behavior
 
@@ -477,7 +575,7 @@ The base file uses:
 
 ::-webkit-scrollbar-thumb {
   background: var(--scrollbar-thumb, var(--border));
-  border-radius: 10px;
+  border-radius: var(--scrollbar-radius);
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -485,11 +583,11 @@ The base file uses:
 }
 ```
 
-If these variables are not defined, the scrollbar uses `--border` for the thumb and `--text-secondary` for the hover state.
+The base CSS defines the track as `var(--bg-main)`, the thumb as `rgba(var(--surface-rgb), 0.12)`, and hover as `var(--text-secondary)`. The second arguments of `var()` are fallbacks if those variables are unavailable.
 
 #### Note on internal scrollbars
 
-Some specific components (such as `.qm-scroll` in certain panels or `.modal`) have their own scrollbar rules that do not fully depend on these global variables. For full control over all scrollbars, you can use `Inject.css` with `::-webkit-scrollbar` selectors.
+The internal scrollbars of `.qm-scroll` and `.modal` also use `--scrollbar-size`, `--scrollbar-thumb`, and `--scrollbar-radius`. Some details remain local, such as the transparent track in `.qm-scroll`; you can customize them through `Inject.css`.
 
 #### V1 example
 
@@ -514,12 +612,21 @@ scrollbar-thumb-hover = "#555555"
 
 ### Customizing typography
 
-The base application typography is mainly controlled by two variables:
+Base typography and controls can be customized with these variables:
 
 | Variable | Description |
 |---|---|
 | `--font-family` | Main font used throughout the interface. |
-| `--font-size-base` | Base font size. Defaults to `14px`; the rest of the sizes are calculated from this value. |
+| `--font-size-base` | Base font size (`14px`); affects dimensions expressed in `rem`. |
+| `--font-family-mono` | Monospace font for logs and technical content; defaults to a system font stack. |
+| `--font-size-sm` / `--font-size-lg` | Small / large sizes; `0.8rem` / `1.2rem`. |
+| `--font-size-control` / `--font-size-label` | Control / label size; `0.85rem` / `0.65rem`. |
+| `--font-weight-normal` / `--font-weight-medium` / `--font-weight-bold` | Text weights; `400` / `600` / `700`. |
+| `--line-height` | Base line height; `1.5`. |
+| `--log-font-size` / `--log-line-height` | Log size and line height; `0.75rem` / `var(--line-height)`. |
+| `--log-line-padding` / `--log-line-min-height` | Log line padding and minimum height; `2px 14px` / `22px`. |
+| `--control-padding` / `--button-padding` | Control / button padding; `10px 12px` / `8px 16px`. |
+| `--icon-scale` | Scale factor for icons using the shared `Icon` component; `1`. |
 | `--font-loaded` | Internal flag indicating whether the custom font has loaded. Usually not necessary to modify. |
 
 #### Behavior
@@ -576,6 +683,12 @@ If the font has multiple weights or styles, declare each variant separately.
 name = "Custom Typography"
 author = "CubicLabs"
 version = "1.0.0"
+```
+
+`Definition.toml`:
+
+```toml
+[theme.background]
 
 [theme.others]
 font-family = "\"Inter\", system-ui, sans-serif"
@@ -661,9 +774,30 @@ name = "Advanced Theme"
 injects_css = true
 ```
 
-The contents of `Inject.css` are read and sent to the frontend in the `inject_css` field of the `ThemeResponse`. The frontend can then apply it as additional styles.
+The contents of `Inject.css` are read and sent to the frontend in the `inject_css` field of the `ThemeResponse`, and the launcher applies them when the theme is activated.
 
-> **Warning**: injected CSS runs in the context of the application. Include only trusted CSS and avoid overriding critical system selectors unless intentional.
+Since `5a7e752`, global styles and Svelte's scoped styles are grouped in `@layer cubic`. Normal `Inject.css` rules **outside any layer** take precedence over normal rules in that layer, without requiring Svelte's generated classes or `!important`:
+
+```css
+/* Inject.css: keep these rules outside @layer cubic */
+.market-item {
+  padding: 20px;
+}
+
+.modal {
+  background: var(--bg-card);
+}
+
+/* Dimensions inherited by the grid and its observers */
+.market-grid {
+  --market-row-height: calc(18rem + 12px);
+  --market-grid-gap: 12px;
+}
+```
+
+Layer precedence does not override the rules for inline styles or `!important` declarations. Prefer defining global variables in `Definition.toml`; when using CSS, apply them to the container that consumes them, such as `.market-grid`. Do not override calculated internal values (`--row-height`, `--columns`, or the heights and transforms of virtualized rows).
+
+When switching back to a built-in theme, check that injected rules disappear and default dimensions are restored.
 :::
 
 :::details Packaging a theme
@@ -723,6 +857,15 @@ Use the `import_theme_cbth` command for `.cbth` files (V2 package format).
 ### Installed themes location
 
 The `get_themes_dir_path` command returns the path where CubicLauncher stores installed themes. During development, you can check that folder to verify that files were extracted correctly.
+
+### Checking the new customizations
+
+1. Use a build that includes `5a7e752`, import the theme, and activate it.
+2. Check contrast on buttons using `--accent-text`, notifications, logs, downloads, and overlays.
+3. Change sidebar, version, and resource row heights and `--market-*` dimensions while scrolling. Check for overlaps or gaps; repeat with `rem` and a different `--font-size-base`.
+4. In V2, try `.market-item { padding: 20px; }` in `Inject.css` without `!important` and verify that it applies. Increase row height if the content needs more space.
+5. Check modals, icons, monospace fonts, and background brightness, including with blur and animations disabled in the launcher.
+6. Switch back to a built-in theme and verify that styles and dimensions are restored; alternate between two themes to detect leftover values.
 :::
 
 :::details Publishing a theme
@@ -890,6 +1033,9 @@ Generate a visually unique theme with a clear, coherent identity that is NOT a "
 
 [TECHNICAL RULES]
 - V2 format.
+- Consult the actual variables in src/styles/shared/reset.css (reference: commit 5a7e752); use --accent-text and semantic colors with sufficient contrast.
+- Use dimension variables for virtualized lists; do not override internal heights or transforms.
+- Keep Inject.css rules outside @layer cubic to override normal component styles without !important.
 - Relative paths for resources.
 - Do not include `vflag.txt`.
 - Background ≤ 25 MB; raster icons ≤ 2 MB.
