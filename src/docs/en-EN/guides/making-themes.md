@@ -52,6 +52,10 @@ CubicLauncher applies the following security validations:
 :::details Creating a V1 theme (legacy)
 The V1 format uses a single JSON file named `theme.json`. It is simple but limited: it does not support custom icons or injected CSS.
 
+:::warning Legacy format not accepted in the repository
+The official Themes repository no longer accepts submissions in the legacy V1 (`theme.json`) format. This format is kept only for compatibility in the launcher. To create and publish new themes, use the V2 TOML format: `Meta.toml` + `Definition.toml`.
+:::
+
 ### Required files
 
 ```
