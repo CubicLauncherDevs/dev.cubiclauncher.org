@@ -1,6 +1,5 @@
 <script lang="ts">
   import { browser } from '$app/environment';
-  import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import Header from '$lib/components/global/Header.svelte';
   import Footer from '$lib/components/global/Footer.svelte';
@@ -12,93 +11,30 @@
   let { data } = $props();
 
   function defaultLang() {
-    if (data.page !== 'doc') {
-      if (browser) {
-        const stored = localStorage.getItem('docs-lang');
-        if (stored && data.langs.some(l => l.code === stored)) return stored;
-      }
-      return 'es-ES';
+    if (browser) {
+      const stored = localStorage.getItem('docs-lang');
+      if (stored && data.langs.some(l => l.code === stored)) return stored;
     }
-    return data.lang;
+    return data.lang || data.langs?.[0]?.code || 'es-ES';
   }
 
   let selectedLang = $state(defaultLang());
-  let sidebarOpen = $state(false);
-  let langOpen = $state(false);
-  let collapsed = $state<Record<string, boolean>>({});
-  let langBtn: HTMLButtonElement;
-  let langMenuStyle = $state('');
-  let articleWrap: HTMLElement | undefined = $state();
 
   $effect(() => {
-    selectedLang = defaultLang();
+    if (data.page === 'doc' && data.lang) selectedLang = data.lang;
   });
 
   let currentLang = $derived(data.langs.find(l => l.code === selectedLang) || data.langs[0]);
-  let langTree = $derived(data.tree.find(l => l.code === currentLang?.code));
 
-  let flatItems = $derived(
-    langTree?.children?.flatMap(cat => cat.children?.map(item => ({ ...item, category: cat.label })) || []) || []
+  let langParam = $derived(currentLang?.code ? `?lang=${currentLang.code}` : '');
+
+  let pageTitle = $derived(
+    data.page === 'doc' ? (data.wikiTitle || data.title)
+    : data.page === 'todas' ? 'Todas las páginas'
+    : data.page === 'categoria' ? `Categoría: ${data.categoryLabel || data.category}`
+    : data.page === 'categorias' ? 'Categorías'
+    : 'Portada'
   );
-
-  let currentIndex = $derived(data.page === 'doc' ? flatItems.findIndex(i => i.slug === data.slug) : -1);
-  let prevItem = $derived(currentIndex > 0 ? flatItems[currentIndex - 1] : undefined);
-  let nextItem = $derived(currentIndex !== -1 && currentIndex < flatItems.length - 1 ? flatItems[currentIndex + 1] : undefined);
-
-  let breadcrumbs = $derived(() => {
-    if (data.page === 'index') {
-      return [{ label: 'Documentación', href: '/docs' }];
-    }
-    const parts = data.slug.split('/');
-    const langLabel = data.langs.find(l => l.code === parts[0])?.label || parts[0];
-    const category = langTree?.children?.find(c =>
-      c.children?.some(item => item.slug === data.slug)
-    );
-    return [
-      { label: 'Documentación', href: '/docs' },
-      { label: langLabel },
-      { label: category?.label || parts[1] },
-      { label: data.title }
-    ];
-  });
-
-  function toggleCategory(label: string) {
-    collapsed = { ...collapsed, [label]: !collapsed[label] };
-  }
-
-  function openLangMenu() {
-    langOpen = true;
-    if (langBtn) {
-      const r = langBtn.getBoundingClientRect();
-      langMenuStyle = `top:${r.bottom + 4}px;left:${r.left}px;width:${r.width}px`;
-    }
-  }
-
-  function switchLang(code: string) {
-    localStorage.setItem('docs-lang', code);
-    selectedLang = code;
-    langOpen = false;
-    if (data.page === 'doc') {
-      const articleName = data.slug.split('/').pop();
-      for (const lang of data.tree) {
-        if (lang.code === code) {
-          for (const cat of lang.children || []) {
-            for (const item of cat.children || []) {
-              if (item.slug && item.slug.endsWith('/' + articleName)) {
-                goto('/docs/' + item.slug);
-                return;
-              }
-            }
-          }
-        }
-      }
-      goto('/docs');
-    }
-  }
-
-  function closeSidebar() {
-    sidebarOpen = false;
-  }
 
   function attachCopyListeners(node: HTMLElement) {
     function onClick(e: MouseEvent) {
@@ -121,6 +57,7 @@
 
   let images = $state<{ src: string; alt: string }[]>([]);
   let lightboxOpenIndex = $state(-1);
+  let articleWrap: HTMLElement | undefined = $state();
 
   function collectImages() {
     if (!articleWrap) return;
@@ -174,14 +111,14 @@
 </script>
 
 <svelte:head>
-  <title>{data.page === 'doc' ? data.title : 'Documentación'} — CubicLauncher Docs</title>
+  <title>{pageTitle} — CubicLauncher Docs</title>
   {#if data.page === 'doc'}
     <meta name="description" content={data.description || `Documentación de CubicLauncher: ${data.title}.`} />
-    <meta property="og:title" content="{data.title} — CubicLauncher Docs" />
+    <meta property="og:title" content="{pageTitle} — CubicLauncher Docs" />
     <meta property="og:description" content={data.description || `Documentación de CubicLauncher: ${data.title}.`} />
   {:else}
     <meta name="description" content="CubicLauncher Docs — Guías, referencias y recursos sobre CubicLauncher, el launcher de Minecraft multiplataforma." />
-    <meta property="og:title" content="Documentación — CubicLauncher Docs" />
+    <meta property="og:title" content="{pageTitle} — CubicLauncher Docs" />
     <meta property="og:description" content="Guías, referencias y recursos sobre CubicLauncher." />
   {/if}
   <meta property="og:type" content="website" />
@@ -190,145 +127,155 @@
 
 <Header />
 
-<div class="docs-layout">
-  <button class="docs-sidebar-toggle" onclick={() => sidebarOpen = !sidebarOpen} aria-expanded={sidebarOpen}>
-    <span>Índice</span>
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class:rotated={sidebarOpen}><polyline points="6 9 12 15 18 9"/></svg>
-  </button>
-
-  <aside class="docs-sidebar" class:docs-sidebar-open={sidebarOpen}>
-    <div class="docs-sidebar-inner">
-      <div class="docs-sidebar-top">
-        <h4 class="docs-sidebar-title">Documentación</h4>
-        <div class="docs-lang-dropdown">
-          <button bind:this={langBtn} class="docs-lang-btn" onclick={openLangMenu}>
-            <span>{currentLang?.label}</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class:lang-open={langOpen}><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-        </div>
+<div class="docs-root">
+  <div class="wiki-topbar">
+    <div class="wiki-topbar-inner">
+      <div class="wiki-topbar-search">
+        <Search searchIndex={data.searchIndex} currentLang={currentLang?.code || 'es-ES'} />
       </div>
-
-      <Search searchIndex={data.searchIndex} currentLang={currentLang?.code || 'es-ES'} />
-
-      {#if langTree}
-        <div class="docs-lang-group">
-          {#each langTree.children || [] as cat}
-            <div class="docs-cat-group">
-              <button
-                type="button"
-                class="docs-cat-label"
-                onclick={() => toggleCategory(cat.label)}
-                aria-expanded={!collapsed[cat.label]}
-              >
-                {cat.label}
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class:rotated={!collapsed[cat.label]}><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-              {#if !collapsed[cat.label]}
-                <div class="docs-cat-items">
-                  {#each cat.children || [] as item}
-                    <a
-                      href="/docs/{item.slug}"
-                      class="docs-sidebar-link"
-                      class:active={data.page === 'doc' && item.slug === data.slug}
-                    >
-                      {item.label}
-                    </a>
-                  {/each}
-                </div>
-              {/if}
-            </div>
+      <nav class="wiki-topbar-links" aria-label="Navegación wiki">
+        <a href="/docs" class="wiki-topbar-link" class:active={data.page === 'index'}>Portada</a>
+        <span class="wiki-topbar-sep" aria-hidden="true"></span>
+        <a href="/docs/categoria{langParam}" class="wiki-topbar-link" class:active={data.page === 'categorias' || data.page === 'categoria'}>Categorías</a>
+        <span class="wiki-topbar-sep" aria-hidden="true"></span>
+        <a href="/docs/todas{langParam}" class="wiki-topbar-link" class:active={data.page === 'todas'}>Todas las páginas</a>
+        <span class="wiki-topbar-sep" aria-hidden="true"></span>
+        <a href="/docs/aleatoria{langParam}" class="wiki-topbar-link">Aleatoria</a>
+      </nav>
+      <div class="wiki-topbar-lang">
+        <select
+          class="wiki-lang-select"
+          aria-label="Idioma"
+          value={currentLang?.code}
+          onchange={(e) => {
+            const code = e.currentTarget.value;
+            localStorage.setItem('docs-lang', code);
+            selectedLang = code;
+            if (data.page === 'categorias' || data.page === 'categoria') {
+              window.location.href = `/docs/categoria?lang=${code}`;
+            } else if (data.page === 'todas') {
+              window.location.href = `/docs/todas?lang=${code}`;
+            } else if (data.page === 'index') {
+              window.location.reload();
+            }
+          }}
+        >
+          {#each data.langs as lang}
+            <option value={lang.code}>{lang.label}</option>
           {/each}
-        </div>
-      {/if}
+        </select>
+      </div>
     </div>
-  </aside>
+  </div>
 
-  {#if sidebarOpen}
-    <div class="docs-sidebar-overlay" onclick={closeSidebar} role="presentation"></div>
-  {/if}
-
-  <main class="docs-content">
+  <main class="wiki-main">
     {#if data.page === 'index'}
-      <div class="docs-index">
-        <h1>Documentación</h1>
-        <p class="docs-index-desc">Guías, referencias y recursos sobre CubicLauncher: instala, configura y personaliza tu experiencia de Minecraft.</p>
-        {#if langTree}
-          <div class="docs-index-grid">
-            {#each langTree.children || [] as cat}
-              <div class="docs-index-card">
-                <h3>{cat.label}</h3>
-                <ul>
-                  {#each cat.children || [] as item}
-                    <li><a href="/docs/{item.slug}">{item.label}</a></li>
-                  {/each}
-                </ul>
-              </div>
+      <div class="wiki-home">
+        <div class="wiki-hero">
+          <h1 class="wiki-title">CubicLauncher Docs</h1>
+          <p class="wiki-tagline">La wiki comunitaria de CubicLauncher, el launcher de Minecraft multiplataforma y open source.</p>
+          {#if data.categories}
+            <div class="wiki-hero-stats">
+              <span><strong>{data.pageCount}</strong> artículos</span>
+              <span><strong>{data.categories.length}</strong> categorías</span>
+            </div>
+          {/if}
+        </div>
+
+        {#if data.categories}
+          <div class="wiki-portals">
+            {#each data.categories as cat}
+              <a href="/docs/categoria/{encodeURIComponent(cat.name)}{langParam}" class="wiki-portal">
+                <span class="wiki-portal-name">{cat.label || cat.name}</span>
+                <span class="wiki-portal-count">{cat.count} {cat.count === 1 ? 'página' : 'páginas'}</span>
+              </a>
             {/each}
           </div>
         {/if}
+
+        {#if data.sections}
+          {#each data.sections as section}
+            <div class="wiki-home-section">
+              <h2 class="wiki-home-section-title">{section.label}</h2>
+              <ul class="wiki-home-list">
+                {#each section.pages as p}
+                  <li><a href="/docs/{p.slug}">{p.title}</a></li>
+                {/each}
+              </ul>
+            </div>
+          {/each}
+        {/if}
       </div>
+    {:else if data.page === 'categorias'}
+      <article class="wiki-article">
+        <header class="wiki-page-header">
+          <h1 class="wiki-page-title">Categorías</h1>
+          <p class="wiki-page-subtitle">Todas las categorías de la wiki en {currentLang?.label}.</p>
+        </header>
+        <div class="wiki-cat-grid">
+          {#each data.categories as cat}
+            <a href="/docs/categoria/{encodeURIComponent(cat.name)}{langParam}" class="wiki-cat-card">
+              <span class="wiki-cat-name">{cat.label || cat.name}</span>
+              <span class="wiki-cat-count">{cat.count} {cat.count === 1 ? 'página' : 'páginas'}</span>
+            </a>
+          {/each}
+        </div>
+      </article>
+    {:else if data.page === 'categoria'}
+      <article class="wiki-article">
+        <header class="wiki-page-header">
+          <h1 class="wiki-page-title">Categoría: {data.categoryLabel || data.category}</h1>
+          <p class="wiki-page-subtitle">{data.pages.length} {data.pages.length === 1 ? 'página' : 'páginas'} en esta categoría.</p>
+        </header>
+        <ul class="wiki-page-list">
+          {#each data.pages as p}
+            <li><a href="/docs/{p.slug}">{p.title}</a></li>
+          {/each}
+        </ul>
+      </article>
+    {:else if data.page === 'todas'}
+      <article class="wiki-article">
+        <header class="wiki-page-header">
+          <h1 class="wiki-page-title">Todas las páginas</h1>
+          <p class="wiki-page-subtitle">Índice alfabético de los {data.pages.length} artículos de la wiki en {currentLang?.label}.</p>
+        </header>
+        <ul class="wiki-page-list">
+          {#each data.pages as p}
+            <li>
+              <a href="/docs/{p.slug}">{p.title}</a>
+              <span class="wiki-page-list-cat"> — {p.categoryLabel || p.category}</span>
+            </li>
+          {/each}
+        </ul>
+      </article>
     {:else}
-      <article class="docs-article" bind:this={articleWrap} use:attachCopyListeners use:attachLightbox>
-        <nav class="docs-breadcrumbs" aria-label="Breadcrumb">
-          <ol>
-            {#each breadcrumbs() as crumb, i (crumb.label + i)}
-              <li>
-                {#if crumb.href}
-                  <a href={crumb.href}>{crumb.label}</a>
-                {:else}
-                  <span aria-current="page">{crumb.label}</span>
-                {/if}
-              </li>
-            {/each}
-          </ol>
-        </nav>
-
-        {@html data.html}
-
-        <div class="docs-page-nav">
-          <div class="docs-page-nav-item prev">
-            {#if prevItem}
-              <span class="docs-page-nav-label">Anterior</span>
-              <a href="/docs/{prevItem.slug}">← {prevItem.label}</a>
-            {/if}
+      <article class="wiki-article" bind:this={articleWrap}>
+        <header class="wiki-page-header">
+          <h1 class="wiki-page-title">{data.wikiTitle || data.title}</h1>
+          <p class="wiki-page-subtitle">De CubicLauncher Docs</p>
+          <div class="wiki-page-meta">
+            <a href="/docs/categoria/{encodeURIComponent(data.category)}{langParam}">{data.categoryLabel || data.category}</a>
+            <span aria-hidden="true">·</span>
+            <a href="{data.editBase}/{data.wikiCategory}.md" target="_blank" rel="noopener noreferrer">Editar</a>
+            <span aria-hidden="true">·</span>
+            <a href="https://github.com/CubicLauncherDevs/dev.cubiclauncher.org/commits/main/src/docs/{data.slug}.md" target="_blank" rel="noopener noreferrer">Historial</a>
           </div>
-          <div class="docs-page-nav-item next">
-            {#if nextItem}
-              <span class="docs-page-nav-label">Siguiente</span>
-              <a href="/docs/{nextItem.slug}">{nextItem.label} →</a>
-            {/if}
-          </div>
+        </header>
+
+        <div class="wiki-article-body" use:attachCopyListeners use:attachLightbox>
+          <DocToc headings={data.headings} />
+          {@html data.html}
         </div>
 
-        <a
-          href="https://github.com/CubicLauncherDevs/dev.cubiclauncher.org/edit/main/src/docs/{data.slug}.md"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="docs-edit-link"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          Editar esta página en GitHub
-        </a>
+        {#if data.category}
+          <div class="wiki-catbox">
+            <span class="wiki-catbox-label">Categoría</span>
+            <a href="/docs/categoria/{encodeURIComponent(data.category)}{langParam}">{data.categoryLabel || data.category}</a>
+          </div>
+        {/if}
       </article>
     {/if}
   </main>
-
-  {#if data.page === 'doc'}
-    <DocToc headings={data.headings} />
-  {/if}
-
-  {#if langOpen}
-    <div class="docs-lang-backdrop" onclick={() => langOpen = false} role="presentation"></div>
-    <ul class="docs-lang-menu" style={langMenuStyle}>
-      {#each data.langs as lang}
-        <li>
-          <button class="docs-lang-option" class:active={lang.code === currentLang?.code} onclick={() => switchLang(lang.code)}>
-            {lang.label}
-          </button>
-        </li>
-      {/each}
-    </ul>
-  {/if}
 </div>
 
 <Footer />

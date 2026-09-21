@@ -32,3 +32,29 @@ Abrí CubicLauncher, andá al selector de temas y elegí el que acabas de instal
 </div>
 
 ¡Y listo! Ya tenés tu theme instalado.
+
+## Detalles y formatos soportados
+
+### Formato v1 (theme.json)
+
+- Estructura simple con variables CSS y metadatos en `theme.json`.
+- Podés importar un ZIP que contenga `theme.json` en la raíz o dentro de una carpeta.
+
+### Formato v2 (CBTH)
+
+- Paquete `.cbth` o ZIP con `Meta.toml` y `Definition.toml`.
+- Soporta grupos de íconos, fuentes y fondo con mayor flexibilidad.
+
+### Validaciones de imágenes e íconos
+
+- El fondo no debe superar ~25 MB y debe ser una imagen válida (PNG/JPG/WEBP, etc.).
+- Íconos soportados: SVG, PNG, WEBP y JPG/JPEG. Para raster, tamaño máximo ~2 MB.
+- Rutas relativas dentro del ZIP se resuelven respecto del tema; también se aceptan rutas absolutas y `file:`.
+
+### Dónde quedan instalados
+
+Los temas se instalan en `~/.cubic/themes/<id_del_tema>/`. Podés borrar esa carpeta para quitar el tema o usar la opción de eliminar desde Cubic.
+
+### Exportar un tema
+
+Desde el selector de temas podés exportar un tema a `.zip` para compartirlo.

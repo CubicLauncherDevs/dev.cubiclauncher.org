@@ -9,9 +9,17 @@ CubicLauncher allows you to customize the user interface through **themes**. A t
 
 This guide describes how to create a theme from scratch, how to package it, how to test it locally, and how to publish it to the official repository.
 
-> **Compatibility reference:** updated to [commit `5a7e752` on `develop` (September 16, 2026)](https://github.com/CubicLauncherDevs/CubicLauncher/commit/5a7e752bbb34b0c4573830cbf43616931a8263ca). The new dimensions and `Inject.css` precedence require a build that includes this change. See the [default variables in `reset.css`](https://github.com/CubicLauncherDevs/CubicLauncher/blob/5a7e752bbb34b0c4573830cbf43616931a8263ca/src/styles/shared/reset.css) for reference names and values.
+:::related
+- [Install a theme](/docs/en-EN/Usage/install-theme)
+- [Marketplace](/docs/en-EN/Usage/howto)
+- [Wiki components](/docs/es-ES/Avanzado/componentes)
+:::
 
-:::details Introduction
+:::info Compatibility reference
+Updated to [commit `5a7e752` on `develop` (September 16, 2026)](https://github.com/CubicLauncherDevs/CubicLauncher/commit/5a7e752bbb34b0c4573830cbf43616931a8263ca). The new dimensions and `Inject.css` precedence require a build that includes this change. See the [default variables in `reset.css`](https://github.com/CubicLauncherDevs/CubicLauncher/blob/5a7e752bbb34b0c4573830cbf43616931a8263ca/src/styles/shared/reset.css) for reference names and values.
+:::
+
+## Introduction
 ### What is a theme?
 
 A theme is a set of files that CubicLauncher interprets to modify the visual appearance of the application. Internally, CubicLauncher converts any theme format into a common structure called `ThemeResponse`, which the frontend uses to apply styles.
@@ -24,9 +32,9 @@ CubicLauncher supports two versions of the theme format:
 |---|---|---|---|
 | V1 | JSON (`theme.json`) | Legacy | Kept for compatibility, but does not receive new features. |
 | V2 | TOML (`Meta.toml` + `Definition.toml`) | Current | Recommended for new themes. Supports icons, injected CSS, and a clearer organization. |
-:::
 
-:::details General concepts
+
+## General concepts
 ### Version detection
 
 CubicLauncher automatically detects the theme version based on the file present in the theme directory:
@@ -47,9 +55,9 @@ CubicLauncher applies the following security validations:
 - **Background images**: must be valid image files (identified by magic bytes) and cannot exceed **25 MB**.
 - **Custom icons (V2)**: must have the `svg`, `png`, `webp`, `jpg`, or `jpeg` extension; raster images cannot exceed **2 MB**.
 - **Fonts**: if the path is relative, it is resolved locally to the theme directory.
-:::
 
-:::details Creating a V1 theme (legacy)
+
+## Creating a V1 theme (legacy)
 The V1 format uses a single JSON file named `theme.json`. It is simple but limited: it does not support custom icons or injected CSS.
 
 :::warning Legacy format not accepted in the repository
@@ -129,9 +137,9 @@ Each entry in the `fonts` array follows this schema:
 - Does not allow injecting additional CSS.
 - The `bg_image_blur` field is received as a `string` and is parsed to a number.
 - CSS variables are defined manually exactly as they will be applied.
-:::
 
-:::details Creating a V2 theme (recommended)
+
+## Creating a V2 theme (recommended)
 The V2 format separates metadata from visual definitions into two TOML files:
 
 - `Meta.toml`: author information, name, version, and whether the theme injects CSS.
@@ -308,9 +316,9 @@ home = "icons/sidebar/home.svg"
   padding: 20px;
 }
 ```
-:::
 
-:::details Interface dimensions and styles
+
+## Interface dimensions and styles
 Change `5a7e752` expands customization through CSS variables without changing the file formats. V1 themes can use these variables in `variables`; V2 themes declare them in the categories of `Definition.toml`. Omitting a variable preserves the launcher's default value.
 
 ### Lists and the Market grid
@@ -397,9 +405,9 @@ bg-image-brightness = "0.55"
 ```
 
 Variable values are strings, including unitless factors such as `icon-scale`. Use `[theme.layout]` to generate `--modal-width` or `--font-size-base`, and `[theme.others]` for `--font-family-mono`. Placing `font-family-mono` in `[theme.text]` would generate `--text-font-family-mono`, which does not control the monospace font.
-:::
 
-:::details Additional resources
+
+## Additional resources
 ### Background image
 
 The background image is configured differently depending on the version:
@@ -802,9 +810,9 @@ Since `5a7e752`, global styles and Svelte's scoped styles are grouped in `@layer
 Layer precedence does not override the rules for inline styles or `!important` declarations. Prefer defining global variables in `Definition.toml`; when using CSS, apply them to the container that consumes them, such as `.market-grid`. Do not override calculated internal values (`--row-height`, `--columns`, or the heights and transforms of virtualized rows).
 
 When switching back to a built-in theme, check that injected rules disappear and default dimensions are restored.
-:::
 
-:::details Packaging a theme
+
+## Packaging a theme
 A theme is distributed as a ZIP file. Inside the ZIP, files must be inside a root folder with the theme name.
 
 ### ZIP structure for V2
@@ -841,9 +849,9 @@ Author_Theme.zip
 - The ZIP can contain the target file at the root (`theme.json` or `Meta.toml`) or inside a subfolder.
 - If multiple target files or multiple subfolders with them exist, the import is rejected.
 - The ZIP file name for publishing in the official repository must follow the pattern `Author_Theme.zip`.
-:::
 
-:::details Testing a theme locally
+
+## Testing a theme locally
 CubicLauncher exposes several commands to import themes. During development, you can use any of the following methods:
 
 ### Importing a V1 JSON file directly
@@ -870,9 +878,9 @@ The `get_themes_dir_path` command returns the path where CubicLauncher stores in
 4. In V2, try `.market-item { padding: 20px; }` in `Inject.css` without `!important` and verify that it applies. Increase row height if the content needs more space.
 5. Check modals, icons, monospace fonts, and background brightness, including with blur and animations disabled in the launcher.
 6. Switch back to a built-in theme and verify that styles and dimensions are restored; alternate between two themes to detect leftover values.
-:::
 
-:::details Publishing a theme
+
+## Publishing a theme
 Want to share your theme with the community? Open a Pull Request to the [official Themes repository](https://github.com/CubicLauncherDevs/Themes). Published themes appear on the official website: [cubiclauncher.org/themes](https://www.cubiclauncher.org/themes).
 
 ### Repository structure
@@ -1008,9 +1016,9 @@ Example:
 ### Repository license
 
 The Themes repository is under [CC0 1.0 Universal](https://github.com/CubicLauncherDevs/Themes/blob/master/LICENSE) (public domain). By submitting your theme, you agree to publish it under that license. Remember that the **fonts** included in your theme keep their own license: include it and use only fonts you have the right to redistribute.
-:::
 
-:::details Designing themes with AI (agents.md)
+
+## Designing themes with AI (agents.md)
 AI can greatly speed up theme design, but it also tends to reproduce generic combinations: dark backgrounds + blue accent, Inter fonts, and little else. To leverage AI without falling into repetition, use this prompt or adapt it to your assistant.
 
 > This block works as an `agents.md`-style reference for AI and creators. Feel free to copy it, paste it into your favorite chat, and adjust it to the concept you want.
@@ -1070,9 +1078,9 @@ Generate a visually unique theme with a clear, coherent identity that is NOT a "
 - [ ] Icons (if any) are consistent with the concept.
 - [ ] The TOML validates correctly.
 - [ ] It does not include `vflag.txt`.
-:::
 
-:::details Quick reference
+
+## Quick reference
 ### V1 vs V2 comparison table
 
 | Feature | V1 | V2 |
@@ -1099,9 +1107,9 @@ These variables are not required, but they are frequently used by the frontend a
 | `--text-primary` | Primary text color. |
 
 In V2, these variables come from the `colors`, `backgrounds`, and `text` sections with the corresponding prefixes.
-:::
 
-:::details Notes and best practices
+
+## Notes and best practices
 - **Use semver** in the `version` field to keep a clear change history.
 - **Compress images**: background images have a 25 MB limit and icons 2 MB. Lightweight images improve load time.
 - **Prefer SVG or WEBP** for icons, since they offer better quality and compression.
@@ -1110,4 +1118,3 @@ In V2, these variables come from the `colors`, `backgrounds`, and `text` section
 - **Document licenses** for the fonts and images you include in your `theme.md`.
 - **Avoid variable collisions** in V2: if two sections generate the same CSS variable, the theme will emit a warning and one value will overwrite the other.
 - **Test the theme locally** before publishing it using `import_theme_zip` or the corresponding commands.
-:::

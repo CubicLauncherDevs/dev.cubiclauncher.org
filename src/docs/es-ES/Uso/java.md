@@ -27,6 +27,24 @@ En el apartado de Java de la configuracion podes abrir el menu de entornos de Ja
 ### Que versiones descargo?
 Lo general es java 8 para versiones inferiores a 1.16.5, java 17 para versiones inferiores a 1.20.4, java 21 para versiones inferiores a 1.21.11 y java 25 para versiones superiores a la mencionada anteriormente (1.21.11 para los que no tienen comprension lectora)
 
+### Cómo elige Cubic qué Java usar
+
+- Si la versión del juego lo especifica, se usa ese Java.
+- Si no, Cubic infiere la versión de Java adecuada según la versión de Minecraft.
+- Para Forge/NeoForge antiguos que piden Java 8, Cubic puede mantener 8; para Forge/NeoForge recientes, eleva automáticamente a Java 17 porque el loader lo requiere.
+
+Si configurás overrides por instancia, podés forzar una versión de Java distinta para esa instancia.
+
+### JREs gestionados vs externos
+
+- Gestionados: Cubic los instala en `~/.cubic/shared/runtimes/jre<version>` y los mantiene separados del sistema.
+- Externos: podés seleccionar un `java` que ya tengas instalado (p. ej. desde JAVA_HOME o ubicaciones típicas del sistema).
+
+### Detección automática de Java
+
+- En Configuración → Java, Cubic detecta binarios en rutas comunes por sistema y en `JAVA_HOME`.
+- Muestra las rutas detectadas para Java 8/17/21/25 y te deja elegir o descargar los gestionados.
+
 ## Parámetros de la JVM
 
 Los parámetros de la JVM son opciones que se le pasan a Java al iniciar Minecraft. Permiten ajustar cómo se ejecuta el juego, por ejemplo, el manejo de memoria, el recolector de basura o las propiedades del sistema de Java.
@@ -68,3 +86,13 @@ Si ya configuraste la RAM desde el launcher, omití `-Xms` y `-Xmx` del campo de
 ```
 
 Podés cambiar `4G` por otro límite según la memoria disponible y los requisitos de tu modpack, dejando memoria para el sistema y otros programas. El valor de `-Xms` debe ser menor o igual al de `-Xmx`. Estos ajustes no garantizan más FPS: el resultado depende de tu equipo, la versión de Java y los mods.
+
+## Memoria recomendada
+
+Desde Configuración podés ver un rango recomendado según tu RAM total. Como guía general:
+
+- 4 GB o menos: 2 GB para Minecraft.
+- 8 GB: entre 3 y 4 GB.
+- 16 GB o más: entre 4 y 8 GB, según mods y shaders.
+
+Recordá que el sistema y otras apps también necesitan memoria.

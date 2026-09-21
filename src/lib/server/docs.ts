@@ -1,4 +1,3 @@
-import matter from 'gray-matter';
 import { renderMarkdown } from './markdown';
 import type { Heading } from './markdown';
 
@@ -14,6 +13,7 @@ export interface DocNode {
   slug?: string;
   children?: DocNode[];
   code?: string;
+  editBase?: string;
 }
 
 export interface DocMeta {
@@ -24,6 +24,61 @@ export interface DocMeta {
   slug: string;
   content: string;
   headings: Heading[];
+  wikiTitle: string;
+  wikiCategory: string;
+  editBase: string;
+}
+
+/**
+ * Parser de frontmatter tolerante: extrae `key: value` línea a línea.
+ * A diferencia de un parser YAML estricto, tolera valores con «:» sueltos
+ * (ej: `description: Vista de X: Y y Z`) en lugar de lanzar una excepción
+ * que hacía que el frontmatter se renderizara como texto visible.
+ */
+function parseFrontmatter(raw: string): { data: Record<string, string>; content: string } {
+  const data: Record<string, string> = {};
+  let content = raw;
+
+  if (raw.startsWith('---')) {
+    const end = raw.indexOf('\n---');
+    if (end !== -1) {
+      const block = raw.slice(3, end).trim();
+      for (const line of block.split('\n')) {
+        const m = line.match(/^([A-Za-z0-9_-]+)\s*:\s*(.*)$/);
+        if (m) data[m[1].trim()] = m[2].trim().replace(/^["']|["']$/g, '');
+      }
+      content = raw.slice(end + 4).replace(/^\s*\n/, '');
+    }
+  }
+  return { data, content };
+}
+
+function metaFor(entry: DocEntry): { title: string; description: string } {
+  const { data } = parseFrontmatter(entry.content);
+  const fallback = entry.slug.split('/').pop()?.replace(/-/g, ' ') || '';
+  return {
+    title: data.title?.split('|')[0]?.trim() || fallback,
+    description: data.description || '',
+  };
+}
+
+function wikiTitleFor(entry: DocEntry): string {
+  return metaFor(entry).title;
+}
+
+const EDIT_BASES: Record<string, string> = {
+  'es-ES': 'https://github.com/CubicLauncherDevs/dev.cubiclauncher.org/edit/main/src/docs/es-ES',
+  'en-EN': 'https://github.com/CubicLauncherDevs/dev.cubiclauncher.org/edit/main/src/docs/en-EN',
+  'fr-FR': 'https://github.com/CubicLauncherDevs/dev.cubiclauncher.org/edit/main/src/docs/fr-FR',
+};
+
+function editBaseFor(lang: string): string {
+  return EDIT_BASES[lang] || 'https://github.com/CubicLauncherDevs/dev.cubiclauncher.org/edit/main/src/docs';
+}
+
+/** Sufijo de ruta dentro del idioma, ej: 'Uso/instances' */
+function wikiCategoryFor(entry: DocEntry): string {
+  return entry.slug.split('/').slice(1).join('/');
 }
 
 export interface SearchDoc {
@@ -54,7 +109,7 @@ function langName(lang: string): string {
   return map[lang] || lang;
 }
 
-function catDisplay(name: string): string {
+export function catDisplay(name: string): string {
   const map: Record<string, string> = {
     'Comenzando': 'Comenzando',
     'Pour-commencer': 'Pour commencer',
@@ -88,7 +143,7 @@ export function getDocTree(): DocNode[] {
   const tree: DocNode[] = [];
 
   for (const lang of langs) {
-    const langNode: DocNode = { label: langName(lang), code: lang, children: [] };
+    const langNode: DocNode = { label: langName(lang), code: lang, children: [], editBase: editBaseFor(lang) };
     const categories = [...new Set(docsCache.filter(d => d.lang === lang).map(d => d.category))];
     categories.sort((a, b) => {
       const pa = catOrder.indexOf(a);
@@ -100,13 +155,7 @@ export function getDocTree(): DocNode[] {
       const catNode: DocNode = { label: catDisplay(cat), children: [] };
       const entries = docsCache.filter(d => d.lang === lang && d.category === cat);
       for (const entry of entries) {
-        const fileName = entry.slug.split('/').pop() || '';
-        let title = fileName.replace(/-/g, ' ');
-        try {
-          const { data } = matter(entry.content);
-          if (data.title) title = data.title.split('|')[0].trim();
-        } catch {}
-        catNode.children!.push({ label: title, slug: entry.slug });
+        catNode.children!.push({ label: wikiTitleFor(entry), slug: entry.slug });
       }
       catNode.children?.sort((a, b) => a.label.localeCompare(b.label));
       langNode.children!.push(catNode);
@@ -117,17 +166,13 @@ export function getDocTree(): DocNode[] {
 }
 
 function getDocMeta(entry: DocEntry): { title: string; description: string; headings: Heading[]; content: string } {
-  try {
-    const { data, content } = matter(entry.content);
-    const { html, headings } = renderMarkdown(content);
-    const title = data.title?.split('|')[0]?.trim() || entry.slug.split('/').pop()?.replace(/-/g, ' ') || '';
-    const description = data.description || '';
-    return { title, description, headings, content: html };
-  } catch {
-    const { html, headings } = renderMarkdown(entry.content);
-    const title = entry.slug.split('/').pop()?.replace(/-/g, ' ') || '';
-    return { title, description: '', headings, content: html };
-  }
+  const { data, content } = parseFrontmatter(entry.content);
+  const { html, headings } = renderMarkdown(content, {
+    editBase: editBaseFor(entry.lang),
+    filePath: wikiCategoryFor(entry) + '.md',
+  });
+  const meta = metaFor(entry);
+  return { title: meta.title, description: meta.description, headings, content: html };
 }
 
 export function getDoc(slug: string): DocMeta | null {
@@ -142,34 +187,46 @@ export function getDoc(slug: string): DocMeta | null {
     description: meta.description,
     headings: meta.headings,
     content: meta.content,
+    wikiTitle: wikiTitleFor(docEntry),
+    wikiCategory: wikiCategoryFor(docEntry),
+    editBase: editBaseFor(docEntry.lang),
   };
+}
+
+/** Páginas de un idioma ordenadas alfabéticamente (índice estilo wiki) */
+export function getAllPages(lang: string): { title: string; slug: string; category: string; categoryLabel: string }[] {
+  return docsCache
+    .filter(d => d.lang === lang)
+    .map(d => ({
+      title: wikiTitleFor(d),
+      slug: d.slug,
+      category: d.category,
+      categoryLabel: catDisplay(d.category),
+    }))
+    .sort((a, b) => a.title.localeCompare(b.title, 'es'));
+}
+
+export function getRandomPageSlug(lang?: string): string {
+  const pool = lang ? docsCache.filter(d => d.lang === lang) : docsCache;
+  const list = pool.length > 0 ? pool : docsCache;
+  const pick = list[Math.floor(Math.random() * list.length)];
+  return pick.slug;
 }
 
 export function getSearchIndex(): SearchDoc[] {
   return docsCache.map(entry => {
-    try {
-      const { data, content } = matter(entry.content);
-      const title = data.title?.split('|')[0]?.trim() || entry.slug.split('/').pop()?.replace(/-/g, ' ') || '';
-      const { html } = renderMarkdown(content);
-      const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-      const excerpt = text.slice(0, 160) + (text.length > 160 ? '…' : '');
-      return {
-        slug: entry.slug,
-        lang: entry.lang,
-        category: entry.category,
-        title,
-        description: data.description || '',
-        excerpt,
-      };
-    } catch {
-      return {
-        slug: entry.slug,
-        lang: entry.lang,
-        category: entry.category,
-        title: entry.slug.split('/').pop()?.replace(/-/g, ' ') || '',
-        description: '',
-        excerpt: '',
-      };
-    }
+    const meta = metaFor(entry);
+    const { data, content } = parseFrontmatter(entry.content);
+    const { html } = renderMarkdown(content);
+    const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const excerpt = text.slice(0, 160) + (text.length > 160 ? '…' : '');
+    return {
+      slug: entry.slug,
+      lang: entry.lang,
+      category: entry.category,
+      title: meta.title,
+      description: data.description || '',
+      excerpt,
+    };
   });
 }

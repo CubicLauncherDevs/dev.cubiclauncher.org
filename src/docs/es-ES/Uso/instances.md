@@ -119,6 +119,7 @@ Desde la barra lateral podés:
 - **Renombrar** — cambiá el nombre (también renombra la carpeta en disco)
 - **Eliminar** — borra la instancia y todo su contenido (mods, capturas, etc.)
 - **Abrir carpeta** — accedé directamente al directorio de la instancia
+- **Fijar** — poné la instancia arriba de la lista para encontrarla rápido
 
 También podés abrir carpetas específicas desde la pestaña Detalles: mods, resource packs, screenshots.
 
@@ -135,3 +136,8 @@ Las versiones descargadas se guardan en `.cubic/shared/versions/` y se comparten
 ## Memoria RAM
 
 Podés configurar memoria personalizada por instancia editando el `instance.cub`. Si `min_memory` o `max_memory` no están seteados, se usan los valores globales de la configuración.
+
+## Importar y exportar instancias
+
+- Exportá una instancia a `.zip` desde el menú de acciones; sirve para compartir o hacer backup.
+- Importá un `.zip` compatible (incluye `instance.cub` y carpetas de contenido). El asistente te muestra una vista previa antes de confirmar.

@@ -3,7 +3,7 @@
   import { goto } from '$app/navigation';
   import type { SearchDoc } from '$lib/server/docs';
 
-  let { searchIndex, currentLang }: { searchIndex: SearchDoc[]; currentLang: string } = $props();
+  let { searchIndex, currentLang, onOpen }: { searchIndex: SearchDoc[]; currentLang: string; onOpen?: () => void } = $props();
 
   let query = $state('');
   let open = $state(false);
@@ -27,6 +27,7 @@
 
   function openSearch() {
     open = true;
+    onOpen?.();
     requestAnimationFrame(() => inputEl?.focus());
   }
 
@@ -66,8 +67,7 @@
 <svelte:window onkeydown={onKeydown} />
 
 <button type="button" class="search-trigger" onclick={openSearch} aria-label="Buscar documentación">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
-  <span class="search-placeholder">Buscar...</span>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>    <span class="search-placeholder">Buscar...</span>
   <kbd class="search-kbd">Ctrl K</kbd>
 </button>
 

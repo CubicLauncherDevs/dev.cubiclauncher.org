@@ -7,9 +7,17 @@ CubicLauncher permite personalizar la interfaz de usuario mediante **themes** (t
 
 Esta guía describe cómo crear un theme desde cero, cómo empaquetarlo, cómo probarlo localmente y cómo publicarlo en el repositorio oficial.
 
-> **Referencia de compatibilidad:** actualizada al [commit `5a7e752` de `develop` (16 de septiembre de 2026)](https://github.com/CubicLauncherDevs/CubicLauncher/commit/5a7e752bbb34b0c4573830cbf43616931a8263ca). Las nuevas medidas y la prioridad de `Inject.css` requieren una compilación que incluya ese cambio. Consultá las [variables predeterminadas en `reset.css`](https://github.com/CubicLauncherDevs/CubicLauncher/blob/5a7e752bbb34b0c4573830cbf43616931a8263ca/src/styles/shared/reset.css) como referencia de nombres y valores.
+:::related
+- [Instalar un theme](/docs/es-ES/Uso/instalar-tema)
+- [Marketplace](/docs/es-ES/Uso/marketplace)
+- [Componentes de la wiki](/docs/es-ES/Avanzado/componentes)
+:::
 
-:::details Introducción
+:::info Referencia de compatibilidad
+Actualizada al [commit `5a7e752` de `develop` (16 de septiembre de 2026)](https://github.com/CubicLauncherDevs/CubicLauncher/commit/5a7e752bbb34b0c4573830cbf43616931a8263ca). Las nuevas medidas y la prioridad de `Inject.css` requieren una compilación que incluya ese cambio. Consultá las [variables predeterminadas en `reset.css`](https://github.com/CubicLauncherDevs/CubicLauncher/blob/5a7e752bbb34b0c4573830cbf43616931a8263ca/src/styles/shared/reset.css) como referencia de nombres y valores.
+:::
+
+## Introducción
 ### ¿Qué es un theme?
 
 Un theme es un conjunto de archivos que CubicLauncher interpreta para modificar la apariencia visual de la aplicación. Internamente, CubicLauncher convierte cualquier formato de theme a una estructura común llamada `ThemeResponse`, que el frontend utiliza para aplicar los estilos.
@@ -22,9 +30,9 @@ CubicLauncher soporta dos versiones del formato de themes:
 |---|---|---|---|
 | V1 | JSON (`theme.json`) | Legacy | Se mantiene por compatibilidad, pero no recibe nuevas funciones. |
 | V2 | TOML (`Meta.toml` + `Definition.toml`) | Actual | Se recomienda para themes nuevos. Soporta iconos, CSS inyectado y una organización más clara. |
-:::
 
-:::details Conceptos generales
+
+## Conceptos generales
 ### Detección de versiones
 
 CubicLauncher detecta automáticamente la versión del theme según el archivo presente en el directorio del tema:
@@ -45,9 +53,9 @@ CubicLauncher aplica las siguientes validaciones de seguridad:
 - **Imágenes de fondo**: deben ser archivos de imagen válidos (identificación por magic bytes) y no pueden superar los **25 MB**.
 - **Iconos personalizados (V2)**: deben tener extensión `svg`, `png`, `webp`, `jpg` o `jpeg`; las imágenes rasterizadas no pueden superar los **2 MB**.
 - **Fuentes**: si la ruta es relativa, se resuelve localmente al directorio del theme.
-:::
 
-:::details Crear un theme V1 (legacy)
+
+## Crear un theme V1 (legacy)
 El formato V1 utiliza un único archivo JSON llamado `theme.json`. Es simple pero limitado: no soporta iconos personalizados ni CSS inyectado.
 
 :::warning Formato legacy no aceptado en el repositorio
@@ -127,9 +135,9 @@ Cada entrada del array `fonts` sigue este schema:
 - No permite inyectar CSS adicional.
 - El campo `bg_image_blur` se recibe como `string` y se intenta parsear a número.
 - Las variables CSS se definen manualmente tal cual serán aplicadas.
-:::
 
-:::details Crear un theme V2 (recomendado)
+
+## Crear un theme V2 (recomendado)
 El formato V2 separa los metadatos de las definiciones visuales en dos archivos TOML:
 
 - `Meta.toml`: información del autor, nombre, versión y si el theme inyecta CSS.
@@ -306,9 +314,9 @@ home = "icons/sidebar/home.svg"
   padding: 20px;
 }
 ```
-:::
 
-:::details Dimensiones y estilos de la interfaz
+
+## Dimensiones y estilos de la interfaz
 El cambio `5a7e752` amplía la personalización mediante variables CSS, sin cambiar el formato de los archivos. Los temas V1 pueden usar estas variables en `variables`; en V2 se declaran en las categorías de `Definition.toml`. Si omitís una variable, se conserva el valor predeterminado del launcher.
 
 ### Listas y cuadrícula del Market
@@ -395,9 +403,9 @@ bg-image-brightness = "0.55"
 ```
 
 Los valores de variables se escriben como strings, incluso los factores sin unidad como `icon-scale`. Usá `[theme.layout]` para generar `--modal-width` o `--font-size-base`, y `[theme.others]` para `--font-family-mono`. Poner `font-family-mono` en `[theme.text]` generaría `--text-font-family-mono`, que no controla la fuente monoespaciada.
-:::
 
-:::details Recursos adicionales
+
+## Recursos adicionales
 ### Imagen de fondo
 
 La imagen de fondo se configura de forma distinta según la versión:
@@ -800,9 +808,9 @@ Desde `5a7e752`, los estilos globales y los estilos encapsulados de Svelte se ag
 La prioridad de capas no sustituye las reglas de los estilos inline ni de las declaraciones `!important`. Preferí definir variables globales en `Definition.toml`; si usás CSS, aplicalas al contenedor que las consume, como `.market-grid`. No sobrescribas los valores internos calculados (`--row-height`, `--columns`, alturas o transformaciones de las filas virtualizadas).
 
 Al volver a un tema incluido, comprobá que desaparezcan las reglas inyectadas y se restauren las medidas predeterminadas.
-:::
 
-:::details Empaquetar un theme
+
+## Empaquetar un theme
 Un theme se distribuye como un archivo ZIP. Dentro del ZIP, los archivos deben estar dentro de una carpeta raíz con el nombre del theme.
 
 ### Estructura del ZIP para V2
@@ -839,9 +847,9 @@ Autor_Tema.zip
 - El ZIP puede contener el archivo objetivo en la raíz (`theme.json` o `Meta.toml`) o dentro de una subcarpeta.
 - Si existen múltiples archivos objetivo o múltiples subcarpetas con ellos, la importación se rechaza.
 - El nombre del archivo ZIP para publicar en el repositorio oficial debe seguir el patrón `Autor_Tema.zip`.
-:::
 
-:::details Probar un theme localmente
+
+## Probar un theme localmente
 CubicLauncher expone varios comandos para importar themes. Durante el desarrollo, podés usar cualquiera de los siguientes métodos:
 
 ### Importar un archivo JSON V1 directamente
@@ -868,9 +876,9 @@ El comando `get_themes_dir_path` devuelve la ruta donde CubicLauncher almacena l
 4. En V2, probá `.market-item { padding: 20px; }` en `Inject.css` sin `!important` y verificá que se aplique. Aumentá la altura de fila si el contenido necesita más espacio.
 5. Revisá modales, iconos, fuentes monoespaciadas y brillo del fondo, también con desenfoque y animaciones desactivados desde el launcher.
 6. Volvé a un tema incluido y verificá que se restauren estilos y dimensiones; alterná entre dos temas para detectar valores residuales.
-:::
 
-:::details Publicar un theme
+
+## Publicar un theme
 ¿Querés compartir tu tema con la comunidad? Enviá un Pull Request al [repositorio oficial de Themes](https://github.com/CubicLauncherDevs/Themes). Los temas publicados aparecen en la web oficial: [cubiclauncher.org/themes](https://www.cubiclauncher.org/themes).
 
 ### Estructura del repositorio
@@ -1006,9 +1014,9 @@ Ejemplo:
 ### Licencia del repositorio
 
 El repositorio de Themes está bajo [CC0 1.0 Universal](https://github.com/CubicLauncherDevs/Themes/blob/master/LICENSE) (dominio público). Al enviar tu tema, aceptás publicarlo bajo esa licencia. Recordá que las **fuentes** incluidas en tu tema mantienen su propia licencia: incluíla y usá solo fuentes que tengas derecho a redistribuir.
-:::
 
-:::details Diseñar themes con IA (agents.md)
+
+## Diseñar themes con IA (agents.md)
 Las IA pueden acelerar mucho el diseño de un theme, pero también tienden a reproducir combinaciones genéricas: fondos oscuros + acento azul, fuentes Inter y poco más. Para aprovecharlas sin caer en lo repetido, usá este prompt o adaptalo a tu asistente.
 
 > Este bloque funciona como una referencia tipo `agents.md` para IA y creadores. Podés copiarlo, pegarlo en tu chat favorito y ajustarlo al concepto que quieras.
@@ -1068,9 +1076,9 @@ Generar un theme visualmente único, con identidad clara y coherente, que NO sea
 - [ ] Los iconos (si los hay) son consistentes con el concepto.
 - [ ] El TOML valida correctamente.
 - [ ] No incluye `vflag.txt`.
-:::
 
-:::details Referencia rápida
+
+## Referencia rápida
 ### Tabla comparativa V1 vs V2
 
 | Característica | V1 | V2 |
@@ -1097,9 +1105,9 @@ Estas variables no son obligatorias, pero se utilizan frecuentemente por el fron
 | `--text-primary` | Color de texto principal. |
 
 En V2, estas variables surgen de las secciones `colors`, `backgrounds` y `text` con los prefijos correspondientes.
-:::
 
-:::details Notas y buenas prácticas
+
+## Notas y buenas prácticas
 - **Usá semver** en el campo `version` para mantener un historial claro de cambios.
 - **Comprimí las imágenes**: las imágenes de fondo tienen un límite de 25 MB y los iconos de 2 MB. Imágenes livianas mejoran el tiempo de carga.
 - **Preferí SVG o WEBP** para iconos, ya que ofrecen mejor calidad y compresión.
@@ -1108,4 +1116,3 @@ En V2, estas variables surgen de las secciones `colors`, `backgrounds` y `text` 
 - **Documentá las licencias** de las fuentes e imágenes que incluyas en tu `theme.md`.
 - **Evitá colisiones de variables** en V2: si dos secciones generan la misma variable CSS, el tema emitirá una advertencia y un valor sobrescribirá al otro.
 - **Probá el theme localmente** antes de publicarlo mediante `import_theme_zip` o los comandos correspondientes.
-:::
