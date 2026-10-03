@@ -1,4 +1,6 @@
 ---
+category: usage
+order: 10
 title: Comment ajouter un compte ?
 description: Beaucoup de gens nous ont demandé comment utiliser notre launcher, ce qui est compréhensible car nous avons une interface assez unique. Voici quelques…
 ---

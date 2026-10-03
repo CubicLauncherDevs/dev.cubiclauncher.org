@@ -65,17 +65,35 @@ src/
 
 ## Escribir documentación
 
-1. Coloca tus archivos `.md` dentro de `src/docs/<idioma>/<categoria>/`.
+1. Coloca tus archivos `.md` dentro de `src/docs/<idioma>/<carpeta>/`. La ruta del archivo define su URL; conserva las rutas de los artículos publicados.
 2. Usa frontmatter al inicio del archivo:
 
 ```md
 ---
 title: Título del artículo
 description: Breve descripción para SEO y búsquedas.
+category: getting-started
+order: 10
 ---
 
 # Título del artículo
 ```
+
+`category` y `order` son obligatorios. La categoría visible depende de estos metadatos, no de la carpeta. Usa el mismo identificador de categoría y orden para las traducciones de un artículo. Los valores menores de `order` aparecen primero; utiliza intervalos de 10 para poder insertar artículos. El índice «Todas las páginas» conserva el orden alfabético.
+
+Las categorías y sus traducciones están definidas en `src/lib/server/doc-categories.ts`, en este orden:
+
+| Identificador | Categoría |
+| --- | --- |
+| `getting-started` | Primeros pasos |
+| `usage` | Uso y configuración |
+| `content` | Mods y contenido |
+| `customization` | Personalización |
+| `troubleshooting` | Ayuda y soporte |
+| `development` | Desarrollo y contribución |
+| `legal` | Información legal |
+
+Las categorías vacías se ocultan en el idioma correspondiente. Las rutas de categorías antiguas se resuelven a un tema actual o muestran una página de transición cuando sus artículos se repartieron entre varios temas.
 
 3. Usa los callouts soportados:
 

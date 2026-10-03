@@ -1,4 +1,6 @@
 ---
+category: getting-started
+order: 40
 title: Installation on Nix
 description: CubicLauncher can be installed from the repository's flake. To use it you need Nix with flakes and nix-command enabled.
 ---

@@ -1,4 +1,6 @@
 ---
+category: content
+order: 30
 title: Install Dawn Client
 description: How to install Dawn Client in CubicLauncher using the standalone Fabric mod for Minecraft 1.17 and above. Recommended version 1.20.1.
 ---

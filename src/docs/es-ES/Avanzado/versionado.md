@@ -1,4 +1,6 @@
 ---
+category: development
+order: 40
 title: Versionado y lanzamientos
 description: Cómo se gestionan las versiones, canales y publicaciones del proyecto.
 ---

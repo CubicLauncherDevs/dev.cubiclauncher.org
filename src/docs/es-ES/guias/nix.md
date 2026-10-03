@@ -1,4 +1,6 @@
 ---
+category: getting-started
+order: 40
 title: Instalación en Nix
 description: CubicLauncher se puede instalar desde el flake del repositorio. Para usarlo necesitas Nix con flakes y nix-command habilitados.
 ---

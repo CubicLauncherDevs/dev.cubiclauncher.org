@@ -1,4 +1,6 @@
 ---
+category: usage
+order: 30
 title: Qu'est-ce que Java ?
 description: Qu'est-ce que Java et pourquoi est-il nécessaire pour lancer le jeu ?
 ---

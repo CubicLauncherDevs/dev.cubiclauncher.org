@@ -1,4 +1,6 @@
 ---
+category: legal
+order: 10
 title: Licencia
 description: Licencias Cubic Launcher
 ---

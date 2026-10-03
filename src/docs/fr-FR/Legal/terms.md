@@ -1,4 +1,6 @@
 ---
+category: legal
+order: 30
 title: Conditions d'Utilisation
 description: En utilisant CubicLauncher, vous acceptez les conditions suivantes. Ce projet est conçu pour la communauté Minecraft avec un accent sur la transparence et…
 ---

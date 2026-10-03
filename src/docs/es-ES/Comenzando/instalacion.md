@@ -1,4 +1,6 @@
 ---
+category: getting-started
+order: 20
 title: Instalación
 description: Cómo instalar CubicLauncher en Windows, Linux (AppImage/.deb/.rpm, AUR) y macOS, además de Nix/NixOS.
 ---
@@ -54,6 +56,10 @@ Más detalles en la guía: /docs/es-ES/guias/nix
 
 - Los binarios `.AppImage`, `.deb` y `.rpm` se generan en Ubuntu; en distros rolling como Arch puede haber diferencias en versiones de bibliotecas.
 - Por eso, en Arch te recomendamos usar el empaquetado nativo del AUR.
+
+### NVIDIA y Wayland: ventana vacía o cierres
+
+Si el launcher queda en blanco, parpadea o se cierra al redimensionar, consultá [Problemas gráficos en Linux: NVIDIA y Wayland](/docs/es-ES/guias/nvidia-wayland). La guía explica el uso de `WEBKIT_DISABLE_COMPOSITING_MODE=1 cubiclauncher`, las alternativas de WebKitGTK y cómo aplicar el ajuste a un acceso directo.
 
 ## Requisitos mínimos
 

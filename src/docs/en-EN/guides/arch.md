@@ -1,4 +1,6 @@
 ---
+category: getting-started
+order: 30
 title: Installation on Arch Linux
 description: CubicLauncher is available in the AUR (Arch User Repository). You can install it with your preferred AUR helper.
 ---
@@ -75,6 +77,10 @@ CubicLauncher includes a built-in auto-update mechanism that downloads the lates
 3. **Arch philosophy**: On Arch Linux the correct way to update any program is through `pacman`. Using external auto-updaters bypasses the package manager, leaving the system in an inconsistent state (pacman will not know the binary was replaced).
 
 ## Common issues
+
+### NVIDIA and Wayland: graphics issues
+
+If CubicLauncher opens a blank window, flickers or crashes when resizing, see [Linux graphics issues: NVIDIA and Wayland](/docs/en-EN/guides/nvidia-wayland). It covers `WEBKIT_DISABLE_COMPOSITING_MODE=1 cubiclauncher`, less restrictive alternatives and checking KMS. Building locally does not guarantee a fix for these rendering issues.
 
 ### Error downloading dependencies (404)
 

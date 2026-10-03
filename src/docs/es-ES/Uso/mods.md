@@ -1,4 +1,6 @@
 ---
+category: content
+order: 20
 title: Mods
 description: Los mods son modificaciones que alteran o agregan contenido a Minecraft. CubicLauncher te permite gestionarlos fácilmente desde el Market, un widget…
 ---

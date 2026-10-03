@@ -1,4 +1,6 @@
 ---
+category: development
+order: 30
 title: Contribuir
 description: Cómo reportar problemas, proponer cambios y enviar PRs a CubicLauncher.
 ---

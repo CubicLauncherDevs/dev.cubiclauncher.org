@@ -1,4 +1,6 @@
 ---
+category: development
+order: 20
 title: Local development
 description: Requirements, commands and workflow to build, test and contribute to CubicLauncher.
 ---

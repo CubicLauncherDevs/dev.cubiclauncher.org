@@ -1,4 +1,6 @@
 ---
+category: troubleshooting
+order: 20
 title: Diagnóstico y logs
 description: Usá la consola integrada, previsualización de logs y subida a mclo.gs. Cómo reportar problemas.
 ---
@@ -30,6 +32,8 @@ El launcher limpia automáticamente información sensible antes de mostrar o gua
 Usá el botón de Upload para generar un enlace público en mclo.gs y compartirlo en soporte. Ideal para issues.
 
 ## Reportar un problema
+
+Si CubicLauncher no llega a mostrar la interfaz en Linux, consultá [Problemas gráficos en Linux: NVIDIA y Wayland](/docs/es-ES/guias/nvidia-wayland). La guía incluye cómo capturar la salida de la terminal y probar `WEBKIT_DISABLE_COMPOSITING_MODE=1 cubiclauncher`; no necesitás iniciar Minecraft para investigar un fallo de la ventana del launcher.
 
 Incluí en tu reporte:
 

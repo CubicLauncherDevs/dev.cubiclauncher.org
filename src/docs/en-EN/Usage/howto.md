@@ -1,4 +1,6 @@
 ---
+category: getting-started
+order: 50
 title: How do I use it?
 description: Many people have asked us how to use our launcher, which is understandable since we have a quite unique interface. Here we will show you some basic things…
 ---

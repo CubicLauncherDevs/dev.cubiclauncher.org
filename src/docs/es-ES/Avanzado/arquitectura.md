@@ -1,4 +1,6 @@
 ---
+category: development
+order: 10
 title: Arquitectura
 description: "Vista general de la arquitectura de CubicLauncher: Tauri (Rust) + SvelteKit (frontend), eventos e IPC, y estructura de carpetas."
 ---

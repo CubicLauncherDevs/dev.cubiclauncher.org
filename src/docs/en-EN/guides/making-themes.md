@@ -1,4 +1,6 @@
 ---
+category: customization
+order: 20
 title: How to create themes
 description: Complete guide to create, package, and publish custom themes for CubicLauncher. Covers the V1 (legacy) and V2 (recommended) formats, resources, validations, and the official publishing flow.
 ---
@@ -12,7 +14,6 @@ This guide describes how to create a theme from scratch, how to package it, how 
 :::related
 - [Install a theme](/docs/en-EN/Usage/install-theme)
 - [Marketplace](/docs/en-EN/Usage/howto)
-- [Wiki components](/docs/es-ES/Avanzado/componentes)
 :::
 
 :::info Compatibility reference

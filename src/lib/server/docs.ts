@@ -1,15 +1,19 @@
 import { renderMarkdown } from './markdown';
 import type { Heading } from './markdown';
+import { DOC_CATEGORIES, getCategoryDetails } from './doc-categories';
 
 interface DocEntry {
   lang: string;
   category: string;
+  order: number;
   slug: string;
   content: string;
 }
 
 export interface DocNode {
   label: string;
+  category?: string;
+  description?: string;
   slug?: string;
   children?: DocNode[];
   code?: string;
@@ -96,8 +100,16 @@ const docsCache: DocEntry[] = Object.entries(modules).map(([filepath, rawContent
   const relative = filepath.replace('/src/docs/', '').replace(/\.md$/, '');
   const parts = relative.split('/');
   const lang = parts[0];
-  const category = parts[1];
-  return { lang, category, slug: relative, content: rawContent as string };
+  const { data } = parseFrontmatter(rawContent);
+  const category = data.category;
+  const order = Number(data.order);
+  if (!getCategoryDetails(category, lang)) {
+    throw new Error(`Categoría inválida o ausente en ${filepath}: ${category || '(vacía)'}`);
+  }
+  if (!data.order?.trim() || !Number.isInteger(order) || order < 0) {
+    throw new Error(`El campo order debe ser un entero positivo o cero en ${filepath}`);
+  }
+  return { lang, category, order, slug: relative, content: rawContent };
 });
 
 function langName(lang: string): string {
@@ -109,7 +121,10 @@ function langName(lang: string): string {
   return map[lang] || lang;
 }
 
-export function catDisplay(name: string): string {
+export function catDisplay(name: string, lang: string): string {
+  const category = getCategoryDetails(name, lang);
+  if (category) return category.label;
+  // Nombres anteriores, usados solo en las páginas de transición.
   const map: Record<string, string> = {
     'Comenzando': 'Comenzando',
     'Pour-commencer': 'Pour commencer',
@@ -131,7 +146,6 @@ export function catDisplay(name: string): string {
 
 export function getDocTree(): DocNode[] {
   const langOrder = ['es-ES', 'en-EN', 'fr-FR'];
-  const catOrder = ['Comenzando', 'Getting-Started', 'Pour-commencer', 'Uso', 'Usage', 'Utilisation', 'Avanzado', 'Advanced', 'Avance', 'guias', 'guides', 'Clientes', 'Clients', 'Legal'];
 
   const langs = [...new Set(docsCache.map(d => d.lang))];
   langs.sort((a, b) => {
@@ -144,21 +158,13 @@ export function getDocTree(): DocNode[] {
 
   for (const lang of langs) {
     const langNode: DocNode = { label: langName(lang), code: lang, children: [], editBase: editBaseFor(lang) };
-    const categories = [...new Set(docsCache.filter(d => d.lang === lang).map(d => d.category))];
-    categories.sort((a, b) => {
-      const pa = catOrder.indexOf(a);
-      const pb = catOrder.indexOf(b);
-      return (pa === -1 ? 99 : pa) - (pb === -1 ? 99 : pb);
-    });
-
-    for (const cat of categories) {
-      const catNode: DocNode = { label: catDisplay(cat), children: [] };
-      const entries = docsCache.filter(d => d.lang === lang && d.category === cat);
-      for (const entry of entries) {
-        catNode.children!.push({ label: wikiTitleFor(entry), slug: entry.slug });
-      }
-      catNode.children?.sort((a, b) => a.label.localeCompare(b.label));
-      langNode.children!.push(catNode);
+    for (const cat of getCategories(lang)) {
+      langNode.children!.push({
+        label: cat.label,
+        category: cat.name,
+        description: cat.description,
+        children: getCategoryPages(cat.name, lang).map(p => ({ label: p.title, slug: p.slug }))
+      });
     }
     tree.push(langNode);
   }
@@ -193,17 +199,36 @@ export function getDoc(slug: string): DocMeta | null {
   };
 }
 
-/** Páginas de un idioma ordenadas alfabéticamente (índice estilo wiki) */
-export function getAllPages(lang: string): { title: string; slug: string; category: string; categoryLabel: string }[] {
+function pageFor(entry: DocEntry) {
+  return {
+    ...metaFor(entry),
+    slug: entry.slug,
+    category: entry.category,
+    categoryLabel: catDisplay(entry.category, entry.lang)
+  };
+}
+
+export function getCategories(lang: string) {
+  return DOC_CATEGORIES.map(category => ({
+    ...getCategoryDetails(category.id, lang)!,
+    count: docsCache.filter(d => d.lang === lang && d.category === category.id).length
+  })).filter(category => category.count > 0);
+}
+
+/** Orden editorial dentro de cada tema; las rutas de los documentos son independientes. */
+export function getCategoryPages(category: string, lang: string) {
+  return docsCache
+    .filter(d => d.lang === lang && d.category === category)
+    .sort((a, b) => a.order - b.order || wikiTitleFor(a).localeCompare(wikiTitleFor(b), lang.split('-')[0]))
+    .map(pageFor);
+}
+
+/** Índice alfabético completo, independiente del orden de lectura de las categorías. */
+export function getAllPages(lang: string) {
   return docsCache
     .filter(d => d.lang === lang)
-    .map(d => ({
-      title: wikiTitleFor(d),
-      slug: d.slug,
-      category: d.category,
-      categoryLabel: catDisplay(d.category),
-    }))
-    .sort((a, b) => a.title.localeCompare(b.title, 'es'));
+    .map(pageFor)
+    .sort((a, b) => a.title.localeCompare(b.title, lang.split('-')[0]));
 }
 
 export function getRandomPageSlug(lang?: string): string {
@@ -223,7 +248,7 @@ export function getSearchIndex(): SearchDoc[] {
     return {
       slug: entry.slug,
       lang: entry.lang,
-      category: entry.category,
+      category: catDisplay(entry.category, entry.lang),
       title: meta.title,
       description: data.description || '',
       excerpt,

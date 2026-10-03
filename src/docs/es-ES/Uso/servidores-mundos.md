@@ -1,4 +1,6 @@
 ---
+category: usage
+order: 60
 title: Servidores y mundos
 description: Administrá tus mundos locales y listas de servidores por instancia. Consultá el estado del servidor y conectate rápido.
 ---

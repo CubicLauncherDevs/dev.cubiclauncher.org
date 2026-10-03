@@ -1,4 +1,6 @@
 ---
+category: development
+order: 20
 title: Desarrollo local
 description: Requisitos, comandos y flujo de trabajo para compilar, probar y contribuir a CubicLauncher.
 ---

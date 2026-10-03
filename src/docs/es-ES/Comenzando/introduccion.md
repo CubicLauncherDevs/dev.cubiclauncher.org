@@ -1,4 +1,6 @@
 ---
+category: getting-started
+order: 10
 title: Introducción a CubicLauncher
 description: Qué es CubicLauncher, qué puede hacer y cómo empezar en pocos minutos.
 ---

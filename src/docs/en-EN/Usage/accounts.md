@@ -1,4 +1,6 @@
 ---
+category: usage
+order: 10
 title: How do I set up an account?
 description: Many people have asked us how to use our launcher, which is understandable since we have a quite unique interface. Here we will show you some basic things…
 ---

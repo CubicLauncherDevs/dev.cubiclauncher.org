@@ -1,4 +1,6 @@
 ---
+category: usage
+order: 50
 title: Migración desde otros launchers
 description: Importá perfiles del launcher oficial o instancias de MultiMC/Prism/PolyMC/Pinecone a CubicLauncher de forma segura.
 ---

@@ -1,5 +1,5 @@
 import { error, redirect } from '@sveltejs/kit';
-import { getDoc, getDocTree, getSearchIndex, getAllPages, getRandomPageSlug, catDisplay } from '$lib/server/docs';
+import { getDoc, getDocTree, getSearchIndex, getAllPages, getCategories, getCategoryPages, getRandomPageSlug, catDisplay } from '$lib/server/docs';
 import type { SearchDoc } from '$lib/server/docs';
 
 const CATEGORY_ALIASES = ['categoria', 'categorias', 'categories'];
@@ -11,57 +11,76 @@ function resolveLang(langs: { code: string }[], value: string | null): string {
   return langs[0]?.code || 'es-ES';
 }
 
-/** Compara nombres de categoría ignorando mayúsculas, guiones y guiones bajos */
+/** Permite buscar por identificador o nombre traducido. */
 function normCat(s: string): string {
-  return s.toLowerCase().replace(/[_-]+/g, ' ').trim();
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[_-]+/g, ' ').trim();
 }
 
-export function load({ params, url }) {
+export function load({ params, url, cookies }) {
   const path = params.path || '';
   const tree = getDocTree();
   const langs: { code: string; label: string }[] = tree.map(l => ({ code: l.code!, label: l.label }));
   const searchIndex: SearchDoc[] = getSearchIndex();
+  const preferredLang = url.searchParams.get('lang') || cookies.get('docs-lang') || null;
+  const lang = resolveLang(langs, preferredLang);
+  const categories = getCategories(lang);
 
   if (!path) {
-    const lang = resolveLang(langs, url.searchParams.get('lang'));
-    const all = getAllPages(lang);
-    const categories = [...new Set(all.map(p => p.category))].map(name => ({
-      name,
-      label: catDisplay(name),
-      count: all.filter(p => p.category === name).length,
-    }));
-    // Portada estilo wiki: una lista de páginas por categoría
+    // La portada comparte el orden editorial con la navegación y las categorías.
     const sections = categories.map(cat => ({
-      label: catDisplay(cat.name),
-      pages: all.filter(p => p.category === cat.name),
+      ...cat,
+      pages: getCategoryPages(cat.name, lang),
     }));
-    return { page: 'index' as const, tree, langs, searchIndex, lang, categories, sections, pageCount: all.length };
+    return { page: 'index' as const, tree, langs, searchIndex, lang, categories, sections, pageCount: categories.reduce((total, cat) => total + cat.count, 0) };
   }
 
   const parts = path.split('/');
   const first = parts[0];
-  const lang = resolveLang(langs, url.searchParams.get('lang'));
 
   // /docs/categoria[/<categoría>]
   if (CATEGORY_ALIASES.includes(first)) {
-    const all = getAllPages(lang);
-    const categories = [...new Set(all.map(p => p.category))].map(name => ({
-      name,
-      label: catDisplay(name),
-      count: all.filter(p => p.category === name).length,
-    }));
     if (parts.length < 2 || !parts[1]) {
       return { page: 'categorias' as const, tree, langs, searchIndex, lang, categories };
     }
-    const wanted = decodeURIComponent(parts.slice(1).join('/'));
-    const match = categories.find(c => normCat(c.name) === normCat(wanted));
-    if (!match) redirect(307, `/docs/categoria?lang=${lang}`);
-    const pages = all.filter(p => p.category === match.name);
+    const wanted = normCat(parts.slice(1).join('/'));
+    const match = categories.find(c => normCat(c.name) === wanted || normCat(c.label) === wanted);
+    if (match) {
+      return {
+        page: 'categoria' as const,
+        tree, langs, searchIndex, lang,
+        category: match.name,
+        categoryLabel: match.label,
+        categoryDescription: match.description,
+        legacyNotice: null,
+        successorCategories: [],
+        categories,
+        pages: getCategoryPages(match.name, lang),
+      };
+    }
+
+    // Las carpetas antiguas siguen resolviendo sus enlaces públicos.
+    const all = getAllPages(lang);
+    const legacyName = all.map(p => p.slug.split('/')[1]).find(name =>
+      normCat(name) === wanted || normCat(catDisplay(name, lang)) === wanted);
+    if (!legacyName) redirect(307, `/docs/categoria?lang=${lang}`);
+    const pages = all.filter(p => p.slug.split('/')[1] === legacyName);
+    const successorCategories = categories.filter(c => pages.some(p => p.category === c.name));
+    if (successorCategories.length === 1) {
+      redirect(308, `/docs/categoria/${successorCategories[0].name}?lang=${lang}`);
+    }
+    const notices: Record<string, string> = {
+      'es-ES': 'Esta categoría se reorganizó por temas. Explora las categorías actuales o accede a sus artículos desde la lista inferior.',
+      'en-EN': 'This category was reorganized by topic. Explore the current categories or find its articles in the list below.',
+      'fr-FR': 'Cette catégorie a été réorganisée par thème. Explorez les catégories actuelles ou retrouvez ses articles dans la liste ci-dessous.'
+    };
     return {
       page: 'categoria' as const,
       tree, langs, searchIndex, lang,
-      category: match.name,
-      categoryLabel: match.label,
+      category: legacyName,
+      categoryLabel: catDisplay(legacyName, lang),
+      categoryDescription: '',
+      legacyNotice: notices[lang],
+      successorCategories,
       categories,
       pages,
     };
@@ -92,7 +111,7 @@ export function load({ params, url }) {
     slug: path,
     lang: doc.lang,
     category: doc.category,
-    categoryLabel: catDisplay(doc.category),
+    categoryLabel: catDisplay(doc.category, doc.lang),
     wikiTitle: doc.wikiTitle,
     wikiCategory: doc.wikiCategory,
     editBase: doc.editBase,

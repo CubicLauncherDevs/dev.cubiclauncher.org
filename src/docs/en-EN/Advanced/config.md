@@ -1,8 +1,10 @@
 ---
-title: Config
+category: usage
+order: 40
+title: Launcher configuration
 description: This section is currently under construction. Soon you will find all information about config management in CubicLauncher.
 ---
 
-# Config
+# Launcher configuration
 
 This section is currently under construction. Soon you will find all information about config management in CubicLauncher.

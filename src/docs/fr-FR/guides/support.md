@@ -1,4 +1,6 @@
 ---
+category: troubleshooting
+order: 40
 title: Support Officiel
 description: Besoin d'aide avec CubicLauncher ? Nous disposons de plusieurs canaux officiels où vous pouvez obtenir de l'assistance, signaler des problèmes et recevoir…
 ---
@@ -21,6 +23,8 @@ Plus vous fournissez d'informations, plus il sera facile d'identifier et de rés
 :::
 
 ## GitHub Issues
+
+Pour une fenêtre vide, des scintillements ou des plantages sous Linux, consultez d'abord le [guide NVIDIA et Wayland](/docs/fr-FR/guides/nvidia-wayland). Précisez le pilote, le compositeur, le type de session et les résultats des essais. Si le launcher ne s'ouvre pas, vous pouvez joindre sa sortie de terminal plutôt qu'un log du jeu.
 
 Notre méthode principale pour signaler des bugs, demander de nouvelles fonctionnalités ou obtenir du support technique est via les **Issues** du dépôt officiel.
 

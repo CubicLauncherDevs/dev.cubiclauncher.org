@@ -1,4 +1,6 @@
 ---
+category: customization
+order: 20
 title: Cómo crear themes
 description: Guía completa para crear, empaquetar y publicar temas personalizados en CubicLauncher. Cubre los formatos V1 (legacy) y V2 (recomendado), recursos, validaciones y flujo de publicación oficial.
 ---
@@ -10,7 +12,6 @@ Esta guía describe cómo crear un theme desde cero, cómo empaquetarlo, cómo p
 :::related
 - [Instalar un theme](/docs/es-ES/Uso/instalar-tema)
 - [Marketplace](/docs/es-ES/Uso/marketplace)
-- [Componentes de la wiki](/docs/es-ES/Avanzado/componentes)
 :::
 
 :::info Referencia de compatibilidad

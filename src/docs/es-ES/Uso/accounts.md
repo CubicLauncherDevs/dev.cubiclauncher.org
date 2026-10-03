@@ -1,4 +1,6 @@
 ---
+category: usage
+order: 10
 title: Cuentas de usuario
 description: Muchas personas nos han dicho sobre como se usa nuestro launcher, lo que igual se entiende ya que tenemos una interfaz bastante unica. Aca te mostraremos…
 ---

@@ -1,4 +1,6 @@
 ---
+category: getting-started
+order: 20
 title: Installation
 description: Installer CubicLauncher est un processus simple. Suivez les instructions correspondant à votre système d'exploitation pour commencer.
 ---
@@ -35,6 +37,10 @@ Nous offrons le support pour plusieurs formats sur Linux :
 - **Debian/Ubuntu :** Installez le paquet `.deb` avec `sudo apt install ./cubiclauncher.deb`.
 - **ARCH PKGBUILD :** La compilation locale est obligatoire. Les binaires générés par les CI GitHub (Ubuntu) peuvent ne pas être compatibles avec Arch Linux en raison de son modèle de rolling release. <a href="/docs/fr-FR/guides/arch" class="text-blue-400 hover:underline">Guide</a>.
 - **Nix/NixOS :** Installez depuis le flake du dépôt avec `nix profile install github:CubicLauncherDevs/CubicLauncher`. <a href="/docs/fr-FR/guides/nix" class="text-blue-400 hover:underline">Guide</a>.
+
+### NVIDIA et Wayland : fenêtre vide ou plantages
+
+Si le launcher reste vide, scintille ou se ferme au redimensionnement, consultez [Problèmes graphiques sous Linux : NVIDIA et Wayland](/docs/fr-FR/guides/nvidia-wayland). Ce guide explique `WEBKIT_DISABLE_COMPOSITING_MODE=1 cubiclauncher`, les alternatives WebKitGTK et l'application du réglage à un raccourci.
 
 ## macOS
 

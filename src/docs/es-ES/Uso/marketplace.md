@@ -1,4 +1,6 @@
 ---
+category: content
+order: 10
 title: Contenido y Marketplace
 description: Instalá mods, resource packs, shader packs y modpacks desde Modrinth y CurseForge con resolución de dependencias.
 ---

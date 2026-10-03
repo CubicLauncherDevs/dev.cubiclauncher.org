@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { browser } from '$app/environment';
+  import { tick } from 'svelte';
   import { goto } from '$app/navigation';
   import type { SearchDoc } from '$lib/server/docs';
 
@@ -8,58 +8,69 @@
   let query = $state('');
   let open = $state(false);
   let inputEl = $state<HTMLInputElement | undefined>(undefined);
+  let dialogEl: HTMLDialogElement;
+  let activeIndex = $state(0);
 
-  let results = $derived(
-    query.trim().length < 2
-      ? []
-      : searchIndex
-          .filter(d => d.lang === currentLang)
-          .filter(d => {
-            const q = query.toLowerCase();
-            return (
-              d.title.toLowerCase().includes(q) ||
-              d.description.toLowerCase().includes(q) ||
-              d.excerpt.toLowerCase().includes(q)
-            );
-          })
-          .slice(0, 8)
-  );
+  function normalize(value: string) {
+    return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  }
 
-  function openSearch() {
+  let results = $derived.by(() => {
+    const q = normalize(query);
+    if (q.length < 2) return [];
+    const words = q.split(/\s+/);
+    return searchIndex.filter(d => d.lang === currentLang)
+      .map(doc => {
+        const title = normalize(doc.title);
+        const text = normalize(`${doc.title} ${doc.category} ${doc.description} ${doc.excerpt}`);
+        const score = words.every(word => text.includes(word))
+          ? (title === q ? 100 : title.startsWith(q) ? 50 : title.includes(q) ? 30 : 1)
+            + words.filter(word => title.includes(word)).length * 5 : 0;
+        return { doc, score };
+      })
+      .filter(result => result.score > 0)
+      .sort((a, b) => b.score - a.score || a.doc.title.localeCompare(b.doc.title))
+      .slice(0, 12).map(result => result.doc);
+  });
+
+  async function openSearch() {
+    if (open) return;
     open = true;
     onOpen?.();
-    requestAnimationFrame(() => inputEl?.focus());
+    await tick();
+    dialogEl.showModal();
+    inputEl?.focus();
   }
 
   function closeSearch() {
+    dialogEl?.close();
     open = false;
     query = '';
+    activeIndex = 0;
   }
 
   function navigate(slug: string) {
-    goto('/docs/' + slug);
     closeSearch();
+    goto('/docs/' + slug);
   }
 
   function onKeydown(e: KeyboardEvent) {
-    if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+    if (e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       if (open) closeSearch();
       else openSearch();
     }
-    if (e.key === 'Escape') closeSearch();
   }
 
-  function onDocKeydown(e: KeyboardEvent) {
-    if (e.key === 'ArrowDown' && document.activeElement?.classList.contains('search-result')) {
-      const next = (document.activeElement as HTMLElement).nextElementSibling as HTMLElement | null;
-      next?.focus();
+  function onInputKeydown(e: KeyboardEvent) {
+    if (e.isComposing || !results.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
-    }
-    if (e.key === 'ArrowUp' && document.activeElement?.classList.contains('search-result')) {
-      const prev = (document.activeElement as HTMLElement).previousElementSibling as HTMLElement | null;
-      prev?.focus();
+      activeIndex = (activeIndex + (e.key === 'ArrowDown' ? 1 : -1) + results.length) % results.length;
+      document.getElementById(`search-result-${activeIndex}`)?.scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter') {
       e.preventDefault();
+      navigate(results[activeIndex].slug);
     }
   }
 </script>
@@ -67,20 +78,25 @@
 <svelte:window onkeydown={onKeydown} />
 
 <button type="button" class="search-trigger" onclick={openSearch} aria-label="Buscar documentación">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>    <span class="search-placeholder">Buscar...</span>
+  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>    <span class="search-placeholder">Buscar en la documentación...</span>
   <kbd class="search-kbd">Ctrl K</kbd>
 </button>
 
-{#if open}
-  <div class="search-backdrop" onclick={closeSearch} role="presentation"></div>
-  <div class="search-modal" role="dialog" aria-modal="true" aria-label="Búsqueda de documentación">
+<dialog bind:this={dialogEl} class="search-modal" aria-label="Búsqueda de documentación" onclose={closeSearch} onclick={(e) => { if (e.target === dialogEl) closeSearch(); }}>
+  <div class="search-panel" role="presentation">
     <div class="search-input-wrap">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
       <input
         type="text"
+        role="combobox"
+        aria-label="Buscar artículos"
+        aria-expanded={results.length > 0}
+        aria-activedescendant={results.length ? `search-result-${activeIndex}` : undefined}
         bind:this={inputEl}
         aria-controls="search-results-list"
         bind:value={query}
+        oninput={() => activeIndex = 0}
+        onkeydown={onInputKeydown}
         placeholder="Buscar en la documentación..."
         aria-autocomplete="list"
         autocomplete="off"
@@ -88,13 +104,14 @@
       />
       <button type="button" class="search-close" onclick={closeSearch} aria-label="Cerrar búsqueda">Esc</button>
     </div>
-    <div class="search-results" role="listbox" id="search-results-list">
+    <p class="search-status" role="status">{results.length ? `${results.length} resultados · ${currentLang}` : `Búsqueda en ${currentLang}`}</p>
+    <div class="search-results" role="listbox" aria-label="Artículos encontrados" id="search-results-list">
       {#if results.length === 0}
         <div class="search-empty">
           {#if query.trim().length < 2}
             Escribe al menos 2 caracteres para buscar.
           {:else}
-            No se encontraron resultados.
+            No se encontraron resultados. Prueba con menos palabras o cambia el idioma de la documentación.
           {/if}
         </div>
       {:else}
@@ -102,10 +119,11 @@
           <button
             type="button"
             class="search-result"
+            id="search-result-{idx}"
+            tabindex="-1"
             onclick={() => navigate(result.slug)}
             role="option"
-            aria-selected={idx === 0}
-            onkeydown={onDocKeydown}
+            aria-selected={idx === activeIndex}
           >
             <span class="search-result-title">{result.title}</span>
             <span class="search-result-meta">{result.category} · {result.lang}</span>
@@ -124,7 +142,7 @@
       <span><kbd>Esc</kbd> cerrar</span>
     </div>
   </div>
-{/if}
+</dialog>
 
 <style>
   .search-trigger {
@@ -171,26 +189,28 @@
     }
   }
 
-  .search-backdrop {
-    position: fixed;
-    inset: 0;
+  .search-modal::backdrop {
     background: rgba(0, 0, 0, 0.5);
-    z-index: 300;
   }
 
   .search-modal {
     position: fixed;
     top: 15vh;
-    left: 50%;
-    transform: translateX(-50%);
+    margin: 0 auto;
+    padding: 0;
     width: min(640px, calc(100vw - 2rem));
     background: var(--bg-surface);
+    color: var(--text-secondary);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
     z-index: 301;
     overflow: hidden;
+    max-height: calc(100dvh - 2rem);
   }
+
+  .search-panel { display: flex; flex-direction: column; max-height: min(680px, 80dvh); }
+  .search-status { padding: 0.5rem 1rem; font-size: 0.75rem; color: var(--text-muted); border-bottom: 1px solid var(--border); }
 
   .search-input-wrap {
     display: flex;
@@ -203,6 +223,7 @@
 
   .search-input-wrap input {
     flex: 1;
+    min-width: 0;
     background: transparent;
     border: none;
     outline: none;
@@ -234,6 +255,7 @@
   .search-results {
     max-height: 360px;
     overflow-y: auto;
+    min-height: 0;
   }
 
   .search-empty {
@@ -263,8 +285,9 @@
   }
 
   .search-result:hover,
+  .search-result[aria-selected="true"],
   .search-result:focus {
-    background: var(--bg-elevated);
+    background: var(--accent-subtle);
     outline: none;
   }
 

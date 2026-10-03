@@ -1,4 +1,6 @@
 ---
+category: usage
+order: 20
 title: Instances
 description: An instance is a self-contained directory with its own copy of Minecraft, mods, resource packs, screenshots and configuration. Each instance represents a…
 ---

@@ -1,4 +1,6 @@
 ---
+category: getting-started
+order: 10
 title: Introduction
 description: Bienvenue dans la documentation officielle de CubicLauncher. Vous trouverez ici des guides détaillés sur la façon d'installer, configurer et tirer le…
 ---

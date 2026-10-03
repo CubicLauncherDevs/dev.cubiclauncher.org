@@ -1,4 +1,6 @@
 ---
+category: development
+order: 20
 title: Développement local
 description: Prérequis, commandes et flux de travail pour compiler, tester et contribuer à CubicLauncher.
 ---
