@@ -212,12 +212,17 @@ Notes importantes :
 - Le champ `[background]` **n'est pas converti en variables CSS**. Il est exposé directement comme image de fond du thème.
 - Les clés dupliquées génèrent un avertissement dans les logs et sont écrasées.
 
+:::warning Sections à la racine, sans le préfixe `theme.`
+Dans `Definition.toml`, les sections se trouvent à la racine et **sans** le préfixe `theme.` : `[background]`, `[colors]`, `[text]`, `[borders]`, `[layout]`, `[shadows]`, `[backgrounds]`, `[backdrop]`, `[others]`, `[[fonts]]`, `[icons]`. Écrire `[theme.colors]`, `[[theme.fonts]]`, etc. fait que CubicLauncher ignore **tout** le fichier sans lever d'erreur : le thème s'importe mais n'applique rien.
+
+De même, `Meta.toml` définit ses champs à la racine (`name`, `author`, `version`, `description`, `injects_css`), **pas** dans une section `[meta]`.
+:::
+
 ### Exemple minimal V2
 
 `Meta.toml` :
 
 ```toml
-[meta]
 name = "Minimal"
 author = "CubicLabs"
 version = "1.0.0"
@@ -226,13 +231,13 @@ version = "1.0.0"
 `Definition.toml` :
 
 ```toml
-[theme.background]
+[background]
 
-[theme.colors]
+[colors]
 accent = "#ffffff"
 bg-main = "#0a0a0a"
 
-[theme.text]
+[text]
 primary = "#e5e5e5"
 ```
 
@@ -241,7 +246,6 @@ primary = "#e5e5e5"
 `Meta.toml` :
 
 ```toml
-[meta]
 name = "Midnight Blue"
 author = "CubicLabs"
 version = "2.0.0"
@@ -252,60 +256,60 @@ injects_css = true
 `Definition.toml` :
 
 ```toml
-[theme.background]
+[background]
 reference_path = "bg.webp"
 image_blur = 8.0
 image_opacity = 0.4
 
-[theme.colors]
+[colors]
 accent = "#3b82f6"
 bg-main = "#0a0e17"
 bg-card = "#111827"
 
-[theme.text]
+[text]
 primary = "#e5e7eb"
 secondary = "#9ca3af"
 
-[theme.borders]
+[borders]
 color = "#1f2937"
 radius = "8px"
 
-[theme.layout]
+[layout]
 spacing = "1rem"
 
-[theme.shadows]
+[shadows]
 glow-accent = "0 0 12px rgba(59, 130, 246, 0.3)"
 
-[theme.backgrounds]
+[backgrounds]
 sidebar = "#0f172a"
 
-[theme.backdrop]
+[backdrop]
 modal = 8.0
 dropdown = 4.0
 
-[theme.others]
+[others]
 icon-filter = "invert(1)"
 
-[[theme.fonts]]
+[[fonts]]
 family = "Inter"
 src = "fonts/Inter.woff2"
 format = "woff2"
 weight = "400"
 
-[[theme.fonts]]
+[[fonts]]
 family = "Inter"
 src = "fonts/Inter-Bold.woff2"
 format = "woff2"
 weight = "700"
 
-[theme.icons]
+[icons]
 preview = "icons/preview.png"
 
-[theme.icons.ui]
+[icons.ui]
 play = "icons/ui/play.svg"
 settings = "icons/ui/settings.svg"
 
-[theme.icons.sidebar]
+[icons.sidebar]
 home = "icons/sidebar/home.svg"
 ```
 
@@ -358,7 +362,7 @@ Les dimensions sont résolues par CSS et observées avec `ResizeObserver` : elle
 | `--media-overlay`, `--media-overlay-text`, `--viewer-overlay` | Overlay des images (`rgba(0, 0, 0, 0.6)`), texte (`#fff`) et visionneuse (`rgba(0, 0, 0, 0.9)`). |
 | `--shadow-inset`, `--shadow-floating`, `--shadow-image`, `--shadow-indicator` | Ombres intérieures, flottantes, d'images et d'indicateurs. Les trois dernières utilisent `--shadow-lg`, `--shadow-md` et `--shadow-sm`. |
 | `--shadow-drawer-left`, `--shadow-drawer-right`, `--shadow-drawer-top`, `--shadow-drawer-bottom` | Ombres des panneaux coulissants selon leur direction. |
-| `--bg-image-brightness`, `--bg-image-size`, `--bg-image-position` | Luminosité (`0.4`), taille (`cover`) et position (`center`) du fond. La luminosité est indépendante de l'opacité et du flou configurés dans `[theme.background]`. |
+| `--bg-image-brightness`, `--bg-image-size`, `--bg-image-position` | Luminosité (`0.4`), taille (`cover`) et position (`center`) du fond. La luminosité est indépendante de l'opacité et du flou configurés dans `[background]`. |
 
 Les variables `--error` et `--warning` restent disponibles comme noms legacy. Pour les nouveaux thèmes, préférez les couleurs sémantiques `--color-*`. Si vous modifiez `--accent`, `--color-success`, `--color-error` ou `--color-warning`, gardez leurs variables `*-rgb` cohérentes lorsqu'elles servent aux transparences ; écrivez les valeurs RGB sous la forme `"239, 68, 68"`, sans `rgb()`.
 
@@ -367,9 +371,9 @@ Les variables `--error` et `--warning` restent disponibles comme noms legacy. Po
 Ce `Definition.toml` peut être utilisé avec le `Meta.toml` minimal précédent. Pour l'adapter à un thème existant, intégrez les clés dans les sections correspondantes : ne répétez pas une même table TOML.
 
 ```toml
-[theme.background]
+[background]
 
-[theme.colors]
+[colors]
 accent = "#d89b53"
 accent-rgb = "216, 155, 83"
 accent-hover = "#e5ad6d"
@@ -381,11 +385,11 @@ surface-rgb = "255, 240, 220"
 log-warn = "#f1c875"
 download-jre = "#8dcbb8"
 
-[theme.text]
+[text]
 primary = "#f5eadb"
 secondary = "#c6b6a1"
 
-[theme.layout]
+[layout]
 font-size-base = "14px"
 sidebar-row-height = "4rem"
 sidebar-compact-row-height = "4rem"
@@ -400,12 +404,12 @@ modal-width = "480px"
 modal-padding = "24px"
 icon-scale = "1.1"
 
-[theme.others]
+[others]
 font-family-mono = "ui-monospace, Consolas, monospace"
 bg-image-brightness = "0.55"
 ```
 
-Les valeurs des variables sont des chaînes de caractères, y compris les facteurs sans unité comme `icon-scale`. Utilisez `[theme.layout]` pour générer `--modal-width` ou `--font-size-base`, et `[theme.others]` pour `--font-family-mono`. Placer `font-family-mono` dans `[theme.text]` générerait `--text-font-family-mono`, qui ne contrôle pas la police à chasse fixe.
+Les valeurs des variables sont des chaînes de caractères, y compris les facteurs sans unité comme `icon-scale`. Utilisez `[layout]` pour générer `--modal-width` ou `--font-size-base`, et `[others]` pour `--font-family-mono`. Placer `font-family-mono` dans `[text]` générerait `--text-font-family-mono`, qui ne contrôle pas la police à chasse fixe.
 
 
 ## Ressources additionnelles
@@ -468,16 +472,16 @@ La barre latérale peut alterner entre deux modes depuis l'interface :
 #### Exemple en V2
 
 ```toml
-[theme.colors]
+[colors]
 bg-sidebar = "#0f1010"
 bg-sidebar-gradient = "linear-gradient(180deg, #1a1a2e 0%, #0f1010 100%)"
 bg-item-active = "#1c1d1d"
 accent = "#3b82f6"
 
-[theme.layout]
+[layout]
 sidebar-width = "260px"
 
-[theme.text]
+[text]
 primary = "#d8d8d8"
 ```
 
@@ -544,21 +548,21 @@ Cela signifie que la personnalisation de `--bg-sidebar` modifie également l'app
 #### Exemple en V2
 
 ```toml
-[theme.colors]
+[colors]
 bg-overlay = "rgba(0, 0, 0, 0.85)"
 bg-sidebar = "#141414"
 
-[theme.borders]
+[borders]
 color = "#2a2a2a"
 radius = "12px"
 
-[theme.backdrop]
+[backdrop]
 modal = 6.0
 
-[theme.shadows]
+[shadows]
 shadow-lg = "0 8px 28px rgba(0, 0, 0, 0.6)"
 
-[theme.text]
+[text]
 primary = "#e5e5e5"
 muted = "#888888"
 ```
@@ -615,7 +619,7 @@ Les barres internes de `.qm-scroll` et `.modal` utilisent également `--scrollba
 #### Exemple en V2
 
 ```toml
-[theme.colors]
+[colors]
 scrollbar-track = "#0c0c0c"
 scrollbar-thumb = "#333333"
 scrollbar-thumb-hover = "#555555"
@@ -692,7 +696,6 @@ Si la police a plusieurs graisses ou styles, déclarez chaque variante séparém
 #### Exemple en V2
 
 ```toml
-[meta]
 name = "Tipografía personalizada"
 author = "CubicLabs"
 version = "1.0.0"
@@ -701,35 +704,35 @@ version = "1.0.0"
 `Definition.toml` :
 
 ```toml
-[theme.background]
+[background]
 
-[theme.others]
+[others]
 font-family = "\"Inter\", system-ui, sans-serif"
 
-[theme.layout]
+[layout]
 font-size-base = "14px"
 
-[[theme.fonts]]
+[[fonts]]
 family = "Inter"
 src = "fonts/Inter-Regular.woff2"
 format = "woff2"
 weight = "400"
 
-[[theme.fonts]]
+[[fonts]]
 family = "Inter"
 src = "fonts/Inter-Bold.woff2"
 format = "woff2"
 weight = "700"
 ```
 
-> En V2, `--font-family` et `--font-size-base` n'appartiennent à aucune catégorie sémantique spécifique. Il est recommandé de définir `--font-family` dans `[theme.others]` et `--font-size-base` dans `[theme.layout]`.
+> En V2, `--font-family` et `--font-size-base` n'appartiennent à aucune catégorie sémantique spécifique. Il est recommandé de définir `--font-family` dans `[others]` et `--font-size-base` dans `[layout]`.
 
 ### Polices personnalisées
 
 V1 et V2 permettent tous deux des polices personnalisées via le schéma suivant :
 
 ```toml
-[[theme.fonts]]
+[[fonts]]
 family = "Inter"
 src = "fonts/Inter.woff2"
 format = "woff2"
@@ -747,15 +750,15 @@ style = "normal"
 
 ### Icônes personnalisées (V2 uniquement)
 
-V2 permet de remplacer les icônes du frontend via la section `[theme.icons]`.
+V2 permet de remplacer les icônes du frontend via la section `[icons]`.
 
 La structure est la suivante :
 
 ```toml
-[theme.icons]
+[icons]
 preview = "icons/preview.png"
 
-[theme.icons.ui]
+[icons.ui]
 play = "icons/ui/play.svg"
 settings = "icons/ui/settings.svg"
 ```
@@ -782,7 +785,6 @@ V2 permet d'inclure une feuille de styles additionnelle appelée `Inject.css` à
 Pour indiquer que le thème inclut du CSS personnalisé, définissez `injects_css = true` dans `Meta.toml` :
 
 ```toml
-[meta]
 name = "Advanced Theme"
 injects_css = true
 ```
@@ -1029,36 +1031,19 @@ L'IA peut beaucoup accélérer la conception d'un thème, mais elle a aussi tend
 Copiez et collez ceci dans votre assistant, en ajustant le concept :
 
 ```text
-[RÔLE]
-Tu es un designer spécialisé dans les interfaces de bureau pour les launchers Minecraft. Tu vas créer un thème pour CubicLauncher au format V2 (`Meta.toml` + `Definition.toml`).
+Conçois un thème V2 pour CubicLauncher (`Meta.toml` + `Definition.toml`).
 
-[OBJECTIF]
-Générer un thème visuellement unique, avec une identité claire et cohérente, qui NE ressemble pas à un « thème sombre avec des accents bleus génériques ».
+Concept : <décris ton idée en une ligne>.
 
-[RÈGLES DE DESIGN]
-- Choisis une source d'inspiration concrète et peu commune : une esthétique de jeu vidéo, une époque du design, une sous-culture visuelle, un mouvement artistique, etc.
-- Évite l'accent par défaut bleu/vert/violet. Propose de l'ocre, du corail, du turquoise atténué, du lavande grisâtre, etc.
-- Utilise des typographies qui apportent de la personnalité. Tu peux combiner une police display pour les titres et une sans-serif lisible pour le corps.
-- Le fond doit avoir une texture, un motif subtil ou un dégradé atmosphérique ; pas une couleur sombre plate.
-- Ajoute des icônes cohérentes avec le concept.
-- Utilise `Inject.css` quand les variables seules ne suffisent pas (ombres de néon, bordures avec clip, filtres, etc.).
-- Nomme les variables de manière sémantique et cohérente.
-
-[RÈGLES TECHNIQUES]
-- Consulter les variables réelles de src/styles/shared/reset.css (référence : commit 5a7e752) ; utiliser --accent-text et des couleurs sémantiques avec un contraste suffisant.
-- Utiliser les variables de dimensions pour les listes virtualisées ; ne pas remplacer les hauteurs ni les transformations internes.
-- Garder les règles de Inject.css hors de @layer cubic pour remplacer les styles normaux des composants sans !important.
-- Format V2.
-- Chemins relatifs pour les ressources.
-- Ne pas inclure `vflag.txt`.
-- Image de fond ≤ 25 Mo ; icônes rasterisées ≤ 2 Mo.
-- Valider le TOML avant de livrer.
-
-[SORTIE ATTENDUE]
-1. `[meta]` avec nom, auteur, version, description et `injects_css` si applicable.
-2. `[theme]` complet dans `Definition.toml`.
-3. Liste des fichiers recommandés (bg, polices, icônes).
-4. Brève explication du concept et pourquoi il est unique.
+Règles :
+- Palette dérivée du fond du thème, pas de couleurs éparses : choisis d'abord le fond et tires-en le texte, les bordures et l'accent (même teinte, luminosité différente).
+- Pas de bleu/violet par défaut ni de polices Inter/Roboto. Si le concept ne demande pas de couleur, choisis-en une peu commune.
+- Le fond doit avoir une texture ou un dégradé subtil, jamais une couleur plate.
+- Tokens sémantiques dans `[colors]`, `[backgrounds]`, `[text]`, `[borders]`, `[layout]`, `[shadows]`, `[backdrop]`, `[others]`.
+- `Inject.css` uniquement si les variables ne suffisent pas.
+- Sections à la racine, sans préfixe `theme.` ; champs de `Meta.toml` à la racine, sans `[meta]`.
+- Chemins relatifs ; pas de `vflag.txt` ; fond ≤ 25 Mo et icônes ≤ 2 Mo.
+- Valide le TOML avant de livrer.
 ```
 
 ### Comment éviter les résultats génériques
