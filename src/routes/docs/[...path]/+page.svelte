@@ -15,11 +15,110 @@
   let currentLang = $derived(data.langs.find(l => l.code === data.lang) || data.langs[0]);
   let navigation = $derived(data.tree.find(l => l.code === currentLang?.code)?.children || []);
   let langParam = $derived(currentLang?.code ? `?lang=${currentLang.code}` : '');
-  let quickLinks = $derived([
-    { label: 'Conoce el launcher', match: /\/(introduccion|introduction)$/, description: 'Características y primeros pasos.' },
-    { label: 'Instala CubicLauncher', match: /\/(instalacion|install)$/, description: 'Prepara el launcher en tu sistema.' },
-    { label: 'Encuentra ayuda', match: /\/(soporte|support)$/, description: 'Resuelve dudas y problemas habituales.' }
-  ].map(link => ({ ...link, doc: data.searchIndex.find(d => d.lang === data.lang && link.match.test(d.slug)) })));
+
+  type UiStrings = {
+    explore: string;
+    home: string;
+    categories: string;
+    allPages: string;
+    categoryTitle: (label: string) => string;
+    docs: string;
+    community: string;
+    github: string;
+    eyebrow: string;
+    heroTitle: string;
+    tagline: string;
+    articleWord: (n: number) => string;
+    categoryWord: (n: number) => string;
+    pagesCount: (n: number) => string;
+    categoriasSubtitle: (lang: string) => string;
+    categoriaSubtitle: (n: number) => string;
+    todasSubtitle: (n: number, lang: string) => string;
+    quick: { label: string; description: string }[];
+  };
+
+  const UI: Record<string, UiStrings> = {
+    'es-ES': {
+      explore: 'Explorar la documentación',
+      home: 'Portada',
+      categories: 'Categorías',
+      allPages: 'Todas las páginas',
+      categoryTitle: (label) => `Categoría: ${label}`,
+      docs: 'Documentación',
+      community: 'Comunidad',
+      github: 'Proyecto en GitHub ↗',
+      eyebrow: 'Documentación de la comunidad',
+      heroTitle: 'Documentación de CubicLauncher',
+      tagline: 'Todo lo que necesitas para instalar, configurar y aprovechar tu launcher de Minecraft. Explora las guías o busca una respuesta concreta.',
+      articleWord: (n) => (n === 1 ? 'artículo' : 'artículos'),
+      categoryWord: (n) => (n === 1 ? 'categoría' : 'categorías'),
+      pagesCount: (n) => `${n} ${n === 1 ? 'página' : 'páginas'}`,
+      categoriasSubtitle: (lang) => `Todas las categorías de la documentación en ${lang}.`,
+      categoriaSubtitle: (n) => `${n} ${n === 1 ? 'página' : 'páginas'} en esta categoría.`,
+      todasSubtitle: (n, lang) => `Índice alfabético de los ${n} ${n === 1 ? 'artículo' : 'artículos'} de la documentación en ${lang}.`,
+      quick: [
+        { label: 'Conoce el launcher', description: 'Características y primeros pasos.' },
+        { label: 'Instala CubicLauncher', description: 'Prepara el launcher en tu sistema.' },
+        { label: 'Encuentra ayuda', description: 'Resuelve dudas y problemas habituales.' }
+      ]
+    },
+    'en-EN': {
+      explore: 'Explore the documentation',
+      home: 'Home',
+      categories: 'Categories',
+      allPages: 'All pages',
+      categoryTitle: (label) => `Category: ${label}`,
+      docs: 'Documentation',
+      community: 'Community',
+      github: 'Project on GitHub ↗',
+      eyebrow: 'Community documentation',
+      heroTitle: 'CubicLauncher documentation',
+      tagline: 'Everything you need to install, configure and get the most out of your Minecraft launcher. Browse the guides or search for a specific answer.',
+      articleWord: (n) => (n === 1 ? 'article' : 'articles'),
+      categoryWord: (n) => (n === 1 ? 'category' : 'categories'),
+      pagesCount: (n) => `${n} ${n === 1 ? 'page' : 'pages'}`,
+      categoriasSubtitle: (lang) => `All documentation categories in ${lang}.`,
+      categoriaSubtitle: (n) => `${n} ${n === 1 ? 'page' : 'pages'} in this category.`,
+      todasSubtitle: (n, lang) => `Alphabetical index of the ${n} ${n === 1 ? 'article' : 'articles'} in the documentation in ${lang}.`,
+      quick: [
+        { label: 'Meet the launcher', description: 'Features and first steps.' },
+        { label: 'Install CubicLauncher', description: 'Set up the launcher on your system.' },
+        { label: 'Find help', description: 'Solve common questions and issues.' }
+      ]
+    },
+    'fr-FR': {
+      explore: 'Explorer la documentation',
+      home: 'Accueil',
+      categories: 'Catégories',
+      allPages: 'Toutes les pages',
+      categoryTitle: (label) => `Catégorie : ${label}`,
+      docs: 'Documentation',
+      community: 'Communauté',
+      github: 'Projet sur GitHub ↗',
+      eyebrow: 'Documentation communautaire',
+      heroTitle: 'Documentation de CubicLauncher',
+      tagline: 'Tout ce qu\'il faut pour installer, configurer et profiter de votre launcher Minecraft. Parcourez les guides ou recherchez une réponse précise.',
+      articleWord: (n) => (n === 1 ? 'article' : 'articles'),
+      categoryWord: (n) => (n === 1 ? 'catégorie' : 'catégories'),
+      pagesCount: (n) => `${n} ${n === 1 ? 'page' : 'pages'}`,
+      categoriasSubtitle: (lang) => `Toutes les catégories de la documentation en ${lang}.`,
+      categoriaSubtitle: (n) => `${n} ${n === 1 ? 'page' : 'pages'} dans cette catégorie.`,
+      todasSubtitle: (n, lang) => `Index alphabétique des ${n} ${n === 1 ? 'article' : 'articles'} de la documentation en ${lang}.`,
+      quick: [
+        { label: 'Découvrir le launcher', description: 'Fonctionnalités et premiers pas.' },
+        { label: 'Installer CubicLauncher', description: 'Préparez le launcher sur votre système.' },
+        { label: 'Trouver de l\'aide', description: 'Résolvez les questions et problèmes courants.' }
+      ]
+    }
+  };
+
+  let ui = $derived(UI[currentLang?.code || 'es-ES'] || UI['es-ES']);
+
+  const QUICK_MATCHES = [/\/(introduccion|introduction)$/, /\/(instalacion|install)$/, /\/(soporte|support)$/];
+  let quickLinks = $derived(QUICK_MATCHES.map((match, i) => ({
+    ...ui.quick[i],
+    doc: data.searchIndex.find(d => d.lang === data.lang && match.test(d.slug))
+  })));
 
   afterNavigate(() => {
     menuOpen = false;
@@ -36,10 +135,10 @@
 
   let pageTitle = $derived(
     data.page === 'doc' ? (data.wikiTitle || data.title)
-    : data.page === 'todas' ? 'Todas las páginas'
-    : data.page === 'categoria' ? `Categoría: ${data.categoryLabel || data.category}`
-    : data.page === 'categorias' ? 'Categorías'
-    : 'Portada'
+    : data.page === 'todas' ? ui.allPages
+    : data.page === 'categoria' ? ui.categoryTitle(data.categoryLabel || data.category)
+    : data.page === 'categorias' ? ui.categories
+    : ui.home
   );
 
   function attachCopyListeners(node: HTMLElement) {
@@ -163,12 +262,11 @@
   <div class="wiki-shell">
     <aside id="wiki-navigation" class="wiki-sidebar" class:wiki-sidebar-open={menuOpen}>
       <nav aria-label="Navegación de la documentación">
-        <p class="wiki-nav-label">Explorar la documentación</p>
-        <a class="wiki-nav-link" href="/docs{langParam}" aria-current={data.page === 'index' ? 'page' : undefined}>Portada</a>
-        <a class="wiki-nav-link" href="/docs/categoria{langParam}" aria-current={data.page === 'categorias' ? 'page' : undefined}>Categorías</a>
-        <a class="wiki-nav-link" href="/docs/todas{langParam}" aria-current={data.page === 'todas' ? 'page' : undefined}>Todas las páginas</a>
-        <a class="wiki-nav-link" href="/docs/aleatoria{langParam}" data-sveltekit-preload-data="off">Página aleatoria</a>
-        <p class="wiki-nav-label">Documentación</p>
+        <p class="wiki-nav-label">{ui.explore}</p>
+        <a class="wiki-nav-link" href="/docs{langParam}" aria-current={data.page === 'index' ? 'page' : undefined}>{ui.home}</a>
+        <a class="wiki-nav-link" href="/docs/categoria{langParam}" aria-current={data.page === 'categorias' ? 'page' : undefined}>{ui.categories}</a>
+        <a class="wiki-nav-link" href="/docs/todas{langParam}" aria-current={data.page === 'todas' ? 'page' : undefined}>{ui.allPages}</a>
+        <p class="wiki-nav-label">{ui.docs}</p>
         {#each navigation as category, i}
           <details class="wiki-nav-group" open={category.children?.some(p => p.slug === data.slug) || (data.page === 'categoria' && category.category === data.category) || (data.page === 'index' && i === 0)}>
             <summary title={category.description}>{category.label}</summary>
@@ -177,8 +275,8 @@
             {/each}
           </details>
         {/each}
-        <p class="wiki-nav-label">Comunidad</p>
-        <a class="wiki-nav-link" href="https://github.com/CubicLauncherDevs/CubicLauncher" target="_blank" rel="noopener noreferrer">Proyecto en GitHub ↗</a>
+        <p class="wiki-nav-label">{ui.community}</p>
+        <a class="wiki-nav-link" href="https://github.com/CubicLauncherDevs/CubicLauncher" target="_blank" rel="noopener noreferrer">{ui.github}</a>
         <a class="wiki-nav-link" href="https://discord.gg/7VaqSrPukm" target="_blank" rel="noopener noreferrer">Discord ↗</a>
       </nav>
     </aside>
@@ -195,13 +293,13 @@
     {#if data.page === 'index'}
       <div class="wiki-home">
         <div class="wiki-hero">
-          <p class="wiki-eyebrow">Documentación de la comunidad</p>
-          <h1 class="wiki-title">Documentación de CubicLauncher</h1>
-          <p class="wiki-tagline">Todo lo que necesitas para instalar, configurar y aprovechar tu launcher de Minecraft. Explora las guías o busca una respuesta concreta.</p>
+          <p class="wiki-eyebrow">{ui.eyebrow}</p>
+          <h1 class="wiki-title">{ui.heroTitle}</h1>
+          <p class="wiki-tagline">{ui.tagline}</p>
           {#if data.categories}
             <div class="wiki-hero-stats">
-              <span><strong>{data.pageCount}</strong> artículos</span>
-              <span><strong>{data.categories.length}</strong> categorías</span>
+              <span><strong>{data.pageCount}</strong> {ui.articleWord(data.pageCount)}</span>
+              <span><strong>{data.categories.length}</strong> {ui.categoryWord(data.categories.length)}</span>
             </div>
           {/if}
         </div>
@@ -223,7 +321,7 @@
             {#each data.categories as cat}
               <a href="/docs/categoria/{encodeURIComponent(cat.name)}{langParam}" class="wiki-portal">
                 <span class="wiki-portal-name">{cat.label || cat.name}</span>
-                <span class="wiki-portal-count">{cat.count} {cat.count === 1 ? 'página' : 'páginas'}</span>
+                <span class="wiki-portal-count">{ui.pagesCount(cat.count)}</span>
               </a>
             {/each}
           </div>
@@ -248,15 +346,15 @@
     {:else if data.page === 'categorias'}
       <article class="wiki-article">
         <header class="wiki-page-header">
-          <h1 class="wiki-page-title">Categorías</h1>
-          <p class="wiki-page-subtitle">Todas las categorías de la documentación en {currentLang?.label}.</p>
+          <h1 class="wiki-page-title">{ui.categories}</h1>
+          <p class="wiki-page-subtitle">{ui.categoriasSubtitle(currentLang?.label || '')}</p>
         </header>
         <div class="wiki-cat-grid">
           {#each data.categories as cat}
             <a href="/docs/categoria/{encodeURIComponent(cat.name)}{langParam}" class="wiki-cat-card">
               <span class="wiki-cat-name">{cat.label || cat.name}</span>
               <span class="wiki-category-description">{cat.description}</span>
-              <span class="wiki-cat-count">{cat.count} {cat.count === 1 ? 'página' : 'páginas'}</span>
+              <span class="wiki-cat-count">{ui.pagesCount(cat.count)}</span>
             </a>
           {/each}
         </div>
@@ -264,9 +362,9 @@
     {:else if data.page === 'categoria'}
       <article class="wiki-article">
         <header class="wiki-page-header">
-          <h1 class="wiki-page-title">Categoría: {data.categoryLabel || data.category}</h1>
+          <h1 class="wiki-page-title">{ui.categoryTitle(data.categoryLabel || data.category)}</h1>
           {#if data.categoryDescription}<p class="wiki-category-description">{data.categoryDescription}</p>{/if}
-          <p class="wiki-page-subtitle">{data.pages.length} {data.pages.length === 1 ? 'página' : 'páginas'} en esta categoría.</p>
+          <p class="wiki-page-subtitle">{ui.categoriaSubtitle(data.pages.length)}</p>
         </header>
         {#if data.legacyNotice}
           <div class="wiki-category-transition">
@@ -293,8 +391,8 @@
     {:else if data.page === 'todas'}
       <article class="wiki-article">
         <header class="wiki-page-header">
-          <h1 class="wiki-page-title">Todas las páginas</h1>
-          <p class="wiki-page-subtitle">Índice alfabético de los {data.pages.length} artículos de la documentación en {currentLang?.label}.</p>
+          <h1 class="wiki-page-title">{ui.allPages}</h1>
+          <p class="wiki-page-subtitle">{ui.todasSubtitle(data.pages.length, currentLang?.label || '')}</p>
         </header>
         <ul class="wiki-page-list">
           {#each data.pages as p}

@@ -231,13 +231,6 @@ export function getAllPages(lang: string) {
     .sort((a, b) => a.title.localeCompare(b.title, lang.split('-')[0]));
 }
 
-export function getRandomPageSlug(lang?: string): string {
-  const pool = lang ? docsCache.filter(d => d.lang === lang) : docsCache;
-  const list = pool.length > 0 ? pool : docsCache;
-  const pick = list[Math.floor(Math.random() * list.length)];
-  return pick.slug;
-}
-
 export function getSearchIndex(): SearchDoc[] {
   return docsCache.map(entry => {
     const meta = metaFor(entry);

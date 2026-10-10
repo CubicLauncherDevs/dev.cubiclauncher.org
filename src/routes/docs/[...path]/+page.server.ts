@@ -1,10 +1,9 @@
 import { error, redirect } from '@sveltejs/kit';
-import { getDoc, getDocTree, getSearchIndex, getAllPages, getCategories, getCategoryPages, getRandomPageSlug, catDisplay } from '$lib/server/docs';
+import { getDoc, getDocTree, getSearchIndex, getAllPages, getCategories, getCategoryPages, catDisplay } from '$lib/server/docs';
 import type { SearchDoc } from '$lib/server/docs';
 
 const CATEGORY_ALIASES = ['categoria', 'categorias', 'categories'];
 const ALL_ALIASES = ['todas', 'todas-las-paginas', 'allpages', 'all-pages', 'all'];
-const RANDOM_ALIASES = ['aleatoria', 'aleatorio', 'random'];
 
 function resolveLang(langs: { code: string }[], value: string | null): string {
   if (value && langs.some(l => l.code === value)) return value;
@@ -89,11 +88,6 @@ export function load({ params, url, cookies }) {
   // /docs/todas — índice alfabético
   if (ALL_ALIASES.includes(first)) {
     return { page: 'todas' as const, tree, langs, searchIndex, lang, pages: getAllPages(lang) };
-  }
-
-  // /docs/aleatoria — página aleatoria
-  if (RANDOM_ALIASES.includes(first)) {
-    redirect(307, `/docs/${getRandomPageSlug(lang)}`);
   }
 
   const doc = getDoc(path);
