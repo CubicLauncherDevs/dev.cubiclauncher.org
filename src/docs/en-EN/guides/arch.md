@@ -7,7 +7,9 @@ description: CubicLauncher is available in the AUR (Arch User Repository). You c
 
 ## Installation
 
-CubicLauncher is available in the AUR (Arch User Repository). You can install it with your preferred AUR helper:
+CubicLauncher is available in the AUR (Arch User Repository). You can install it with your preferred AUR helper or build the official package from the `PKGBUILD`.
+
+### From the AUR
 
 ```bash
 yay -S cubiclauncher
@@ -23,7 +25,15 @@ If you don't have `yay` or `paru` installed, check their documentation:
 
 You can also view the package at: <https://aur.archlinux.org/packages/cubiclauncher>
 
-If you prefer to compile manually, you can also use the official `PKGBUILD`. There is no need to clone the full repository or install dependencies manually: the `PKGBUILD` itself downloads the source code and `makepkg` handles resolving and installing the necessary dependencies.
+:::warning The AUR package no longer receives updates
+The `cubiclauncher` package is still published in the AUR, but for now **we cannot update it**, so it will not receive new CubicLauncher versions. Installing or updating with `yay -S cubiclauncher` or `paru -S cubiclauncher` will give you the latest version published in the AUR, but not the newest ones.
+
+To stay up to date, rebuild the official `PKGBUILD`: edit the `pkgver=` line, run `updpkgsums` and then `makepkg -si`. See [Updating CubicLauncher](#updating-cubiclauncher).
+:::
+
+### Building the PKGBUILD
+
+If you prefer to compile manually, you can use the official `PKGBUILD`. There is no need to clone the full repository or install dependencies manually: the `PKGBUILD` itself downloads the source code and `makepkg` handles resolving and installing the necessary dependencies.
 
 :::warning Local compilation is optional.
 Arch Linux is a rolling release distribution, so library and dependency versions change frequently.
@@ -39,9 +49,9 @@ wget https://raw.githubusercontent.com/CubicLauncherDevs/CubicLauncher/main/dist
 makepkg -si
 ```
 
-## Updating to a new version
+## Updating CubicLauncher
 
-When a new version of CubicLauncher is released, you can update the locally compiled package without downloading the `PKGBUILD` from scratch.
+The AUR package is not updated, so moving to a new version requires rebuilding the `PKGBUILD`. If you already downloaded it, there is no need to download it again from scratch.
 
 Go to the directory where you downloaded the `PKGBUILD`, edit the file and change the `pkgver` value to the new version:
 
@@ -63,10 +73,10 @@ makepkg -si
 ```
 
 :::warning NOTE
-The updpkgsums command belongs to the pacman-contrib package. If you don't have it installed, you can get it with sudo pacman -S pacman-contrib.
+The `updpkgsums` command belongs to the `pacman-contrib` package. If you don't have it installed, you can get it with `sudo pacman -S pacman-contrib`.
 :::
 
-## Auto-update does not work on Arch
+### Auto-update does not work on Arch
 
 CubicLauncher includes a built-in auto-update mechanism that downloads the latest binary from GitHub Releases and replaces the current executable. On Arch Linux this mechanism **does not work** and cannot be fixed, for the following reasons:
 
