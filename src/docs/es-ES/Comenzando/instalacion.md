@@ -38,17 +38,26 @@ También podés compilar con el PKGBUILD del repositorio. Mirá la guía especí
 
 ## Nix y NixOS (flake)
 
-Con `flakes` y `nix-command` habilitados:
+Con `flakes` y `nix-command` habilitados, instala el canal estable o la beta:
 
 ```bash
-# Instalar en el perfil de usuario
-nix profile add github:CubicLauncherDevs/CubicLauncher
+# Última versión estable
+nix profile add github:CubicLauncherDevs/CubicLauncher/latest-release
+
+# Última beta
+nix profile add github:CubicLauncherDevs/CubicLauncher/latest-beta
 
 # Ejecutar sin instalar en el perfil
-nix run github:CubicLauncherDevs/CubicLauncher
+nix run github:CubicLauncherDevs/CubicLauncher/latest-release
 ```
 
-Targets soportados: `x86_64-linux`, `aarch64-linux` y `aarch64-darwin`.
+Opcionalmente, configura la caché pública de Cachix para descargar binarios precompilados:
+
+```bash
+nix run nixpkgs#cachix -- use cubiclauncher
+```
+
+El flake soporta `x86_64-linux`, `aarch64-linux` y `aarch64-darwin`; la caché del proyecto publica builds solo para Linux.
 
 Más detalles en la guía: /docs/es-ES/guias/nix
 
