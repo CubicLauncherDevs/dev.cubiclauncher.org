@@ -17,6 +17,21 @@ Sitio web de documentación oficial para **CubicLauncher**, un launcher de Minec
 
 - [Node.js](https://nodejs.org/) 20+ o [Bun](https://bun.sh/)
 
+## Uso con Nix
+
+El proyecto incluye un `flake.nix` que provee Bun y Node en un entorno aislado:
+
+```bash
+# Entrar al entorno de desarrollo
+nix develop
+
+# Dentro del shell
+bun install
+bun run dev
+```
+
+Con [direnv](https://direnv.net/) y `nix-direnv`, el entorno se carga automáticamente al entrar a la carpeta.
+
 ## Instalación
 
 ```bash
