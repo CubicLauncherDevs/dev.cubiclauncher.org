@@ -14,7 +14,7 @@ description: Установить тему в CubicLauncher очень прос�
 Найдите тему в разделе https://www.cubiclauncher.org/themes страницы или в официальном репозитории https://github.com/CubicLauncherDevs/Themes. Скачайте её в виде ZIP- или CBTH-файла.
 
 <div class="docs-img-wrap">
-  <img src="https://i.imgur.com/YJ9ujlR.png" alt="Кнопка скачивания" />
+  <img src="https://i.imgur.com/aVc64Y5.png" alt="Кнопка скачивания" />
 </div>
 
 ## Шаг 2: Перетащите тему в лаунчер
@@ -22,7 +22,7 @@ description: Установить тему в CubicLauncher очень прос�
 Перетащите скачанный ZIP- или CBTH-файл прямо в окно CubicLauncher. Лаунчер установит её автоматически.
 
 <div class="docs-img-wrap">
-  <img src="https://i.imgur.com/YJ9ujlR.png" alt="Шаг 2" />
+  <img src="https://i.imgur.com/m9qodRX.png" alt="Шаг 2" />
 </div>
 
 ## Шаг 3: Выберите тему
