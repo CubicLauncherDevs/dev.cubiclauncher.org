@@ -9,7 +9,14 @@ description: Cómo instalar CubicLauncher en Windows, Linux (AppImage/.deb/.rpm,
 
 ## Requisitos previos
 
-- CubicLauncher no necesita Java instalado para abrirse, pero sí para jugar a Minecraft. Si no tenés Java, podés usar los JRE gestionados del launcher o configurar uno externo. Ver Guía de Java: /docs/es-ES/Uso/java
+CubicLauncher no necesita Java instalado para abrirse, pero sí para jugar a Minecraft. Podés usar los JRE gestionados del launcher o configurar uno externo. Ver [Qué es Java](/docs/es-ES/Uso/java).
+
+Como guía general, CubicLauncher puede instalar y detectar Java 8, 17, 21 y 25:
+
+- **Java 8** para versiones antiguas de Minecraft.
+- **Java 17** para versiones modernas que lo requieren.
+- **Java 21** para las versiones más recientes.
+- **Java 25** para versiones o loaders que lo soliciten.
 
 ## Descargas oficiales
 

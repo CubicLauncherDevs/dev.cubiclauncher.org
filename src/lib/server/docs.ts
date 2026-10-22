@@ -1,6 +1,7 @@
 import { renderMarkdown } from './markdown';
 import type { Heading } from './markdown';
 import { DOC_CATEGORIES, getCategoryDetails } from './doc-categories';
+import { DOCS_UI } from '$lib/docs/i18n';
 
 interface DocEntry {
   lang: string;
@@ -74,6 +75,7 @@ const EDIT_BASES: Record<string, string> = {
   'es-ES': 'https://github.com/CubicLauncherDevs/dev.cubiclauncher.org/edit/main/src/docs/es-ES',
   'en-EN': 'https://github.com/CubicLauncherDevs/dev.cubiclauncher.org/edit/main/src/docs/en-EN',
   'fr-FR': 'https://github.com/CubicLauncherDevs/dev.cubiclauncher.org/edit/main/src/docs/fr-FR',
+  'ru-RU': 'https://github.com/CubicLauncherDevs/dev.cubiclauncher.org/edit/main/src/docs/ru-RU',
 };
 
 function editBaseFor(lang: string): string {
@@ -117,6 +119,7 @@ function langName(lang: string): string {
     'es-ES': 'Español',
     'en-EN': 'English',
     'fr-FR': 'Français',
+    'ru-RU': 'Русский',
   };
   return map[lang] || lang;
 }
@@ -145,7 +148,7 @@ export function catDisplay(name: string, lang: string): string {
 }
 
 export function getDocTree(): DocNode[] {
-  const langOrder = ['es-ES', 'en-EN', 'fr-FR'];
+  const langOrder = ['es-ES', 'en-EN', 'fr-FR', 'ru-RU'];
 
   const langs = [...new Set(docsCache.map(d => d.lang))];
   langs.sort((a, b) => {
@@ -176,6 +179,7 @@ function getDocMeta(entry: DocEntry): { title: string; description: string; head
   const { html, headings } = renderMarkdown(content, {
     editBase: editBaseFor(entry.lang),
     filePath: wikiCategoryFor(entry) + '.md',
+    labels: DOCS_UI[entry.lang as keyof typeof DOCS_UI]?.markdown,
   });
   const meta = metaFor(entry);
   return { title: meta.title, description: meta.description, headings, content: html };
@@ -235,7 +239,7 @@ export function getSearchIndex(): SearchDoc[] {
   return docsCache.map(entry => {
     const meta = metaFor(entry);
     const { data, content } = parseFrontmatter(entry.content);
-    const { html } = renderMarkdown(content);
+    const { html } = renderMarkdown(content, { labels: DOCS_UI[entry.lang as keyof typeof DOCS_UI]?.markdown });
     const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
     const excerpt = text.slice(0, 160) + (text.length > 160 ? '…' : '');
     return {

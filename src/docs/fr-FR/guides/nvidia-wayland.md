@@ -9,7 +9,7 @@ description: Fenêtre blanche, scintillements et plantages de CubicLauncher avec
 
 Sous Linux, CubicLauncher utilise Tauri et WebKitGTK pour afficher son interface. Certaines combinaisons de WebKitGTK, du pilote NVIDIA et du compositeur peuvent provoquer des fenêtres vides, des scintillements ou des plantages. Ces problèmes peuvent aussi survenir sous X11 ; utiliser NVIDIA ou Wayland ne signifie pas automatiquement qu'un contournement est nécessaire.
 
-Autres langues : [Español](/docs/es-ES/guias/nvidia-wayland) · [English](/docs/en-EN/guides/nvidia-wayland).
+Autres langues : [Español](/docs/es-ES/guias/nvidia-wayland) · [English](/docs/en-EN/guides/nvidia-wayland) · [Русский](/docs/ru-RU/guides/nvidia-wayland).
 
 ## Contournement rapide signalé pour CubicLauncher
 

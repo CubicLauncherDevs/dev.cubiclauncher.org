@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import type { DocsUiStrings } from '$lib/docs/i18n';
 
   interface LightboxImage {
     src: string;
@@ -9,11 +10,13 @@
   let {
     images = [],
     openIndex = $bindable(-1),
-    onClose
+    onClose,
+    labels
   }: {
     images: LightboxImage[];
     openIndex?: number;
     onClose?: () => void;
+    labels: DocsUiStrings['lightbox'];
   } = $props();
 
   let isOpen = $derived(openIndex >= 0 && openIndex < images.length);
@@ -58,19 +61,19 @@
     onclick={onBackdropClick}
     role="dialog"
     aria-modal="true"
-    aria-label="Visor de imágenes"
+    aria-label={labels.dialog}
     tabindex="-1"
   >
     <div class="docs-lightbox">
-      <button type="button" class="docs-lightbox-close" onclick={close} aria-label="Cerrar visor">
+      <button type="button" class="docs-lightbox-close" onclick={close} aria-label={labels.close}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
 
       {#if images.length > 1}
-        <button type="button" class="docs-lightbox-nav prev" onclick={prev} aria-label="Imagen anterior">
+        <button type="button" class="docs-lightbox-nav prev" onclick={prev} aria-label={labels.prev}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
         </button>
-        <button type="button" class="docs-lightbox-nav next" onclick={next} aria-label="Imagen siguiente">
+        <button type="button" class="docs-lightbox-nav next" onclick={next} aria-label={labels.next}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </button>
       {/if}

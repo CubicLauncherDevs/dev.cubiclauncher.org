@@ -1,5 +1,9 @@
 import { Marked, type RendererObject, type Tokens } from 'marked';
 import hljs from 'highlight.js';
+import { DOCS_UI } from '$lib/docs/i18n';
+import type { DocsUiStrings } from '$lib/docs/i18n';
+
+type MarkdownLabels = DocsUiStrings['markdown'];
 
 export interface Heading {
   level: number;
@@ -14,11 +18,11 @@ function isBlockType(s: string): s is BlockType {
   return BLOCK_TYPES.includes(s as BlockType);
 }
 
-function blockTitle(type: BlockType, raw: string | undefined): string {
+function blockTitle(type: BlockType, raw: string | undefined, labels: MarkdownLabels): string {
   if (raw && raw.trim()) return raw.trim();
-  if (type === 'details') return 'Detalles';
-  if (type === 'related') return 'Artículos relacionados';
-  if (type === 'expansion') return 'Esta página necesita expansión';
+  if (type === 'details') return labels.details;
+  if (type === 'related') return labels.related;
+  if (type === 'expansion') return labels.expansion;
   return type.charAt(0).toUpperCase() + type.slice(1);
 }
 
@@ -72,23 +76,23 @@ function svgIcon(name: string): string {
   return icons[name] || '';
 }
 
-function processVideos(src: string): string {
+function processVideos(src: string, labels: MarkdownLabels): string {
   const videoRegex = /^:::(youtube|video)\s+([^\n]+)$/gim;
 
   return src.replace(videoRegex, (_, type: string, value: string) => {
     const trimmed = value.trim();
     if (type === 'youtube') {
       const id = extractYouTubeId(trimmed);
-      if (!id) return `<div class="docs-video"><div class="docs-video-fallback"><p>ID de YouTube no válido: <code>${escapeHtml(trimmed)}</code></p></div></div>`;
+      if (!id) return `<div class="docs-video"><div class="docs-video-fallback"><p>${escapeHtml(labels.invalidYoutube)} <code>${escapeHtml(trimmed)}</code></p></div></div>`;
       return `<div class="docs-video"><iframe src="https://www.youtube-nocookie.com/embed/${id}" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>`;
     }
     if (isVideoFile(trimmed)) {
-      return `<div class="docs-video"><video controls preload="metadata"><source src="${escapeHtml(trimmed)}" /><p>Tu navegador no soporta la reproducción de video.</p></video></div>`;
+      return `<div class="docs-video"><video controls preload="metadata"><source src="${escapeHtml(trimmed)}" /><p>${escapeHtml(labels.videoUnsupported)}</p></video></div>`;
     }
     if (/^https?:\/\//.test(trimmed)) {
-      return `<div class="docs-video"><video controls preload="metadata"><source src="${escapeHtml(trimmed)}" /><p>Tu navegador no soporta la reproducción de video.</p></video></div>`;
+      return `<div class="docs-video"><video controls preload="metadata"><source src="${escapeHtml(trimmed)}" /><p>${escapeHtml(labels.videoUnsupported)}</p></video></div>`;
     }
-    return `<div class="docs-video"><div class="docs-video-fallback"><p>Formato de video no reconocido: <code>${escapeHtml(trimmed)}</code></p></div></div>`;
+    return `<div class="docs-video"><div class="docs-video-fallback"><p>${escapeHtml(labels.invalidVideo)} <code>${escapeHtml(trimmed)}</code></p></div></div>`;
   });
 }
 
@@ -147,7 +151,7 @@ function processInlineTemplates(segment: string): string {
       `\n<pre class="wiki-bc wiki-hc"><code><span class="wiki-hc-header">${escapeHtml(h.trim())}</span>${escapeHtml(t.replace(/^\n/, ''))}</code></pre>\n`);
 }
 
-function processCustomBlocks(src: string, markedInstance: Marked): string {
+function processCustomBlocks(src: string, markedInstance: Marked, labels: MarkdownLabels): string {
   const openRe = /^:::(\w+)(?:\s+(.*))?$/;
   const closeRe = /^:::[ \t]*$/;
   const fenceRe = /^ *```/;
@@ -176,7 +180,7 @@ function processCustomBlocks(src: string, markedInstance: Marked): string {
       const openMatch = line.match(openRe);
       if (openMatch && isBlockType(openMatch[1])) {
         const type = openMatch[1] as BlockType;
-        const title = blockTitle(type, openMatch[2]);
+        const title = blockTitle(type, openMatch[2], labels);
         let depth = 1;
         const innerLines: string[] = [];
         let j = i + 1;
@@ -193,7 +197,7 @@ function processCustomBlocks(src: string, markedInstance: Marked): string {
           j++;
         }
         const inner = innerLines.join('\n');
-        const processedInner = processCustomBlocks(inner, markedInstance);
+        const processedInner = processCustomBlocks(inner, markedInstance, labels);
         const html = markedInstance.parse(processedInner, { async: false }) as string;
         out.push(wrapBlock(type, title, html));
         i = j + 1;
@@ -208,8 +212,20 @@ function processCustomBlocks(src: string, markedInstance: Marked): string {
   return out.join('\n');
 }
 
+const CYRILLIC_TRANSLITERATION: Record<string, string> = {
+  а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z',
+  и: 'i', й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r',
+  с: 's', т: 't', у: 'u', ф: 'f', х: 'kh', ц: 'ts', ч: 'ch', ш: 'sh',
+  щ: 'sch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya',
+  і: 'i', ї: 'yi', є: 'ye', ґ: 'g'
+};
+
+function transliterate(text: string): string {
+  return text.replace(/[а-яёіїєґ]/gi, char => CYRILLIC_TRANSLITERATION[char.toLowerCase()] ?? char);
+}
+
 function slugify(text: string): string {
-  return text
+  return transliterate(text)
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -243,9 +259,12 @@ export interface RenderOptions {
   editBase?: string;
   /** Ruta del archivo dentro del idioma, ej: 'Uso/instances.md' */
   filePath?: string;
+  /** Etiquetas localizadas del contenido generado */
+  labels?: MarkdownLabels;
 }
 
 export function renderMarkdown(rawContent: string, opts: RenderOptions = {}): { html: string; headings: Heading[] } {
+  const labels = opts.labels || DOCS_UI['es-ES'].markdown;
   const sectionEditBase = opts.editBase && opts.filePath ? `${opts.editBase}/${opts.filePath}` : null;
   const headings: Heading[] = [];
   const usedIds = new Set<string>();
@@ -270,7 +289,7 @@ export function renderMarkdown(rawContent: string, opts: RenderOptions = {}): { 
       const alt = altMatch ? altMatch[1] : '';
       const safeSrc = escapeHtml(src);
       if (hasLightbox) return match;
-      return `<button type="button" class="docs-lightbox-trigger" data-src="${safeSrc}" data-alt="${escapeHtml(alt)}" aria-label="Ampliar imagen"><img${before}src="${src}"${after}></button>`;
+      return `<button type="button" class="docs-lightbox-trigger" data-src="${safeSrc}" data-alt="${escapeHtml(alt)}" aria-label="${escapeHtml(labels.openImage)}"><img${before}src="${src}"${after}></button>`;
     });
   }
 
@@ -280,7 +299,7 @@ export function renderMarkdown(rawContent: string, opts: RenderOptions = {}): { 
       const id = makeUniqueId(text.replace(/<[^>]+>/g, ''));
       headings.push({ level: depth, text, id });
       const edit = sectionEditBase
-        ? `<a href="${sectionEditBase}" target="_blank" rel="noopener noreferrer" class="section-edit" aria-label="Editar esta sección" title="Editar esta sección"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>editar</span></a>`
+        ? `<a href="${sectionEditBase}" target="_blank" rel="noopener noreferrer" class="section-edit" aria-label="${escapeHtml(labels.editSection)}" title="${escapeHtml(labels.editSection)}"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>${escapeHtml(labels.edit)}</span></a>`
         : '';
       return `<h${depth} id="${id}"><a href="#${id}" class="heading-anchor" aria-hidden="true">#</a>${text}${edit}</h${depth}>`;
     },
@@ -303,10 +322,10 @@ export function renderMarkdown(rawContent: string, opts: RenderOptions = {}): { 
           // data-lang se usa para estilizar la «pill» del lenguaje en CSS
           `<div class="code-block-header" data-lang="${language}">` +
             `<span class="code-block-lang">${language}</span>` +
-            `<button class="code-block-copy" type="button" data-code="${safeCode}" aria-label="Copiar código">` +
+            `<button class="code-block-copy" type="button" data-code="${safeCode}" aria-label="${escapeHtml(labels.copyCode)}">` +
               `<span class="copy-icon">${svgIcon('copy')}</span>` +
               `<span class="check-icon">${svgIcon('check')}</span>` +
-              `<span class="copy-text">Copiar</span>` +
+              `<span class="copy-text">${escapeHtml(labels.copy)}</span>` +
             `</button>` +
           `</div>` +
           `<pre><code class="hljs language-${language}">${highlighted}</code></pre>` +
@@ -319,7 +338,7 @@ export function renderMarkdown(rawContent: string, opts: RenderOptions = {}): { 
       const safeAlt = escapeHtml(text || title || '');
       const safeTitle = title ? ` title="${escapeHtml(title)}"` : '';
       const img = `<img class="docs-lightbox-img" src="${safeHref}" alt="${safeAlt}"${safeTitle} loading="lazy" />`;
-      return `<button type="button" class="docs-lightbox-trigger" data-src="${safeHref}" data-alt="${safeAlt}" aria-label="Ampliar imagen">${img}</button>`;
+      return `<button type="button" class="docs-lightbox-trigger" data-src="${safeHref}" data-alt="${safeAlt}" aria-label="${escapeHtml(labels.openImage)}">${img}</button>`;
     },
 
     link({ href, tokens }: Tokens.Link) {
@@ -368,9 +387,9 @@ export function renderMarkdown(rawContent: string, opts: RenderOptions = {}): { 
   const marked = new Marked();
   marked.use({ renderer });
 
-  const withVideos = processVideos(rawContent);
+  const withVideos = processVideos(rawContent, labels);
   const withTemplates = mapOutsideFences(withVideos, processInlineTemplates);
-  const processed = processCustomBlocks(withTemplates, marked);
+  const processed = processCustomBlocks(withTemplates, marked, labels);
   const html = marked.parse(processed, { async: false }) as string;
   const wrapped = wrapImages(html);
 

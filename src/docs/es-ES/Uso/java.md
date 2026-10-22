@@ -1,72 +1,86 @@
 ---
 category: usage
 order: 30
-title: Que es Java?
-description: Que es Java y por que es necesario para lanzar el juego?
+title: Qué es Java
+description: Qué es Java, por qué es necesario para Minecraft, cómo gestiona CubicLauncher los JRE y cómo configurar la memoria y los argumentos JVM.
 ---
 
-# Java?
+# Qué es Java
 
-Que es Java y por que es necesario para lanzar el juego?
+Java es un lenguaje de programación que se ejecuta sobre la **JVM** (Java Virtual Machine). Minecraft: Java Edition está escrito en Java, por lo que necesita una JVM para iniciarse.
 
-Java es un lenguaje de programacion, este no es tan comun como otros ya que usa algo llamado JVM, la JVM es un programa que se encarga de lanzar programas hechos en Java, como el mismo minecraft.
+## JRE y JVM
 
-> Y si, Minecraft se llama Minecraft Java Edition por eso :v
+La JVM viene dentro de un **JRE** (Java Runtime Environment), que incluye la máquina virtual, las librerías de Java y todo lo necesario para ejecutar el juego.
 
+CubicLauncher puede usar dos tipos de Java:
 
-## JVM?
-Como te dije antes para lanzar programas en Java se usa un programa llamado JVM, este viene en unos "kits" denominados JRE o Java Runtime Environment, o Entorno de Ejecucion de Java, esto trae todas las cosas necesarias para que ademas la JVM funcione, tanto librerias de la JVM o hasta la libreria estadar de java.
+- **Gestionado**: el launcher descarga y administra el JRE.
+- **Externo**: usás un Java que ya tenés instalado en el sistema.
 
-## Como lo descargo?
-En Cubic tenes dos opciones para usar Java, podes usar un JRE administrado por el launcher o tambien podes usar un JRE externo si gustas, el tema de por que hago esto, Cubic NO instala automaticamente el JRE administrado, tenes que ir al apartado de configuracion y descargarlo
+:::info Java no se instala automáticamente
+CubicLauncher no descarga un JRE gestionado hasta que vos lo pedís. Si no tenés Java instalado, abrí **Ajustes → Java** y descargá la versión que necesites.
+:::
 
-### Donde?
-En el apartado de Java de la configuracion podes abrir el menu de entornos de Java y descargar los que gustes.
-<div class="docs-img-wrap">
-  <img src="https://i.ibb.co/60thDTQw/java.png" alt=">_<" />
-</div>
+## Versiones de Java
 
-### Que versiones descargo?
-Lo general es java 8 para versiones inferiores a 1.16.5, java 17 para versiones inferiores a 1.20.4, java 21 para versiones inferiores a 1.21.11 y java 25 para versiones superiores a la mencionada anteriormente (1.21.11 para los que no tienen comprension lectora)
+CubicLauncher permite instalar y detectar Java 8, 17, 21 y 25.
 
-### Cómo elige Cubic qué Java usar
+Como guía general:
 
-- Si la versión del juego lo especifica, se usa ese Java.
-- Si no, Cubic infiere la versión de Java adecuada según la versión de Minecraft.
-- Para Forge/NeoForge antiguos que piden Java 8, Cubic puede mantener 8; para Forge/NeoForge recientes, eleva automáticamente a Java 17 porque el loader lo requiere.
+- Java 8 para versiones antiguas de Minecraft.
+- Java 17 para versiones modernas que lo requieren.
+- Java 21 para las versiones más recientes.
+- Java 25 está disponible para versiones o loaders que lo soliciten.
 
-Si configurás overrides por instancia, podés forzar una versión de Java distinta para esa instancia.
+La elección depende de lo que declare la versión del juego, del loader y de los overrides de la instancia. El launcher consulta el manifiesto y, si no hay una versión explícita, infiere una según la versión de Minecraft. Para Forge/NeoForge antiguos puede mantener Java 8; para versiones recientes eleva automáticamente a Java 17 o 21 cuando el loader lo requiere.
 
-### JREs gestionados vs externos
+## Proveedores de Java
 
-- Gestionados: Cubic los instala en `~/.cubic/shared/runtimes/jre<version>` y los mantiene separados del sistema.
-- Externos: podés seleccionar un `java` que ya tengas instalado (p. ej. desde JAVA_HOME o ubicaciones típicas del sistema).
+En **Ajustes → Java** podés elegir el proveedor para cada versión:
 
-### Detección automática de Java
+- **Azul Zulu** — opción por defecto, equilibrada y disponible para Java 8, 17, 21 y 25.
+- **Eclipse Temurin** — distribución de Eclipse, referencia de OpenJDK.
+- **BellSoft Liberica** — compilaciones con soporte a largo plazo.
+- **GraalVM** — suele ir más rápido con mods; disponible para Java 17 o superior.
 
-- En Configuración → Java, Cubic detecta binarios en rutas comunes por sistema y en `JAVA_HOME`.
-- Muestra las rutas detectadas para Java 8/17/21/25 y te deja elegir o descargar los gestionados.
+La opción **Automático** usa Azul Zulu y Eclipse Temurin según su disponibilidad. Si cambiás el proveedor de un JRE ya instalado, el launcher puede pedirte que lo desinstales y lo vuelvas a instalar.
+
+## Dónde se guardan los JRE gestionados
+
+Los JRE gestionados se guardan dentro de la carpeta compartida, en `runtimes/jre<version>`. Por defecto es `~/.cubic/shared/runtimes/`, pero si cambiás la ubicación de los archivos compartidos desde **Ajustes → Almacenamiento**, también cambia la ruta de los runtimes.
+
+## Detección de Java externo
+
+En **Ajustes → Java** podés usar **Detectar rutas**. El launcher busca binarios en `JAVA_HOME` y en ubicaciones comunes del sistema, y muestra las rutas encontradas para Java 8, 17, 21 y 25. También podés indicar una ruta manual.
+
+## Java por instancia
+
+Cada instancia puede usar una versión de Java distinta desde su editor:
+
+- Si la instancia no tiene overrides, se usa la configuración global.
+- Si activás la configuración personalizada, podés elegir la versión de Java y los argumentos JVM propios.
+- Los argumentos de la instancia se añaden después de los globales.
 
 ## Parámetros de la JVM
 
-Los parámetros de la JVM son opciones que se le pasan a Java al iniciar Minecraft. Permiten ajustar cómo se ejecuta el juego, por ejemplo, el manejo de memoria, el recolector de basura o las propiedades del sistema de Java.
+Los parámetros de la JVM son opciones que se le pasan a Java al iniciar Minecraft. Permiten ajustar la memoria, el recolector de basura o propiedades del sistema.
 
-### ¿Dónde se configuran?
+### Dónde se configuran
 
 1. Abrí la **Configuración** de CubicLauncher.
-2. Entrá en el apartado **Java**.
-3. Buscá la opción de **parámetros de la JVM** e ingresá los argumentos que quieras usar, separados por espacios.
+2. Entrá en **Java**.
+3. Buscá **Argumentos JVM** e ingresá los argumentos separados por espacios o saltos de línea.
 
-Estos parámetros se usan al iniciar el juego, así que si Minecraft ya está abierto tenés que cerrarlo y volver a lanzarlo para aplicar los cambios.
+Si Minecraft ya está abierto, cerralo y volvé a abrirlo para aplicar los cambios. También podés definir argumentos JVM por instancia desde el editor de la instancia.
 
 <div class="docs-img-wrap">
   <img src="/jvm-arguments.png" alt="Configuración de los parámetros de la JVM en CubicLauncher" />
 </div>
 
+### Parámetros habituales
 
-### Parámetros que podés usar en Minecraft
-
-Estos ejemplos funcionan con Java 8, 17, 21 y 25 basados en HotSpot, como Eclipse Temurin:
+Estos ejemplos funcionan con distribuciones HotSpot de Java 8, 17, 21 y 25, como Eclipse Temurin:
 
 | Parámetro | ¿Para qué sirve? |
 | --- | --- |
@@ -89,12 +103,16 @@ Si ya configuraste la RAM desde el launcher, omití `-Xms` y `-Xmx` del campo de
 
 Podés cambiar `4G` por otro límite según la memoria disponible y los requisitos de tu modpack, dejando memoria para el sistema y otros programas. El valor de `-Xms` debe ser menor o igual al de `-Xmx`. Estos ajustes no garantizan más FPS: el resultado depende de tu equipo, la versión de Java y los mods.
 
+## Variables de entorno de Java
+
+En **Ajustes → Java → Variables de entorno** podés definir variables que se aplicarán al lanzar Minecraft. Usalas solo si un mod, un loader o una guía específica lo requiere.
+
 ## Memoria recomendada
 
-Desde Configuración podés ver un rango recomendado según tu RAM total. Como guía general:
+Desde **Ajustes → Minecraft** podés ver un rango recomendado según tu RAM total. Como guía general:
 
 - 4 GB o menos: 2 GB para Minecraft.
 - 8 GB: entre 3 y 4 GB.
 - 16 GB o más: entre 4 y 8 GB, según mods y shaders.
 
-Recordá que el sistema y otras apps también necesitan memoria.
+Recordá que el sistema y otras apps también necesitan memoria. La memoria global se configura en **Ajustes → Minecraft → Rendimiento (RAM)** y se puede sobrescribir por instancia.

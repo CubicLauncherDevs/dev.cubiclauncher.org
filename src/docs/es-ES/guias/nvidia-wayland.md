@@ -9,7 +9,7 @@ description: Pantalla blanca, parpadeos y cierres de CubicLauncher con NVIDIA y 
 
 En Linux, CubicLauncher usa Tauri y WebKitGTK para mostrar su interfaz. Algunas combinaciones de WebKitGTK, controlador NVIDIA y compositor pueden provocar ventanas vacías, parpadeos o cierres. Estos problemas también pueden aparecer en X11; tener NVIDIA o Wayland no significa que necesites aplicar un ajuste.
 
-Otros idiomas: [English](/docs/en-EN/guides/nvidia-wayland) · [Français](/docs/fr-FR/guides/nvidia-wayland).
+Otros idiomas: [English](/docs/en-EN/guides/nvidia-wayland) · [Français](/docs/fr-FR/guides/nvidia-wayland) · [Русский](/docs/ru-RU/guides/nvidia-wayland).
 
 ## Solución rápida reportada en CubicLauncher
 

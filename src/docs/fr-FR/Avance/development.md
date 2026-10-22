@@ -23,7 +23,7 @@ Ce guide décrit comment préparer un environnement de développement complet de
 | [Git](https://git-scm.com/) | Toute version récente |
 | [Bun](https://bun.sh/) | Pour installer les dépendances et exécuter les scripts du projet |
 | [Node.js](https://nodejs.org/) | Une version LTS en vigueur (solution de repli pour Bun) |
-| [Rust](https://www.rust-lang.org/tools/install) | Stable, avec prise en charge de l'édition 2024, ainsi que Cargo, `rustfmt` et Clippy |
+| [Rust](https://www.rust-lang.org/tools/install) | >= 1.85, avec prise en charge de l'édition 2024, ainsi que Cargo, `rustfmt` et Clippy |
 | Tauri v2 | Dépendances système selon votre plateforme ([guide officiel](https://v2.tauri.app/start/prerequisites/)) |
 
 La CLI de Tauri fait partie des dépendances du projet et s'installe automatiquement avec `bun install` ; il n'est pas nécessaire de l'installer séparément.
@@ -100,8 +100,10 @@ Avant d'ouvrir une pull request, exécutez `bun run test:all` pour valider les d
 
 ## Flux de travail recommandé
 
-1. **Fork et branche :** créez un fork du dépôt et une branche descriptive depuis `main` :
+1. **Fork et branche :** créez un fork du dépôt et une branche descriptive depuis `develop` :
    ```bash
+   git checkout develop
+   git pull
    git checkout -b feat/nom-du-changement
    ```
 2. **Commits atomiques :** gardez des changements petits et ciblés, avec des messages décrivant l'intention du changement.
@@ -113,7 +115,7 @@ Avant d'ouvrir une pull request, exécutez `bun run test:all` pour valider les d
    cargo fmt --all --check
    cargo clippy --workspace -- -D warnings
    ```
-4. **Pull request :** ouvrez la PR contre `main` en décrivant clairement le problème qu'elle résout et, le cas échéant, en liant l'issue associée.
+4. **Pull request :** ouvrez la PR contre `develop` en décrivant clairement le problème qu'elle résout et, le cas échéant, en liant l'issue associée.
 5. **Révision :** un mainteneur examinera le changement. Répondez aux commentaires avec de nouveaux commits sur la même branche ; évitez de forcer l'historique sauf demande explicite.
 
 ## Conventions de code

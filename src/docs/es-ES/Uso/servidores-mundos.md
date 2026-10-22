@@ -7,19 +7,31 @@ description: Administrá tus mundos locales y listas de servidores por instancia
 
 # Servidores y mundos
 
-Cada instancia tiene su propia lista de servidores y mundos, para que no mezcles cosas entre Vanilla y tus modpacks.
+Cada instancia tiene su propia lista de mundos y servidores, para que no mezcles cosas entre Vanilla y tus modpacks.
 
 ## Mundos
 
-- Listado de mundos locales con nombre y fecha de última partida.
+- Listado de mundos locales con nombre, carpeta y versión de Minecraft.
+- Buscador y orden para encontrar mundos rápidamente.
 - Abrí la carpeta de `saves/` para hacer backups o importar un mundo.
+- Importá un mundo desde un ZIP o desde una carpeta.
+- Eliminá mundos que ya no uses desde la misma vista.
+
+Los mundos se guardan dentro de `saves/` en la carpeta de la instancia.
 
 ## Servidores
 
-- Agregá servidores con host y puerto.
+- Agregá servidores con nombre, host y puerto.
+- Editá o eliminá servidores de la lista.
 - El launcher consulta el estado (ping) y muestra la MOTD, versión y jugadores conectados.
+- Los servidores se guardan en la lista de la instancia (`servers.dat`).
 
 ## Conexión rápida
 
 - Desde la vista de servidor podés iniciar Minecraft e ingresar automáticamente.
-- Para servidores legacy, se pasa host/puerto con Quick Play.
+- Para servidores compatibles, se pasa host/puerto con Quick Play.
+- Si el servidor no responde, revisá el host, el puerto y tu conexión; el ping puede fallar aunque el servidor esté disponible.
+
+## Importar y migrar
+
+Al importar o migrar una instancia desde otro launcher, CubicLauncher copia los mundos (`saves`) y la lista de servidores (`servers.dat`) junto con el resto del contenido. Ver [Migración desde otros launchers](/docs/es-ES/Uso/migracion).

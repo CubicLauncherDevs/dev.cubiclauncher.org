@@ -66,7 +66,8 @@ src/
 ├── docs/              # Archivos markdown organizados por idioma
 │   ├── es-ES/
 │   ├── en-EN/
-│   └── fr-FR/
+│   ├── fr-FR/
+│   └── ru-RU/
 ├── lib/
 │   ├── server/
 │   │   └── docs.ts    # Lógica para leer y parsear documentos

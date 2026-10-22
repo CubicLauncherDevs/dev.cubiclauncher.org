@@ -156,7 +156,7 @@ Avec le pilote NVIDIA propriétaire, si les pilotes du système nécessitent une
 nix develop --override-input nixpkgs nixpkgs --no-write-lock-file
 ```
 
-Consultez le [guide de développement](/docs/fr-FR/Advanced/development) pour plus de détails.
+Consultez le [guide de développement](/docs/fr-FR/Avance/development) pour plus de détails.
 
 ## Mise à jour
 

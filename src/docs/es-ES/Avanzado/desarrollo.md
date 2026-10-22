@@ -23,7 +23,7 @@ Esta guía describe cómo preparar un entorno de desarrollo completo de CubicLau
 | Git | Cualquier versión reciente |
 | Bun | Para gestionar dependencias y scripts del proyecto |
 | Node.js | Una versión LTS vigente (respaldo de Bun) |
-| Rust | Estable, con soporte para la edición 2024, junto con Cargo, `rustfmt` y Clippy |
+| Rust | >= 1.85, con soporte para la edición 2024, junto con Cargo, `rustfmt` y Clippy |
 | Tauri v2 | Dependencias del sistema según tu plataforma ([guía oficial](https://v2.tauri.app/start/prerequisites/)) |
 
 La CLI de Tauri forma parte de las dependencias del proyecto y se instala automáticamente con `bun install`; no es necesario instalarla por separado.
@@ -100,8 +100,10 @@ Antes de abrir un pull request, ejecutá `bun run test:all` para validar ambas s
 
 ## Flujo de trabajo recomendado
 
-1. **Fork y rama:** creá un fork del repositorio y una rama descriptiva desde `main`:
+1. **Fork y rama:** creá un fork del repositorio y una rama descriptiva desde `develop`:
    ```bash
+   git checkout develop
+   git pull
    git checkout -b feat/nombre-del-cambio
    ```
 2. **Commits atómicos:** realizá cambios pequeños y enfocados, con mensajes que describan la intención del cambio.
@@ -113,7 +115,7 @@ Antes de abrir un pull request, ejecutá `bun run test:all` para validar ambas s
    cargo fmt --all --check
    cargo clippy --workspace -- -D warnings
    ```
-4. **Pull request:** abrí el PR contra `main` describiendo claramente el problema que resuelve y, si aplica, enlazando el issue relacionado.
+4. **Pull request:** abrí el PR contra `develop` describiendo claramente el problema que resuelve y, si aplica, enlazando el issue relacionado.
 5. **Revisión:** un mantenedor revisará el cambio. Respondé a los comentarios con nuevos commits en la misma rama; evitá forzar el historial salvo que se te pida.
 
 ## Convenciones de código

@@ -23,7 +23,7 @@ This guide describes how to set up a complete CubicLauncher development environm
 | [Git](https://git-scm.com/) | Any recent version |
 | [Bun](https://bun.sh/) | To install dependencies and run project scripts |
 | [Node.js](https://nodejs.org/) | A current LTS version (fallback for Bun) |
-| [Rust](https://www.rust-lang.org/tools/install) | Stable, with 2024 edition support, along with Cargo, `rustfmt` and Clippy |
+| [Rust](https://www.rust-lang.org/tools/install) | >= 1.85, with 2024 edition support, along with Cargo, `rustfmt` and Clippy |
 | Tauri v2 | System dependencies for your platform ([official guide](https://v2.tauri.app/start/prerequisites/)) |
 
 The Tauri CLI is part of the project dependencies and is installed automatically with `bun install`; there is no need to install it separately.
@@ -100,8 +100,10 @@ Before opening a pull request, run `bun run test:all` to validate both suites.
 
 ## Recommended workflow
 
-1. **Fork and branch:** fork the repository and create a descriptive branch from `main`:
+1. **Fork and branch:** fork the repository and create a descriptive branch from `develop`:
    ```bash
+   git checkout develop
+   git pull
    git checkout -b feat/name-of-the-change
    ```
 2. **Atomic commits:** keep changes small and focused, with commit messages that describe the intent of the change.
@@ -113,7 +115,7 @@ Before opening a pull request, run `bun run test:all` to validate both suites.
    cargo fmt --all --check
    cargo clippy --workspace -- -D warnings
    ```
-4. **Pull request:** open the PR against `main` clearly describing the problem it solves and, if applicable, linking the related issue.
+4. **Pull request:** open the PR against `develop` clearly describing the problem it solves and, if applicable, linking the related issue.
 5. **Review:** a maintainer will review the change. Respond to comments with new commits on the same branch; avoid force-pushing history unless requested.
 
 ## Code conventions

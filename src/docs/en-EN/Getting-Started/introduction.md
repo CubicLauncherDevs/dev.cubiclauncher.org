@@ -1,35 +1,55 @@
 ---
 category: getting-started
 order: 10
-title: Introduction
-description: Welcome to the official CubicLauncher documentation. Here you will find detailed guides on how to install, configure and get the most out of our launcher.
+title: Introduction to CubicLauncher
+description: What CubicLauncher is, what it can do and how to get started in a few minutes.
 ---
 
 # Introduction
 
-Welcome to the official **CubicLauncher** documentation. Here you will find detailed guides on how to install, configure and get the most out of our launcher.
+CubicLauncher is an open-source launcher for Minecraft: Java Edition. It lets you create and manage isolated instances, install versions and loaders, manage accounts, download content from Modrinth and CurseForge, and customize the look with themes.
 
-## What is CubicLauncher?
+## Key features
 
-CubicLauncher is a modern Minecraft launcher, designed to be fast, lightweight and highly customizable. Our mission is to provide a superior gaming experience, focused on ease of use and optimal performance.
+- Independent instances with their own configuration, mods, resource packs, shader packs, screenshots, worlds and servers.
+- Support for Vanilla, Fabric, Forge, Quilt and NeoForge.
+- Microsoft, Ely.by, CubicAuth, custom Yggdrasil/Authlib servers and offline mode accounts.
+- Content from Modrinth and CurseForge: mods, resource packs, shader packs and modpacks.
+- Per-instance world and server management, with ping and Quick Play.
+- Skins and capes, skin closet and automatic classic/slim model detection.
+- Java managed by the launcher or external, with Azul Zulu, Eclipse Temurin, BellSoft Liberica and GraalVM providers.
+- Integrated console with history, sensitive-data cleaning and mclo.gs upload.
+- Themes (v1 JSON and v2 CBTH), backgrounds, icons and custom fonts.
+- Interface available in Spanish, English, French, German, Ukrainian, Japanese and Russian.
 
-<div class="docs-cards">
-  <a href="/docs/en-EN/Getting-Started/install" class="docs-card">
-    <h3>Installation</h3>
-    <p>Learn how to install CubicLauncher on Windows, Linux and macOS in a few steps.</p>
-    <span class="docs-card-action">Start guide →</span>
-  </a>
+## Where my data is stored
 
-  <a href="/docs/en-EN/Usage/instances" class="docs-card">
-    <h3>Instances</h3>
-    <p>Discover how to manage multiple Minecraft versions and profiles independently.</p>
-    <span class="docs-card-action">View details →</span>
-  </a>
-</div>
+By default, data lives in your user folder under `.cubic`:
 
-## Key Features
+```
+~/.cubic/
+├── instances/   # Instances and their content
+├── shared/      # Shared versions, libraries, assets and Java runtimes
+├── settings/    # Launcher configuration (settings.cub)
+├── themes/      # Installed themes
+└── skins/       # Skin closet
+```
 
-- **Multi-Account:** Support for Microsoft, Mojang and offline accounts.
-- **Mod Management:** Built-in installer for Fabric, Quilt, Forge and NeoForge.
-- **Optimization:** Automatic memory and Java tuning for better performance.
-- **Customization:** Clean and modern interface with customizable themes.
+The `instances` and `shared` folders can be moved to another disk from **Settings → Storage**. The launcher moves instances with hardlinks when possible and lets you clear shared files to free space; versions and libraries are downloaded again when needed.
+
+## Quick start
+
+1. Install the launcher by following the [Installation](/docs/en-EN/Getting-Started/install) guide.
+2. Open CubicLauncher and download the game version you want.
+3. Create an instance with that version and, optionally, choose a loader.
+4. Sign in with Microsoft, Ely.by/CubicAuth, a custom Yggdrasil server, or use offline mode.
+5. Open the Market to install mods, resource packs or shaders, or import a modpack.
+6. Adjust RAM, Java, interface and notifications from **Settings**.
+
+## Quick links
+
+- [Installation](/docs/en-EN/Getting-Started/install)
+- [Instances](/docs/en-EN/Usage/instances)
+- [Content and Marketplace](/docs/en-EN/Usage/marketplace)
+- [User accounts](/docs/en-EN/Usage/accounts)
+- [Launcher configuration](/docs/en-EN/Advanced/config)

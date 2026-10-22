@@ -2,62 +2,63 @@
 category: content
 order: 20
 title: Mods
-description: Les mods sont des modifications qui altèrent ou ajoutent du contenu à Minecraft. CubicLauncher vous permet de les gérer facilement depuis le Market, un…
+description: Gérez les mods Minecraft depuis le Market, avec prise en charge de Modrinth, CurseForge et des mods déjà installés.
 ---
 
 # Mods
 
-Les **mods** sont des modifications qui altèrent ou ajoutent du contenu à Minecraft. CubicLauncher vous permet de les gérer facilement depuis le **Market**, un widget intégré qui s'active automatiquement dans les instances utilisant un mod loader.
+Les **mods** sont des modifications qui altèrent ou ajoutent du contenu à Minecraft. CubicLauncher les gère depuis le **Market**, une vue intégrée qui permet aussi de rechercher des resource packs et des shader packs.
 
 ## Prérequis
 
-Pour utiliser le Market, vous avez besoin d'une **instance** disposant d'un mod loader compatible :
+Pour utiliser la section des mods, vous avez besoin d'une **instance** avec un loader compatible :
 
-- **Fabric**
-- **Forge**
-- **NeoForge**
-- **Quilt**
+- Fabric
+- Forge
+- NeoForge
+- Quilt
 
-Si votre instance est Vanilla, le Market ne sera pas disponible.
+Si votre instance est Vanilla ou OptiFine, la section des mods n'est pas disponible. Les resource packs et shaders restent gérables depuis leurs propres sections.
 
 ## Accéder au Market
 
-1. Sélectionnez une instance qui possède un mod loader.
-2. Dans le panneau de l'instance, allez au widget où se trouve l'option appelée **Market**.
+1. Sélectionnez une instance avec un loader compatible.
+2. Dans la vue d'instance, choisissez **Market**.
+3. Choisissez le fournisseur : **Modrinth**, **CurseForge** ou **Local**.
+
+Vous pouvez aussi ouvrir le Market depuis les sections **Ressources** et **Shaders** pour ne rechercher que ces types de contenu.
 
 <div class="docs-img-wrap">
   <img src="https://i.ibb.co/0yzDqtYW/imagen.png" alt="Interface du launcher" />
 </div>
 
-## Fournisseurs de mods
-
-Une fois dans le Market, choisissez le fournisseur que vous souhaitez utiliser :
+## Fournisseurs
 
 :::info Fournisseurs en ligne
-Ces fournisseurs vous permettent de rechercher et télécharger des mods directement depuis internet.
+Ils permettent de rechercher et télécharger du contenu directement depuis internet.
 :::
 
-- **Modrinth** — navigateur intégré Modrinth. Vous pouvez rechercher par nom, catégorie et loader.
+- **Modrinth** — recherchez des mods par nom, catégorie, version et loader.
 - **CurseForge** — accédez au catalogue CurseForge depuis le launcher.
+- **Local** — affiche les mods déjà installés, avec leur origine et leur état.
 
-:::warning Fournisseur local
-Ceci liste les mods que vous avez déjà installés dans l'instance. Aucune connexion internet requise.
-:::
+## Installer et mettre à jour
 
-- **Local** — affiche tous vos mods installés, avec la possibilité de les activer ou désactiver.
+- Pour les mods, le bouton d'installation affiche les dépendances et les conflits avant confirmation.
+- Vous pouvez **double-cliquer sur la carte** pour installer plus rapidement.
+- Si le mod est déjà installé, la carte l'indique et propose de le mettre à jour lorsqu'une nouvelle version existe.
+- Les mods d'un modpack peuvent apparaître comme protégés ; déverrouillez le pack avant de les modifier.
 
-Vous aurez également des **filtres** pour affiner les résultats par version, loader, catégorie, etc.
+## Activer et désactiver
 
-<div class="docs-img-wrap">
-  <img src="https://i.ibb.co/KcZ7CKkx/imagen.png" alt="Interface du launcher" />
-</div>
+- Un mod actif utilise l'extension `.jar`.
+- Le désactiver le renomme en `.jar.disabled` sans supprimer le fichier.
+- Vous pouvez le réactiver depuis la même liste.
 
-## Compatibilité des versions
+## Compatibilité
 
-Par défaut, le Market n'affiche que les versions de mods **compatibles** avec votre instance. Le launcher détecte automatiquement la version de Minecraft et le mod loader que vous utilisez et filtre les résultats.
+Par défaut, le Market n'affiche que les versions compatibles avec la version Minecraft et le loader de votre instance. Si un mod n'est pas compatible, il apparaît marqué avant que vous tentiez de l'installer.
 
-<div class="docs-img-wrap">
-  <img src="https://i.ibb.co/Jw2b9YwS/imagen.png" alt="Interface du launcher" />
-</div>
+## Plus d'informations
 
-Si un mod n'est pas compatible avec votre instance, il sera marqué comme **"Non compatible ou aucune version disponible"** pour que vous le sachiez avant d'essayer de l'installer.
+Consultez [Contenu et Marketplace](/docs/fr-FR/Utilisation/marketplace) pour les fournisseurs, les filtres, les resource packs, les shaders et la mise à jour des modpacks.

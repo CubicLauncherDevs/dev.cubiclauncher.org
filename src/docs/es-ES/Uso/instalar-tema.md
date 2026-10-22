@@ -35,6 +35,12 @@ Abrí CubicLauncher, andá al selector de temas y elegí el que acabas de instal
 
 ¡Y listo! Ya tenés tu theme instalado.
 
+## Temas integrados
+
+CubicLauncher incluye los temas **Oscuro**, **Lima**, **Claro** y **Halloween 2026**. El tema Halloween se renovó para 2026 con una nueva imagen de fondo y una paleta índigo nocturno. Los temas Rosé Pine anteriores ya no forman parte del launcher, pero podés seguir usando un tema instalado manualmente si es compatible.
+
+Podés volver a un tema integrado desde el selector de temas en cualquier momento.
+
 ## Detalles y formatos soportados
 
 ### Formato v1 (theme.json)

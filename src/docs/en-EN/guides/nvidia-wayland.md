@@ -9,7 +9,7 @@ description: Blank windows, flickering and CubicLauncher crashes with NVIDIA and
 
 On Linux, CubicLauncher uses Tauri and WebKitGTK to display its interface. Some combinations of WebKitGTK, the NVIDIA driver and the compositor can cause blank windows, flickering or crashes. These issues can also occur on X11; using NVIDIA or Wayland does not automatically mean you need a workaround.
 
-Other languages: [Español](/docs/es-ES/guias/nvidia-wayland) · [Français](/docs/fr-FR/guides/nvidia-wayland).
+Other languages: [Español](/docs/es-ES/guias/nvidia-wayland) · [Français](/docs/fr-FR/guides/nvidia-wayland) · [Русский](/docs/ru-RU/guides/nvidia-wayland).
 
 ## Quick workaround reported for CubicLauncher
 

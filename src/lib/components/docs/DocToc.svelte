@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import type { Heading } from '$lib/server/markdown';
+  import type { DocsUiStrings } from '$lib/docs/i18n';
 
-  let { headings }: { headings: Heading[] } = $props();
+  let { headings, labels }: { headings: Heading[]; labels: DocsUiStrings['toc'] } = $props();
 
   let activeId = $state('');
   let open = $state(true);
@@ -51,10 +52,10 @@
 </script>
 
 {#if headings.length > 0}
-  <nav class="wiki-toc" aria-label="Tabla de contenidos" class:wiki-toc-collapsed={!open}>
+  <nav class="wiki-toc" aria-label={labels.aria} class:wiki-toc-collapsed={!open}>
     <button type="button" class="wiki-toc-title" aria-expanded={open} aria-controls="wiki-toc-list" onclick={() => open = !open}>
       <span class="wiki-toc-toggle" aria-hidden="true">{open ? '−' : '+'}</span>
-      En esta página
+      {labels.title}
     </button>
     {#if open}
       <ul class="wiki-toc-list" id="wiki-toc-list">

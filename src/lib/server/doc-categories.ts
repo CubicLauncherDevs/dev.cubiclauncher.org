@@ -1,4 +1,4 @@
-export type DocLanguage = 'es-ES' | 'en-EN' | 'fr-FR';
+export type DocLanguage = 'es-ES' | 'en-EN' | 'fr-FR' | 'ru-RU';
 
 interface CategoryDefinition {
   id: string;
@@ -12,7 +12,8 @@ export const DOC_CATEGORIES: CategoryDefinition[] = [
     translations: {
       'es-ES': { label: 'Primeros pasos', description: 'Conoce CubicLauncher, instálalo en tu sistema y empieza a jugar.' },
       'en-EN': { label: 'Getting started', description: 'Discover CubicLauncher, install it on your system and start playing.' },
-      'fr-FR': { label: 'Premiers pas', description: 'Découvrez CubicLauncher, installez-le sur votre système et commencez à jouer.' }
+      'fr-FR': { label: 'Premiers pas', description: 'Découvrez CubicLauncher, installez-le sur votre système et commencez à jouer.' },
+      'ru-RU': { label: 'Начало работы', description: 'Узнайте о CubicLauncher, установите его в своей системе и начните играть.' }
     }
   },
   {
@@ -20,7 +21,8 @@ export const DOC_CATEGORIES: CategoryDefinition[] = [
     translations: {
       'es-ES': { label: 'Uso y configuración', description: 'Gestiona cuentas, instancias, Java y las opciones del launcher.' },
       'en-EN': { label: 'Usage and configuration', description: 'Manage accounts, instances, Java and launcher settings.' },
-      'fr-FR': { label: 'Utilisation et configuration', description: 'Gérez les comptes, les instances, Java et les paramètres du launcher.' }
+      'fr-FR': { label: 'Utilisation et configuration', description: 'Gérez les comptes, les instances, Java et les paramètres du launcher.' },
+      'ru-RU': { label: 'Использование и настройка', description: 'Управляйте учётными записями, инстансами, Java и параметрами лаунчера.' }
     }
   },
   {
@@ -28,7 +30,8 @@ export const DOC_CATEGORIES: CategoryDefinition[] = [
     translations: {
       'es-ES': { label: 'Mods y contenido', description: 'Amplía Minecraft con mods, contenido adicional y clientes compatibles.' },
       'en-EN': { label: 'Mods and content', description: 'Expand Minecraft with mods, additional content and compatible clients.' },
-      'fr-FR': { label: 'Mods et contenu', description: 'Enrichissez Minecraft avec des mods, du contenu et des clients compatibles.' }
+      'fr-FR': { label: 'Mods et contenu', description: 'Enrichissez Minecraft avec des mods, du contenu et des clients compatibles.' },
+      'ru-RU': { label: 'Моды и контент', description: 'Расширьте Minecraft с помощью модов, дополнительного контента и совместимых клиентов.' }
     }
   },
   {
@@ -36,7 +39,8 @@ export const DOC_CATEGORIES: CategoryDefinition[] = [
     translations: {
       'es-ES': { label: 'Personalización', description: 'Cambia la apariencia del launcher e instala o crea tus propios temas.' },
       'en-EN': { label: 'Customization', description: 'Change the launcher’s appearance and install or create your own themes.' },
-      'fr-FR': { label: 'Personnalisation', description: 'Changez l’apparence du launcher et installez ou créez vos propres thèmes.' }
+      'fr-FR': { label: 'Personnalisation', description: 'Changez l’apparence du launcher et installez ou créez vos propres thèmes.' },
+      'ru-RU': { label: 'Персонализация', description: 'Измените внешний вид лаунчера, устанавливайте или создавайте собственные темы.' }
     }
   },
   {
@@ -44,7 +48,8 @@ export const DOC_CATEGORIES: CategoryDefinition[] = [
     translations: {
       'es-ES': { label: 'Ayuda y soporte', description: 'Diagnostica errores, consulta soluciones y encuentra ayuda.' },
       'en-EN': { label: 'Help and support', description: 'Diagnose errors, find solutions and get help.' },
-      'fr-FR': { label: 'Aide et assistance', description: 'Diagnostiquez les erreurs, trouvez des solutions et obtenez de l’aide.' }
+      'fr-FR': { label: 'Aide et assistance', description: 'Diagnostiquez les erreurs, trouvez des solutions et obtenez de l’aide.' },
+      'ru-RU': { label: 'Помощь и поддержка', description: 'Диагностируйте ошибки, находите решения и получайте помощь.' }
     }
   },
   {
@@ -52,7 +57,8 @@ export const DOC_CATEGORIES: CategoryDefinition[] = [
     translations: {
       'es-ES': { label: 'Desarrollo y contribución', description: 'Explora el proyecto, prepara tu entorno y contribuye a CubicLauncher.' },
       'en-EN': { label: 'Development and contribution', description: 'Explore the project, set up your environment and contribute to CubicLauncher.' },
-      'fr-FR': { label: 'Développement et contribution', description: 'Explorez le projet, préparez votre environnement et contribuez à CubicLauncher.' }
+      'fr-FR': { label: 'Développement et contribution', description: 'Explorez le projet, préparez votre environnement et contribuez à CubicLauncher.' },
+      'ru-RU': { label: 'Разработка и участие', description: 'Изучите проект, подготовьте окружение и внесите вклад в CubicLauncher.' }
     }
   },
   {
@@ -60,7 +66,8 @@ export const DOC_CATEGORIES: CategoryDefinition[] = [
     translations: {
       'es-ES': { label: 'Información legal', description: 'Consulta la licencia, la política de privacidad y los términos de uso.' },
       'en-EN': { label: 'Legal information', description: 'Read the license, privacy policy and terms of use.' },
-      'fr-FR': { label: 'Informations légales', description: 'Consultez la licence, la politique de confidentialité et les conditions d’utilisation.' }
+      'fr-FR': { label: 'Informations légales', description: 'Consultez la licence, la politique de confidentialité et les conditions d’utilisation.' },
+      'ru-RU': { label: 'Правовая информация', description: 'Ознакомьтесь с лицензией, политикой конфиденциальности и условиями использования.' }
     }
   }
 ];

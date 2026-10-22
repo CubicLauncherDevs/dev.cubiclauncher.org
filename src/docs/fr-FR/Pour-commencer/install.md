@@ -11,12 +11,14 @@ Installer CubicLauncher est un processus simple. Suivez les instructions corresp
 
 ## Prérequis
 
-Avant d'installer, assurez-vous d'avoir **Java** installé sur votre système. Nous recommandons les versions suivantes :
+CubicLauncher n'a pas besoin que Java soit installé pour s'ouvrir, mais il en a besoin pour jouer à Minecraft. Vous pouvez utiliser les JRE gérés du launcher ou configurer un Java externe. Voir [Qu'est-ce que Java](/docs/fr-FR/Utilisation/java).
 
-- **Java 25 :** Pour les versions de Minecraft 26.1 et supérieures.
-- **Java 21 :** Pour les versions de Minecraft 1.21 et supérieures.
-- **Java 17 :** Pour les versions de Minecraft 1.17 et supérieures.
-- **Java 8 :** Pour les versions de Minecraft 1.16.5 et inférieures.
+En règle générale, CubicLauncher peut installer et détecter Java 8, 17, 21 et 25 :
+
+- **Java 8** pour les anciennes versions de Minecraft.
+- **Java 17** pour les versions modernes qui l'exigent.
+- **Java 21** pour les versions les plus récentes.
+- **Java 25** pour les versions ou loaders qui le demandent.
 
 :::info Astuce
 CubicLauncher n'a pas besoin de Java installé sur le système pour fonctionner, mais vous avez besoin de Java pour jouer à Minecraft.

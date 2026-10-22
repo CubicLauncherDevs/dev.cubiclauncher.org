@@ -2,8 +2,9 @@
   import { tick } from 'svelte';
   import { goto } from '$app/navigation';
   import type { SearchDoc } from '$lib/server/docs';
+  import type { DocsUiStrings } from '$lib/docs/i18n';
 
-  let { searchIndex, currentLang, onOpen }: { searchIndex: SearchDoc[]; currentLang: string; onOpen?: () => void } = $props();
+  let { searchIndex, currentLang, onOpen, labels }: { searchIndex: SearchDoc[]; currentLang: string; onOpen?: () => void; labels: DocsUiStrings['search'] } = $props();
 
   let query = $state('');
   let open = $state(false);
@@ -12,7 +13,7 @@
   let activeIndex = $state(0);
 
   function normalize(value: string) {
-    return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/ё/g, 'е').trim();
   }
 
   let results = $derived.by(() => {
@@ -77,19 +78,19 @@
 
 <svelte:window onkeydown={onKeydown} />
 
-<button type="button" class="search-trigger" onclick={openSearch} aria-label="Buscar documentación">
-  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>    <span class="search-placeholder">Buscar en la documentación...</span>
+<button type="button" class="search-trigger" onclick={openSearch} aria-label={labels.trigger}>
+  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>    <span class="search-placeholder">{labels.placeholder}</span>
   <kbd class="search-kbd">Ctrl K</kbd>
 </button>
 
-<dialog bind:this={dialogEl} class="search-modal" aria-label="Búsqueda de documentación" onclose={closeSearch} onclick={(e) => { if (e.target === dialogEl) closeSearch(); }}>
+<dialog bind:this={dialogEl} class="search-modal" aria-label={labels.dialog} onclose={closeSearch} onclick={(e) => { if (e.target === dialogEl) closeSearch(); }}>
   <div class="search-panel" role="presentation">
     <div class="search-input-wrap">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
       <input
         type="text"
         role="combobox"
-        aria-label="Buscar artículos"
+        aria-label={labels.input}
         aria-expanded={results.length > 0}
         aria-activedescendant={results.length ? `search-result-${activeIndex}` : undefined}
         bind:this={inputEl}
@@ -97,21 +98,21 @@
         bind:value={query}
         oninput={() => activeIndex = 0}
         onkeydown={onInputKeydown}
-        placeholder="Buscar en la documentación..."
+        placeholder={labels.placeholder}
         aria-autocomplete="list"
         autocomplete="off"
         spellcheck="false"
       />
-      <button type="button" class="search-close" onclick={closeSearch} aria-label="Cerrar búsqueda">Esc</button>
+      <button type="button" class="search-close" onclick={closeSearch} aria-label={labels.close}>Esc</button>
     </div>
-    <p class="search-status" role="status">{results.length ? `${results.length} resultados · ${currentLang}` : `Búsqueda en ${currentLang}`}</p>
-    <div class="search-results" role="listbox" aria-label="Artículos encontrados" id="search-results-list">
+    <p class="search-status" role="status">{results.length ? labels.statusResults(results.length, currentLang) : labels.statusSearching(currentLang)}</p>
+    <div class="search-results" role="listbox" aria-label={labels.results} id="search-results-list">
       {#if results.length === 0}
         <div class="search-empty">
           {#if query.trim().length < 2}
-            Escribe al menos 2 caracteres para buscar.
+            {labels.emptyMin}
           {:else}
-            No se encontraron resultados. Prueba con menos palabras o cambia el idioma de la documentación.
+            {labels.emptyNone}
           {/if}
         </div>
       {:else}
@@ -137,9 +138,9 @@
       {/if}
     </div>
     <div class="search-footer">
-      <span><kbd>↑</kbd> <kbd>↓</kbd> navegar</span>
-      <span><kbd>Enter</kbd> seleccionar</span>
-      <span><kbd>Esc</kbd> cerrar</span>
+      <span><kbd>↑</kbd> <kbd>↓</kbd> {labels.navigate}</span>
+      <span><kbd>Enter</kbd> {labels.select}</span>
+      <span><kbd>Esc</kbd> {labels.closeKey}</span>
     </div>
   </div>
 </dialog>

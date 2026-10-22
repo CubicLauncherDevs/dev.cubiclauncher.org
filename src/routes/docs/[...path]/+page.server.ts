@@ -1,6 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import { getDoc, getDocTree, getSearchIndex, getAllPages, getCategories, getCategoryPages, catDisplay } from '$lib/server/docs';
 import type { SearchDoc } from '$lib/server/docs';
+import { getContributors } from '$lib/server/contributors';
 
 const CATEGORY_ALIASES = ['categoria', 'categorias', 'categories'];
 const ALL_ALIASES = ['todas', 'todas-las-paginas', 'allpages', 'all-pages', 'all'];
@@ -15,7 +16,7 @@ function normCat(s: string): string {
   return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[_-]+/g, ' ').trim();
 }
 
-export function load({ params, url, cookies }) {
+export async function load({ params, url, cookies, fetch }) {
   const path = params.path || '';
   const tree = getDocTree();
   const langs: { code: string; label: string }[] = tree.map(l => ({ code: l.code!, label: l.label }));
@@ -30,7 +31,13 @@ export function load({ params, url, cookies }) {
       ...cat,
       pages: getCategoryPages(cat.name, lang),
     }));
-    return { page: 'index' as const, tree, langs, searchIndex, lang, categories, sections, pageCount: categories.reduce((total, cat) => total + cat.count, 0) };
+    const contributors = await getContributors(fetch);
+    return {
+      page: 'index' as const,
+      tree, langs, searchIndex, lang, categories, sections,
+      pageCount: categories.reduce((total, cat) => total + cat.count, 0),
+      contributors,
+    };
   }
 
   const parts = path.split('/');
@@ -70,7 +77,8 @@ export function load({ params, url, cookies }) {
     const notices: Record<string, string> = {
       'es-ES': 'Esta categoría se reorganizó por temas. Explora las categorías actuales o accede a sus artículos desde la lista inferior.',
       'en-EN': 'This category was reorganized by topic. Explore the current categories or find its articles in the list below.',
-      'fr-FR': 'Cette catégorie a été réorganisée par thème. Explorez les catégories actuelles ou retrouvez ses articles dans la liste ci-dessous.'
+      'fr-FR': 'Cette catégorie a été réorganisée par thème. Explorez les catégories actuelles ou retrouvez ses articles dans la liste ci-dessous.',
+      'ru-RU': 'Эта категория была реорганизована по темам. Изучите текущие категории или найдите её статьи в списке ниже.'
     };
     return {
       page: 'categoria' as const,

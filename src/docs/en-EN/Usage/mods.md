@@ -2,62 +2,63 @@
 category: content
 order: 20
 title: Mods
-description: Mods are modifications that alter or add content to Minecraft. CubicLauncher lets you manage them easily from the Market, an integrated widget that is…
+description: Manage Minecraft mods from the Market, with support for Modrinth, CurseForge and already installed mods.
 ---
 
 # Mods
 
-**Mods** are modifications that alter or add content to Minecraft. CubicLauncher lets you manage them easily from the **Market**, an integrated widget that is automatically enabled in instances that use a mod loader.
+**Mods** are modifications that alter or add content to Minecraft. CubicLauncher manages them from the **Market**, an integrated view that also lets you search for resource packs and shader packs.
 
 ## Requirements
 
-To use the Market you need an **instance** that has a compatible mod loader:
+To use the mods section you need an **instance** with a compatible loader:
 
-- **Fabric**
-- **Forge**
-- **NeoForge**
-- **Quilt**
+- Fabric
+- Forge
+- NeoForge
+- Quilt
 
-If your instance is Vanilla, the Market will not be available.
+If your instance is Vanilla or OptiFine, the mods section is not available. Resource packs and shaders can still be managed from their own sections.
 
-## Accessing the Market
+## Access the Market
 
-1. Select an instance that has a mod loader.
-2. In the instance panel, go to the widget where the option called **Market** is located.
+1. Select an instance with a compatible loader.
+2. In the instance view, choose **Market**.
+3. Choose the provider: **Modrinth**, **CurseForge** or **Local**.
+
+You can also open the Market from the **Resources** and **Shaders** sections to search only for those content types.
 
 <div class="docs-img-wrap">
   <img src="https://i.ibb.co/0yzDqtYW/imagen.png" alt="Launcher UI" />
 </div>
 
-## Mod providers
-
-Once in the Market, choose which provider you want to use:
+## Providers
 
 :::info Online providers
-These providers let you search and download mods directly from the internet.
+They let you search and download content directly from the internet.
 :::
 
-- **Modrinth** — integrated Modrinth browser. You can search by name, category, and loader.
+- **Modrinth** — search mods by name, category, version and loader.
 - **CurseForge** — access the CurseForge catalog from the launcher.
+- **Local** — shows the already installed mods, with their origin and status.
 
-:::warning Local provider
-This lists the mods you already have installed in the instance. No internet connection required.
-:::
+## Install and update
 
-- **Local** — shows all your installed mods, with the option to enable or disable them.
+- For mods, the install button shows dependencies and conflicts before confirming.
+- You can **double-click the card** to install faster.
+- If the mod is already installed, the card indicates it and offers to update it when a new version exists.
+- Mods from a modpack may appear as protected; unlock the pack before modifying them.
 
-You will also have **filters** to refine results by version, loader, category, and more.
+## Enable and disable
 
-<div class="docs-img-wrap">
-  <img src="https://i.ibb.co/KcZ7CKkx/imagen.png" alt="Launcher UI" />
-</div>
+- An active mod uses the `.jar` extension.
+- Disabling it renames it to `.jar.disabled` without deleting the file.
+- You can enable it again from the same list.
 
-## Version compatibility
+## Compatibility
 
-By default, the Market will only show mod versions that are **compatible** with your instance. The launcher automatically detects the Minecraft version and the mod loader you are using and filters the results.
+By default the Market shows only versions compatible with your instance's Minecraft version and loader. If a mod is not compatible, it appears marked before you try to install it.
 
-<div class="docs-img-wrap">
-  <img src="https://i.ibb.co/Jw2b9YwS/imagen.png" alt="Launcher UI" />
-</div>
+## More information
 
-If a mod is not compatible with your instance, it will be marked as **"Not Compatible or No Versions Available"** so you know before trying to install it.
+See [Content and Marketplace](/docs/en-EN/Usage/marketplace) for providers, filters, resource packs, shaders and modpack updates.
