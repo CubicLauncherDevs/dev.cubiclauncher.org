@@ -2,7 +2,7 @@
 category: getting-started
 order: 20
 title: Установка
-description: Установка CubicLauncher — простой процесс. Следуйте инструкциям для вашей операционной системы, чтобы начать.
+description: Установите CubicLauncher в Windows, Linux, macOS, Nix/NixOS и Docker. Следуйте инструкциям для вашей операционной системы, чтобы начать.
 ---
 
 # Установка
@@ -39,6 +39,7 @@ CubicLauncher не требует установленной в системе J
 - **Debian/Ubuntu:** установите пакет `.deb` с помощью `sudo apt install ./cubiclauncher.deb`.
 - **ARCH PKGBUILD:** требуется локальная компиляция. Бинарные файлы, созданные в GitHub CI (Ubuntu), могут быть несовместимы с Arch Linux из-за его модели непрерывных обновлений. <a href="/docs/ru-RU/guides/arch" class="text-blue-400 hover:underline">Руководство</a>.
 - **Nix/NixOS:** установите последний стабильный канал с помощью `nix profile add github:CubicLauncherDevs/CubicLauncher/latest-release`. При желании настройте кэш Cachix с помощью `nix run nixpkgs#cachix -- use cubiclauncher`. <a href="/docs/ru-RU/guides/nix" class="text-blue-400 hover:underline">Руководство</a>.
+- **Docker:** загрузите мультиархитектурный образ с помощью `docker pull ghcr.io/cubiclauncherdevs/cubiclauncher:latest` и запустите его с доступом к X11 или Wayland, GPU и томом данных. <a href="/docs/ru-RU/guides/docker" class="text-blue-400 hover:underline">Руководство</a>.
 
 ### NVIDIA и Wayland: пустые окна или сбои
 

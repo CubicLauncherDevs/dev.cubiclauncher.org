@@ -2,7 +2,7 @@
 category: getting-started
 order: 20
 title: Instalación
-description: Cómo instalar CubicLauncher en Windows, Linux (AppImage/.deb/.rpm, AUR) y macOS, además de Nix/NixOS.
+description: Cómo instalar CubicLauncher en Windows, Linux (AppImage/.deb/.rpm, AUR, Docker) y macOS, además de Nix/NixOS.
 ---
 
 # Instalación
@@ -67,6 +67,16 @@ nix run nixpkgs#cachix -- use cubiclauncher
 El flake soporta `x86_64-linux`, `aarch64-linux` y `aarch64-darwin`; la caché del proyecto publica builds solo para Linux.
 
 Más detalles en la guía: /docs/es-ES/guias/nix
+
+## Docker
+
+La imagen oficial se publica en GitHub Packages para `linux/amd64` y `linux/arm64`:
+
+```bash
+docker pull ghcr.io/cubiclauncherdevs/cubiclauncher:latest
+```
+
+Como CubicLauncher es una aplicación de escritorio, el contenedor necesita acceso al servidor gráfico del host (X11 o Wayland), a la GPU y a un volumen para conservar `~/.cubic`. Consultá la guía completa: /docs/es-ES/guias/docker
 
 ## Notas de compatibilidad (Linux)
 
